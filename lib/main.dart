@@ -1,5 +1,8 @@
+import 'package:cooking_friend/main_wrapper.dart';
 import 'package:cooking_friend/river/services/isar_service.dart';
-import 'package:cooking_friend/screens/storage.dart';
+import 'package:cooking_friend/screens/home.dart';
+import 'package:cooking_friend/screens/setting.dart';
+import 'package:cooking_friend/screens/storage/storage_add.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -42,34 +45,23 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Storage(service),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.storage),
-            label: 'Storage',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Setting',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
-      ),
-    );
+  Widget screenToDisplay() {
+    switch (_selectedIndex) {
+      case 0:
+        return const Home();
+      case 1:
+        return StorageAdd(service);
+      case 2:
+        return const Setting();
+      default:
+        return const Home();
+    }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: MainWrapper(service),
+    );
+  }
 }

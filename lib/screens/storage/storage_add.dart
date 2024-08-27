@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-import '../river/models/storage_item.dart';
+import '../../river/models/storage_item.dart';
 
-class Storage extends StatefulWidget {
+class StorageAdd extends StatefulWidget {
   final IsarService service;
 
-  const Storage(this.service, {super.key});
+  const StorageAdd(this.service, {super.key});
 
   @override
-  State<Storage> createState() => _StorageState();
+  State<StorageAdd> createState() => _StorageAddState();
 }
 
-class _StorageState extends State<Storage> {
+class _StorageAddState extends State<StorageAdd> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   @override
