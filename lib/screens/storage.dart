@@ -62,7 +62,7 @@ class _StorageState extends State<Storage> {
                   ..code = code;
 
                 widget.service.saveNewStorageItem(item);
-
+                _formKey.currentState!.reset();
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text("New item added"),
