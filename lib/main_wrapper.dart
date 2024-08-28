@@ -1,7 +1,7 @@
 import 'package:cooking_friend/navigation/recipe_navigation.dart';
 import 'package:cooking_friend/navigation/shoppingList_navigation.dart';
 import 'package:cooking_friend/navigation/storage_navigation.dart';
-import 'package:cooking_friend/river/services/isar_service.dart';
+import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

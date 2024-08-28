@@ -1,7 +1,7 @@
 import 'package:cooking_friend/screens/shoppingList/shopping_list.dart';
 import 'package:flutter/material.dart';
 
-import '../river/services/isar_service.dart';
+import '../getx/services/isar_service.dart';
 
 class ShoppingListNavigation extends StatefulWidget {
   final IsarService service;

@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:cooking_friend/river/models/storage_item.dart';
+import 'package:cooking_friend/getx/models/storage_item.dart';
+import 'package:cooking_friend/screens/storage/storage_view_one.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../river/services/isar_service.dart';
+import '../../getx/services/isar_service.dart';
 
 class StorageView extends StatefulWidget {
   final IsarService service;
@@ -72,12 +73,12 @@ class _StorageViewState extends State<StorageView> {
             },
           ),
           Expanded(
-            child: SingleChildScrollView(
-              physics: const ScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: RefreshIndicator(
-                  onRefresh: () => refreshList(),
+            child: RefreshIndicator(
+              onRefresh: () => refreshList(),
+              child: SingleChildScrollView(
+                physics: const ScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
                   child: FutureBuilder<List<StorageItem?>>(
                     future: storageItemToDisplay,
                     builder: (context, snapshot) {
@@ -94,35 +95,22 @@ class _StorageViewState extends State<StorageView> {
                                     snapshot.data![index]!.name.toString();
                                 String date =
                                     snapshot.data![index]!.date.toString();
+                                int id = snapshot.data![index]!.id;
                                 return Card(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: const Icon(Icons.album),
-                                        title: Text(name),
-                                        subtitle: Text(date),
-                                      ),
-                                      /*Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
+                                  child: InkWell(
+                                    onTap: () => StorageViewOne(
+                                      widget.service, id
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        TextButton(
-                                          child: const Text('BUY TICKETS'),
-                                          onPressed: () {
-                                            /* ... */
-                                          },
+                                        ListTile(
+                                          leading: const Icon(Icons.album),
+                                          title: Text(name),
+                                          subtitle: Text(date),
                                         ),
-                                        const SizedBox(width: 8),
-                                        TextButton(
-                                          child: const Text('LISTEN'),
-                                          onPressed: () {
-                                            /* ... */
-                                          },
-                                        ),
-                                        const SizedBox(width: 8),
                                       ],
-                                    ),*/
-                                    ],
+                                    ),
                                   ),
                                 );
                               }),

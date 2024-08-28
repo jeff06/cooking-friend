@@ -1,6 +1,8 @@
+import 'package:cooking_friend/getx/controller/storage_controller.dart';
 import 'package:cooking_friend/main_wrapper.dart';
-import 'package:cooking_friend/river/services/isar_service.dart';
+import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +14,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -33,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final StorageController controller = Get.put(StorageController());
   final service = IsarService();
 
   @override

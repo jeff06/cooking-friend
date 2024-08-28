@@ -2,7 +2,7 @@ import 'package:cooking_friend/screens/storage/storage_add.dart';
 import 'package:cooking_friend/screens/storage/storage_view.dart';
 import 'package:flutter/material.dart';
 
-import '../river/services/isar_service.dart';
+import '../getx/services/isar_service.dart';
 
 class StorageNavigation extends StatefulWidget {
   final IsarService service;
