@@ -10,6 +10,11 @@ class IsarService {
     db = openDB();
   }
 
+  Future<StorageItem?> getSingleStorageItem(int id) async {
+    final isar = await db;
+    return await isar.storageItems.filter().idEqualTo(id).findFirst();
+  }
+
   Future<void> saveNewStorageItem(StorageItem storageItem) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));

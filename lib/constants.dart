@@ -1,6 +1,1 @@
-const routesPath = {
-  "home": "/home",
-};
-const routesName = {
-"home": "home",
-};
+enum StorageManagementAction { add, view, edit, none }

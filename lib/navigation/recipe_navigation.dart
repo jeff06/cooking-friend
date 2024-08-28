@@ -3,7 +3,7 @@ import 'package:cooking_friend/screens/recipe/recipe_view_all.dart';
 import 'package:cooking_friend/screens/recipe/recipe_view_one.dart';
 import 'package:flutter/material.dart';
 
-import '../river/services/isar_service.dart';
+import '../getx/services/isar_service.dart';
 
 class RecipeNavigation extends StatefulWidget {
   final IsarService service;
