@@ -15,11 +15,6 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));
   }
 
-  Future<List<StorageItem>> getAllCourses() async {
-    final isar = await db;
-    return await isar.storageItems.where().findAll();
-  }
-
   Future<void> cleanDb() async {
     final isar = await db;
     await isar.writeTxn(() => isar.clear());
@@ -29,12 +24,15 @@ class IsarService {
       String currentFilter) async {
     final isar = await db;
 
-    return await isar.storageItems
-        .filter()
-        .nameContains(currentFilter)
-        .or()
-        .codeContains(currentFilter)
-        .findAll();
+    if (currentFilter != "") {
+      return await isar.storageItems
+          .filter()
+          .nameContains(currentFilter)
+          .or()
+          .codeContains(currentFilter)
+          .findAll();
+    }
+    return await isar.storageItems.filter().nameIsNotEmpty().findAll();
   }
 
   Future<Isar> openDB() async {
