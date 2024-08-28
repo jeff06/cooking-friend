@@ -1,4 +1,4 @@
-import 'package:cooking_friend/screens/storage/storage_add.dart';
+import 'package:cooking_friend/screens/storage/storage_management.dart';
 import 'package:cooking_friend/screens/storage/storage_view.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,10 @@ class _StorageNavigationState extends State<StorageNavigation> {
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(builder: (BuildContext context) {
           if (settings.name == "/storageAdd") {
-            return StorageAdd(widget.service);
+            return StorageManagement(widget.service);
+          }
+          else if (settings.name == "/storageView") {
+            return StorageManagement(widget.service);
           }
           return StorageView(widget.service);
         });
