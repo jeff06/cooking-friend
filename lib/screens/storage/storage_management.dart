@@ -42,27 +42,32 @@ class _StorageManagementState extends State<StorageManagement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: <Widget>[
-          Obx(
-            () => IconButton(
-              icon: Icon(
-                storageController.action ==
-                        StorageManagementAction.view.name.obs
-                    ? Icons.edit
-                    : Icons.ice_skating,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                if (storageController.action ==
-                    StorageManagementAction.view.name.obs) {
-                  storageController.updateAction(StorageManagementAction.edit);
-                } else {
-                  storageController.updateAction(StorageManagementAction.view);
-                }
-              },
-            ),
-          )
-        ],
+        actions:
+            storageController.action != StorageManagementAction.add.name.obs
+                ? <Widget>[
+                    Obx(
+                      () => IconButton(
+                        icon: Icon(
+                          storageController.action ==
+                                  StorageManagementAction.view.name.obs
+                              ? Icons.edit
+                              : Icons.edit_outlined,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          if (storageController.action ==
+                              StorageManagementAction.view.name.obs) {
+                            storageController
+                                .updateAction(StorageManagementAction.edit);
+                          } else {
+                            storageController
+                                .updateAction(StorageManagementAction.view);
+                          }
+                        },
+                      ),
+                    )
+                  ]
+                : [],
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
