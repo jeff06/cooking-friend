@@ -15,9 +15,24 @@ class IsarService {
     return await isar.storageItems.filter().idEqualTo(id).findFirst();
   }
 
-  Future<void> saveNewStorageItem(StorageItem storageItem) async {
+  Future<int> saveNewStorageItem(StorageItem storageItem) async {
     final isar = await db;
-    isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));
+    return isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));
+  }
+
+  Future<int> updateStorageItem(StorageItem storageItem, int currentId) async {
+    final isar = await db;
+    storageItem.id = currentId;
+    return isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));
+  }
+
+  Future<bool> deleteStorageItem(int currentId) async {
+    final isar = await db;
+    return await isar.writeTxn(
+      () async {
+        return await isar.storageItems.delete(currentId);
+      },
+    );
   }
 
   Future<void> cleanDb() async {
@@ -25,7 +40,7 @@ class IsarService {
     await isar.writeTxn(() => isar.clear());
   }
 
-  Future<List<StorageItem?>> getAllStorageItemByFilter(
+  Future<List<StorageItem>> getAllStorageItemByFilter(
       String currentFilter) async {
     final isar = await db;
 
