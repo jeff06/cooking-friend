@@ -29,13 +29,19 @@ class StorageController extends GetxController {
         case StorageManagementAction.view:
           break;
         case StorageManagementAction.edit:
+          lstStorageItem[lstStorageItem.indexWhere((x) => x.id == v.id)] =
+              v.item!;
           break;
         case StorageManagementAction.none:
+          break;
+        case StorageManagementAction.delete:
+          lstStorageItem.removeWhere((x) => x.id == v.id);
           break;
         case null:
           break;
       }
     }
+    lstStorageItem.sort((a, b) => b.id.compareTo(a.id));
   }
 
   updateAction(StorageManagementAction newAction) {

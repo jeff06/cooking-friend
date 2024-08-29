@@ -52,7 +52,11 @@ class _StorageManagementState extends State<StorageManagement> {
         ..date = date
         ..code = code;
       if (storageController.action == StorageManagementAction.edit.name.obs) {
-        widget.service.updateStorageItem(item, storageController.currentId);
+        await widget.service.updateStorageItem(item, storageController.currentId);
+        lstStorageItemModification.add(StorageItemModification()
+          ..id = storageController.currentId
+          ..action = StorageManagementAction.edit
+          ..item = item);
       } else {
         int addedItemId = await widget.service.saveNewStorageItem(item);
         item.id = addedItemId;
@@ -221,10 +225,15 @@ class _StorageManagementState extends State<StorageManagement> {
                         child: IconButton(
                           color: Colors.amber,
                           icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            widget.service
+                          onPressed: () async {
+                            await widget.service
                                 .deleteStorageItem(storageController.currentId);
-                            Navigator.pop(context);
+                            lstStorageItemModification
+                                .add(StorageItemModification()
+                                  ..id = storageController.currentId
+                                  ..action = StorageManagementAction.delete
+                                  ..item = null);
+                            Navigator.pop(context, lstStorageItemModification);
                           },
                         ),
                       ),

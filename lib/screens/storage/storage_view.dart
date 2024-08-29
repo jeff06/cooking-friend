@@ -42,6 +42,12 @@ class _StorageViewState extends State<StorageView> {
     });
   }
 
+  Future<void> updateList(String path) async {
+    var listReturned = await Navigator.pushNamed(context, path);
+    storageController.modifyLstStorageItemDisplayed(
+        listReturned as List<StorageItemModification>);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,8 +60,7 @@ class _StorageViewState extends State<StorageView> {
             ),
             onPressed: () async {
               storageController.updateAction(StorageManagementAction.add);
-              var listReturned = await Navigator.pushNamed(context, "/storageAdd");
-              storageController.modifyLstStorageItemDisplayed(listReturned as List<StorageItemModification>);
+              await updateList("/storageAdd");
             },
           )
         ],
@@ -84,6 +89,7 @@ class _StorageViewState extends State<StorageView> {
                 future: storageItemToDisplay,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    snapshot.data!.sort((a, b) => b.id.compareTo(a.id));
                     storageController
                         .updateLstStorageItemDisplayed(snapshot.data!);
                     return Padding(
@@ -108,12 +114,12 @@ class _StorageViewState extends State<StorageView> {
                                     storageController.lstStorageItem[index].id;
                                 return Card(
                                   child: InkWell(
-                                    onTap: () {
-                                      storageController.updateSelectedId(id);
-                                      storageController.updateAction(
+                                    onTap: () async {
+                                      await storageController
+                                          .updateSelectedId(id);
+                                      await storageController.updateAction(
                                           StorageManagementAction.view);
-                                      Navigator.pushNamed(
-                                          context, "/storageView");
+                                      await updateList("/storageView");
                                     },
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
