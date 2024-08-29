@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
 import 'package:cooking_friend/getx/models/storage_item.dart';
+import 'package:cooking_friend/getx/models/storage_item_displayed.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,8 +21,8 @@ class StorageView extends StatefulWidget {
 class _StorageViewState extends State<StorageView> {
   String currentSearchString = "";
   final StorageController storageController = Get.find<StorageController>();
-  Future<List<StorageItem?>> storageItemToDisplay =
-      Completer<List<StorageItem?>>().future;
+  Future<List<StorageItem>> storageItemToDisplay =
+      Completer<List<StorageItem>>().future;
 
   Future<void> refreshList() async {
     setState(() {
@@ -51,9 +52,10 @@ class _StorageViewState extends State<StorageView> {
               Icons.add,
               color: Colors.white,
             ),
-            onPressed: () {
+            onPressed: () async {
               storageController.updateAction(StorageManagementAction.add);
-              Navigator.pushNamed(context, "/storageAdd");
+              var listReturned = await Navigator.pushNamed(context, "/storageAdd");
+              storageController.modifyLstStorageItemDisplayed(listReturned as List<StorageItemModification>);
             },
           )
         ],
@@ -78,47 +80,55 @@ class _StorageViewState extends State<StorageView> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: FutureBuilder<List<StorageItem?>>(
+              child: FutureBuilder<List<StorageItem>>(
                 future: storageItemToDisplay,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    storageController
+                        .updateLstStorageItemDisplayed(snapshot.data!);
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RefreshIndicator(
                         onRefresh: () => refreshList(),
-                        child: ListView.builder(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(8),
-                            itemCount: snapshot.data?.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              String name =
-                                  snapshot.data![index]!.name.toString();
-                              String date =
-                                  snapshot.data![index]!.date.toString();
-                              int id = snapshot.data![index]!.id;
-                              return Card(
-                                child: InkWell(
-                                  onTap: () {
-                                    storageController.updateSelectedId(id);
-                                    storageController.updateAction(
-                                        StorageManagementAction.view);
-                                    Navigator.pushNamed(
-                                        context, "/storageView");
-                                  },
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      ListTile(
-                                        leading: const Icon(Icons.album),
-                                        title: Text(name),
-                                        subtitle: Text(date),
-                                      ),
-                                    ],
+                        child: Obx(
+                          () => ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(8),
+                              itemCount:
+                                  storageController.lstStorageItem.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String name = storageController
+                                    .lstStorageItem[index].name
+                                    .toString();
+                                String date = storageController
+                                    .lstStorageItem[index].date
+                                    .toString();
+                                int id =
+                                    storageController.lstStorageItem[index].id;
+                                return Card(
+                                  child: InkWell(
+                                    onTap: () {
+                                      storageController.updateSelectedId(id);
+                                      storageController.updateAction(
+                                          StorageManagementAction.view);
+                                      Navigator.pushNamed(
+                                          context, "/storageView");
+                                    },
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        ListTile(
+                                          leading: const Icon(Icons.album),
+                                          title: Text(name),
+                                          subtitle: Text(date),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
+                        ),
                       ),
                     );
                   }
