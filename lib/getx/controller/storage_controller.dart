@@ -4,7 +4,7 @@ import 'package:cooking_friend/screens/support/barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import '../models/storage_item_displayed.dart';
+import '../models/storage_item_modification.dart';
 
 class StorageController extends GetxController {
   var barcode = "".obs;

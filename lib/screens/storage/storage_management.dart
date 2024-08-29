@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
 import 'package:cooking_friend/getx/models/storage_item.dart';
-import 'package:cooking_friend/getx/models/storage_item_displayed.dart';
+import 'package:cooking_friend/getx/models/storage_item_modification.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/screens/support/loading.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +41,41 @@ class _StorageManagementState extends State<StorageManagement> {
     }
   }
 
+  Future<void> delete() async {
+    await widget.service.deleteStorageItem(storageController.currentId).then(
+      (res) {
+        lstStorageItemModification.add(StorageItemModification()
+          ..id = storageController.currentId
+          ..action = StorageManagementAction.delete
+          ..item = null);
+        Navigator.pop(context, lstStorageItemModification);
+      },
+    );
+  }
+
+  Future<void> _saveUpdate(StorageItem item) async {
+    if (storageController.action == StorageManagementAction.edit.name.obs) {
+      await widget.service
+          .updateStorageItem(item, storageController.currentId)
+          .then((res) {
+        lstStorageItemModification.add(StorageItemModification()
+          ..id = storageController.currentId
+          ..action = StorageManagementAction.edit
+          ..item = item);
+        Navigator.pop(context, lstStorageItemModification);
+      });
+    } else {
+      await widget.service.saveNewStorageItem(item).then((res) {
+        item.id = res;
+        lstStorageItemModification.add(StorageItemModification()
+          ..id = res
+          ..action = StorageManagementAction.add
+          ..item = item);
+        _formKey.currentState!.reset();
+      });
+    }
+  }
+
   Future<void> save() async {
     // Validate and save the form values
     if (_formKey.currentState!.saveAndValidate()) {
@@ -51,27 +86,16 @@ class _StorageManagementState extends State<StorageManagement> {
         ..name = name
         ..date = date
         ..code = code;
-      if (storageController.action == StorageManagementAction.edit.name.obs) {
-        await widget.service.updateStorageItem(item, storageController.currentId);
-        lstStorageItemModification.add(StorageItemModification()
-          ..id = storageController.currentId
-          ..action = StorageManagementAction.edit
-          ..item = item);
-      } else {
-        int addedItemId = await widget.service.saveNewStorageItem(item);
-        item.id = addedItemId;
-        lstStorageItemModification.add(StorageItemModification()
-          ..id = addedItemId
-          ..action = StorageManagementAction.add
-          ..item = item);
-        _formKey.currentState!.reset();
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(storageController.action.string == "add"
-              ? "New storage item added"
-              : "Storage item edited"),
-        ),
+      await _saveUpdate(item).then(
+        (res) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(storageController.action.string == "add"
+                  ? "New storage item added"
+                  : "Storage item edited"),
+            ),
+          );
+        },
       );
     }
   }
@@ -225,16 +249,7 @@ class _StorageManagementState extends State<StorageManagement> {
                         child: IconButton(
                           color: Colors.amber,
                           icon: const Icon(Icons.delete),
-                          onPressed: () async {
-                            await widget.service
-                                .deleteStorageItem(storageController.currentId);
-                            lstStorageItemModification
-                                .add(StorageItemModification()
-                                  ..id = storageController.currentId
-                                  ..action = StorageManagementAction.delete
-                                  ..item = null);
-                            Navigator.pop(context, lstStorageItemModification);
-                          },
+                          onPressed: () async => await delete(),
                         ),
                       ),
                     ],
