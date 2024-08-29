@@ -196,8 +196,8 @@ class _StorageManagementState extends State<StorageManagement> {
                                     item, storageController.currentId);
                               } else {
                                 widget.service.saveNewStorageItem(item);
+                                _formKey.currentState!.reset();
                               }
-                              _formKey.currentState!.reset();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
