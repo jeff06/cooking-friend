@@ -48,7 +48,7 @@ class _MainWrapperState extends State<MainWrapper> {
           },
           selectedIndex: _selectedIndex,
           destinations: const <NavigationDestination>[
-            NavigationDestination(icon: Icon(Icons.kitchen), label: "Ingredients"),
+            NavigationDestination(icon: Icon(Icons.kitchen), label: "Storage"),
             NavigationDestination(icon: Icon(Icons.fastfood), label: "Recipe"),
             NavigationDestination(icon: Icon(Icons.receipt), label: "Shopping list"),
 

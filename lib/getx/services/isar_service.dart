@@ -23,7 +23,18 @@ class IsarService {
   Future<void> updateStorageItem(StorageItem storageItem, int currentId) async {
     final isar = await db;
     storageItem.id = currentId;
-    isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));
+    await isar.writeTxn(() async {
+      await isar.storageItems.put(storageItem);
+    });
+  }
+
+  Future<bool> deleteStorageItem(int currentId) async {
+    final isar = await db;
+    return await isar.writeTxn(
+      () async {
+        return await isar.storageItems.delete(currentId);
+      },
+    );
   }
 
   Future<void> cleanDb() async {

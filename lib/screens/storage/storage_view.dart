@@ -58,7 +58,7 @@ class _StorageViewState extends State<StorageView> {
           )
         ],
         title: const Text(
-          "Ingredients",
+          "Storage",
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color.fromARGB(255, 210, 52, 52),
@@ -68,7 +68,7 @@ class _StorageViewState extends State<StorageView> {
           TextField(
             onChanged: (newVal) {
               setState(
-                    () {
+                () {
                   currentSearchString = newVal;
                 },
               );
@@ -76,38 +76,37 @@ class _StorageViewState extends State<StorageView> {
             },
           ),
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () => refreshList(),
-              child: SingleChildScrollView(
-                physics: const ScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: FutureBuilder<List<StorageItem?>>(
-                    future: storageItemToDisplay,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.all(8),
-                              itemCount: snapshot.data?.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                String name =
-                                snapshot.data![index]!.name.toString();
-                                String date =
-                                snapshot.data![index]!.date.toString();
-                                int id = snapshot.data![index]!.id;
-                                return Card(
-                                  child: InkWell(
-                                    onTap: () {
-                                      storageController.updateSelectedId(id);
-                                      storageController.updateAction(StorageManagementAction.view);
-                                      Navigator.pushNamed(
-                                          context, "/storageView");
-                                    },
-                                    child: Column(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: FutureBuilder<List<StorageItem?>>(
+                future: storageItemToDisplay,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RefreshIndicator(
+                        onRefresh: () => refreshList(),
+                        child: ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(8),
+                            itemCount: snapshot.data?.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              String name =
+                                  snapshot.data![index]!.name.toString();
+                              String date =
+                                  snapshot.data![index]!.date.toString();
+                              int id = snapshot.data![index]!.id;
+                              return Card(
+                                child: InkWell(
+                                  onTap: () {
+                                    storageController.updateSelectedId(id);
+                                    storageController.updateAction(
+                                        StorageManagementAction.view);
+                                    Navigator.pushNamed(
+                                        context, "/storageView");
+                                  },
+                                  child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       ListTile(
@@ -117,14 +116,14 @@ class _StorageViewState extends State<StorageView> {
                                       ),
                                     ],
                                   ),
-                                ),);
-                              }),
-                        );
-                      }
-                      return Container();
-                    },
-                  ),
-                ),
+                                ),
+                              );
+                            }),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
               ),
             ),
           ),

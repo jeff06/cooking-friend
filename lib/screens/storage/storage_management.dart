@@ -74,7 +74,7 @@ class _StorageManagementState extends State<StorageManagement> {
         ),
         title: Obx(
           () => Text(
-            "${storageController.action.string} ingredient",
+            "${storageController.action.string} storage item",
             style: const TextStyle(color: Colors.white),
           ),
         ),
@@ -197,15 +197,30 @@ class _StorageManagementState extends State<StorageManagement> {
                                 SnackBar(
                                   content: Text(
                                       storageController.action.string == "add"
-                                          ? "New item added"
-                                          : "Item edited"),
+                                          ? "New storage item added"
+                                          : "Storage item edited"),
                                 ),
                               );
                             }
                           },
                           child: const Text('Save'),
                         ),
-                      )
+                      ),
+                      Visibility(
+                        visible: storageController.action ==
+                                StorageManagementAction.add.name.obs ||
+                            storageController.action ==
+                                StorageManagementAction.edit.name.obs,
+                        child: IconButton(
+                          color: Colors.amber,
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            widget.service
+                                .deleteStorageItem(storageController.currentId);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
