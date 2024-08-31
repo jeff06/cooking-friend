@@ -4,6 +4,7 @@ import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
 import 'package:cooking_friend/getx/models/storage_item.dart';
 import 'package:cooking_friend/getx/models/storage_item_modification.dart';
+import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -52,6 +53,7 @@ class _StorageViewState extends State<StorageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         actions: <Widget>[
           IconButton(
             icon: const Icon(
@@ -66,25 +68,37 @@ class _StorageViewState extends State<StorageView> {
         ],
         title: const Text(
           "Storage",
-          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: const Color.fromARGB(255, 210, 52, 52),
       ),
       body: Column(
         children: [
-          TextField(
-            onChanged: (newVal) {
-              setState(
-                () {
-                  currentSearchString = newVal;
-                },
-              );
-              refreshList();
-            },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+            child: TextField(
+              onChanged: (newVal) {
+                setState(
+                      () {
+                    currentSearchString = newVal;
+                  },
+                );
+                refreshList();
+              },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: CustomTheme.searchBarBackground,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  borderSide: BorderSide.none,
+                ),
+                hintText: "Search for Items",
+                prefixIcon: const Icon(Icons.search),
+                prefixIconColor: Colors.black,
+              ),
+            ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
               child: FutureBuilder<List<StorageItem>>(
                 future: storageItemToDisplay,
                 builder: (context, snapshot) {
@@ -113,6 +127,7 @@ class _StorageViewState extends State<StorageView> {
                                 int id =
                                     storageController.lstStorageItem[index].id;
                                 return Card(
+                                  color: Theme.of(context).cardTheme.color,
                                   child: InkWell(
                                     onTap: () async {
                                       await storageController

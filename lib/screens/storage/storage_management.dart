@@ -145,7 +145,6 @@ class _StorageManagementState extends State<StorageManagement> {
             style: const TextStyle(color: Colors.white),
           ),
         ),
-        backgroundColor: const Color.fromARGB(255, 210, 52, 52),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
