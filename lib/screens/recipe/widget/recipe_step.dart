@@ -5,7 +5,9 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 
 class RecipeStep extends StatefulWidget {
-  const RecipeStep({super.key});
+  final int index;
+
+  const RecipeStep(this.index, {super.key});
 
   @override
   State<RecipeStep> createState() => _RecipeStepState();
@@ -22,7 +24,7 @@ class _RecipeStepState extends State<RecipeStep> {
         children: [
           Expanded(
             child: FormBuilderTextField(
-              name: "recipe_step",
+              name: "recipe_step_${widget.index}",
               validator: FormBuilderValidators.compose(
                 [
                   FormBuilderValidators.required(),
@@ -34,7 +36,7 @@ class _RecipeStepState extends State<RecipeStep> {
             color: Colors.amber,
             icon: const Icon(Icons.add),
             onPressed: () {
-              controller.addEmptySteps();
+              controller.addEmptySteps(widget.index + 1);
             },
           ),
         ],

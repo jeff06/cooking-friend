@@ -4,7 +4,7 @@ import 'package:cooking_friend/screens/support/barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import '../models/storage_item_displayed.dart';
+import '../models/storage_item_modification.dart';
 
 class StorageController extends GetxController {
   var barcode = "".obs;
@@ -30,7 +30,7 @@ class StorageController extends GetxController {
           break;
         case StorageManagementAction.edit:
           lstStorageItem[lstStorageItem.indexWhere((x) => x.id == v.id)] =
-              v.item!;
+          v.item!;
           break;
         case StorageManagementAction.none:
           break;
@@ -51,7 +51,7 @@ class StorageController extends GetxController {
   navigateAndDisplaySelection(
       BuildContext context, TextEditingController textController) async {
     final String? cameraScanResult = await Get.to(
-      () => const BarcodeScanner(),
+          () => const BarcodeScanner(),
       preventDuplicates: false,
       fullscreenDialog: true,
     );

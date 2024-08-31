@@ -2,9 +2,9 @@ import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart';
 import 'package:get/get.dart';
 
 class RecipeController extends GetxController {
-  var steps = <RecipeStep>[const RecipeStep()].obs;
+  var steps = <RecipeStep>[const RecipeStep(0)].obs;
 
-  addEmptySteps() {
-    steps.add(const RecipeStep());
+  addEmptySteps(int index) {
+    steps.add(RecipeStep(index));
   }
 }
