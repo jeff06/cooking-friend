@@ -33,15 +33,18 @@ class _RecipeManagementState extends State<RecipeManagement> {
               Expanded(
                 child: Obx(
                   () => ListView.builder(
-                      itemCount: controller.steps.length,
+                    itemCount: controller.steps.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        color: Theme.of(context).cardTheme.color,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            controller.steps[index],
-                          ],
+                      return Offstage(
+                        offstage: !controller.steps[index].isVisible,
+                        child: Card(
+                          color: Theme.of(context).cardTheme.color,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              controller.steps[index],
+                            ],
+                          ),
                         ),
                       );
                     },

@@ -6,8 +6,9 @@ import 'package:get/get.dart';
 
 class RecipeStep extends StatefulWidget {
   final int index;
+  final bool isVisible;
 
-  const RecipeStep(this.index, {super.key});
+  const RecipeStep(this.index, this.isVisible, {super.key});
 
   @override
   State<RecipeStep> createState() => _RecipeStepState();
@@ -18,29 +19,31 @@ class _RecipeStepState extends State<RecipeStep> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: FormBuilderTextField(
-              name: "recipe_step_${widget.index}",
-              validator: FormBuilderValidators.compose(
-                [
-                  FormBuilderValidators.required(),
-                ],
-              ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          child: FormBuilderTextField(
+            onChanged: (newVal) =>
+                controller.manageEmptyStep(widget.index, newVal),
+            name: "recipe_step_${widget.index}",
+            validator: FormBuilderValidators.compose(
+              [
+                widget.isVisible
+                    ? FormBuilderValidators.required()
+                    : FormBuilderValidators.equal(""),
+              ],
             ),
           ),
-          IconButton(
-            color: Colors.amber,
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              controller.addEmptySteps(widget.index + 1);
-            },
-          ),
-        ],
-      ),
+        ),
+        /*IconButton(
+          color: Colors.amber,
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            controller.addEmptySteps(widget.index + 1);
+          },
+        ),*/
+      ],
     );
   }
 }
