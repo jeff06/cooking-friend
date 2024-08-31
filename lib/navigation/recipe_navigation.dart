@@ -1,6 +1,5 @@
-import 'package:cooking_friend/screens/recipe/recipe_add.dart';
-import 'package:cooking_friend/screens/recipe/recipe_view_all.dart';
-import 'package:cooking_friend/screens/recipe/recipe_view_one.dart';
+import 'package:cooking_friend/screens/recipe/recipe_management.dart';
+import 'package:cooking_friend/screens/recipe/recipe_view.dart';
 import 'package:flutter/material.dart';
 
 import '../getx/services/isar_service.dart';
@@ -23,14 +22,10 @@ class _RecipeNavigationState extends State<RecipeNavigation> {
       key: recipeNavigatorKey,
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(builder: (BuildContext context) {
-          if (settings.name == "/recipeAdd") {
-            return const RecipeAdd();
+          if (settings.name != "/recipeAdd") {
+            return RecipeManagement(widget.service);
           }
-          else if (settings.name == "/recipeViewOne")
-            {
-              return const RecipeViewOne();
-            }
-          return const RecipeViewAll();
+          return const RecipeView();
         });
       },
     );
