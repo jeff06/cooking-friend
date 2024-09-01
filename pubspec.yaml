@@ -20,6 +20,7 @@ dependencies:
   mobile_scanner: ^5.2.1
   get: ^4.6.6
   flutter_spinkit: ^5.2.1
+  uuid: ^4.5.0
 
 dev_dependencies:
   flutter_test:

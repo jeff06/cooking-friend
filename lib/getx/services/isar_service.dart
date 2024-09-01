@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../models/storage_item.dart';
+import '../models/storage/storage_item.dart';
 
 class IsarService {
   late Future<Isar> db;

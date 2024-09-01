@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class RecipeStep extends StatefulWidget {
-  final int index;
-  final bool isVisible;
+  final String guid = const Uuid().v4();
 
-  const RecipeStep(this.index, this.isVisible, {super.key});
+  RecipeStep({super.key});
 
   @override
   State<RecipeStep> createState() => _RecipeStepState();
@@ -19,31 +19,40 @@ class _RecipeStepState extends State<RecipeStep> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Expanded(
-          child: FormBuilderTextField(
-            onChanged: (newVal) =>
-                controller.manageEmptyStep(widget.index, newVal),
-            name: "recipe_step_${widget.index}",
-            validator: FormBuilderValidators.compose(
-              [
-                widget.isVisible
-                    ? FormBuilderValidators.required()
-                    : FormBuilderValidators.equal(""),
-              ],
+    return Card(
+      color: Theme.of(context).cardTheme.color,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Obx(
+            () => Visibility(
+              visible: controller.steps.length > 1,
+              child: IconButton(
+                color: Colors.amber,
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  controller.hideStep(widget.guid);
+                },
+              ),
             ),
           ),
-        ),
-        /*IconButton(
-          color: Colors.amber,
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            controller.addEmptySteps(widget.index + 1);
-          },
-        ),*/
-      ],
+          Expanded(
+            child: FormBuilderTextField(
+              name: "rs_${widget.guid}",
+              validator: FormBuilderValidators.compose(
+                [FormBuilderValidators.required()],
+              ),
+            ),
+          ),
+          IconButton(
+            color: Colors.amber,
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              controller.addEmptyStep(widget.guid);
+            },
+          ),
+        ],
+      ),
     );
   }
 }

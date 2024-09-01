@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
-import 'package:cooking_friend/getx/models/storage_item.dart';
-import 'package:cooking_friend/getx/models/storage_item_modification.dart';
+import 'package:cooking_friend/getx/models/storage/storage_item.dart';
+import 'package:cooking_friend/getx/models/storage/storage_item_modification.dart';
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

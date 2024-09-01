@@ -17,11 +17,26 @@ class _RecipeManagementState extends State<RecipeManagement> {
   final _formKey = GlobalKey<FormBuilderState>();
   final RecipeController controller = Get.find<RecipeController>();
 
+  _save() {
+    if (_formKey.currentState!.saveAndValidate()) {
+      for (var v in controller.steps) {
+        var content = _formKey.currentState?.value["rs_${v.guid}"];
+        print(content);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("add recipe"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _save();
+        },
+        child: const Icon(Icons.save),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -32,23 +47,20 @@ class _RecipeManagementState extends State<RecipeManagement> {
               const SizedBox(height: 10),
               Expanded(
                 child: Obx(
-                  () => ListView.builder(
-                    itemCount: controller.steps.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Offstage(
-                        offstage: !controller.steps[index].isVisible,
-                        child: Card(
-                          color: Theme.of(context).cardTheme.color,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              controller.steps[index],
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                      () =>
+                      ReorderableListView.builder(
+                        onReorder: (int oldIndex, int newIndex) {
+                          if (newIndex > oldIndex) newIndex--;
+                          final step = controller.steps.removeAt(oldIndex);
+                          controller.steps.insert(newIndex, step);
+                        },
+                        itemCount: controller.steps.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var element = controller.steps[index];
+                          return Container(key: ValueKey(element),
+                              child: element);
+                        },
+                      ),
                 ),
               ),
             ],
