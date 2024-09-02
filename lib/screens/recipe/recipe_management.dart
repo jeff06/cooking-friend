@@ -2,6 +2,7 @@ import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 
 class RecipeManagement extends StatefulWidget {
@@ -45,6 +46,16 @@ class _RecipeManagementState extends State<RecipeManagement> {
           child: Column(
             children: [
               const SizedBox(height: 10),
+              Expanded(
+                child: FormBuilderTextField(
+                  name: "recipe_title",
+                  validator: FormBuilderValidators.compose(
+                    [
+                      FormBuilderValidators.required(),
+                    ],
+                  ),
+                ),
+              ),
               const Text("Steps"),
               Expanded(
                 child: Obx(

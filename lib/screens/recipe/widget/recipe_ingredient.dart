@@ -74,7 +74,9 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
             child: FormBuilderTextField(
               name: "riq_${widget.guid}",
               validator: FormBuilderValidators.compose(
-                [FormBuilderValidators.required()],
+                [
+                  FormBuilderValidators.required(),
+                ],
               ),
             ),
           ),
