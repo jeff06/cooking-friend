@@ -50,8 +50,9 @@ class _MainWrapperState extends State<MainWrapper> {
           destinations: const <NavigationDestination>[
             NavigationDestination(icon: Icon(Icons.kitchen), label: "Storage"),
             NavigationDestination(icon: Icon(Icons.fastfood), label: "Recipe"),
-            NavigationDestination(icon: Icon(Icons.receipt), label: "Shopping list"),
-
+            NavigationDestination(
+                icon: Icon(Icons.receipt), label: "Shopping list"),
+            //NavigationDestination(icon: Icon(Icons.menu), label: "Menu of the week")
           ],
         ),
         body: SafeArea(

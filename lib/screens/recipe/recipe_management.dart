@@ -45,22 +45,38 @@ class _RecipeManagementState extends State<RecipeManagement> {
           child: Column(
             children: [
               const SizedBox(height: 10),
+              const Text("Steps"),
               Expanded(
                 child: Obx(
-                      () =>
-                      ReorderableListView.builder(
-                        onReorder: (int oldIndex, int newIndex) {
-                          if (newIndex > oldIndex) newIndex--;
-                          final step = controller.steps.removeAt(oldIndex);
-                          controller.steps.insert(newIndex, step);
-                        },
-                        itemCount: controller.steps.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          var element = controller.steps[index];
-                          return Container(key: ValueKey(element),
-                              child: element);
-                        },
-                      ),
+                  () => ReorderableListView.builder(
+                    onReorder: (int oldIndex, int newIndex) {
+                      if (newIndex > oldIndex) newIndex--;
+                      final step = controller.steps.removeAt(oldIndex);
+                      controller.steps.insert(newIndex, step);
+                    },
+                    itemCount: controller.steps.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var element = controller.steps[index];
+                      return Container(key: ValueKey(element), child: element);
+                    },
+                  ),
+                ),
+              ),
+              const Text("Ingredients"),
+              Expanded(
+                child: Obx(
+                  () => ReorderableListView.builder(
+                    onReorder: (int oldIndex, int newIndex) {
+                      if (newIndex > oldIndex) newIndex--;
+                      final step = controller.ingredients.removeAt(oldIndex);
+                      controller.ingredients.insert(newIndex, step);
+                    },
+                    itemCount: controller.ingredients.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var element = controller.ingredients[index];
+                      return Container(key: ValueKey(element), child: element);
+                    },
+                  ),
                 ),
               ),
             ],
