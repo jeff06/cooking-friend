@@ -1,3 +1,4 @@
+import 'package:cooking_friend/getx/models/recipe/recipe.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -18,6 +19,11 @@ class IsarService {
   Future<int> saveNewStorageItem(StorageItem storageItem) async {
     final isar = await db;
     return isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));
+  }
+
+  Future<int> saveNewRecipe(Recipe recipe) async {
+    final isar = await db;
+    return isar.writeTxnSync<int>(() => isar.recipes.putSync(recipe));
   }
 
   Future<int> updateStorageItem(StorageItem storageItem, int currentId) async {

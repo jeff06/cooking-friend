@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:cooking_friend/constants.dart';
 
 class RecipeIngredient extends StatefulWidget {
   final String guid = const Uuid().v4();
@@ -16,40 +17,6 @@ class RecipeIngredient extends StatefulWidget {
 
 class _RecipeIngredientState extends State<RecipeIngredient> {
   final RecipeController controller = Get.find<RecipeController>();
-  final List<DropdownMenuItem> measurementUnits = const [
-    DropdownMenuItem(
-      value: "cup",
-      child: Text("CUP"),
-    ),
-    DropdownMenuItem(
-      value: "g",
-      child: Text("G"),
-    ),
-    DropdownMenuItem(
-      value: "l",
-      child: Text("L"),
-    ),
-    DropdownMenuItem(
-      value: "lbs",
-      child: Text("LBS"),
-    ),
-    DropdownMenuItem(
-      value: "ml",
-      child: Text("ML"),
-    ),
-    DropdownMenuItem(
-      value: "tbs",
-      child: Text("TBS"),
-    ),
-    DropdownMenuItem(
-      value: "tsp",
-      child: Text("tsp"),
-    ),
-    DropdownMenuItem(
-      value: "unit",
-      child: Text("Unit"),
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
