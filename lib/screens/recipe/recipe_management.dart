@@ -1,8 +1,6 @@
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe_step.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
+import 'package:cooking_friend/getx/services/recipe_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -20,23 +18,8 @@ class RecipeManagement extends StatefulWidget {
 class _RecipeManagementState extends State<RecipeManagement> {
   final _formKey = GlobalKey<FormBuilderState>();
   final RecipeController controller = Get.find<RecipeController>();
-
-  _save() {
-    if (_formKey.currentState!.saveAndValidate()) {
-      Recipe newRecipe = Recipe()
-        ..name = _formKey.currentState?.value["recipe_title"];
-      for (var v in controller.steps) {
-        var content = _formKey.currentState?.value["rs_${v.guid}"];
-        newRecipe.steps.add(RecipeStep()..step = content);
-      }
-
-      for(var v in controller.ingredients){
-        var content = _formKey.currentState?.value["rs_${v.guid}"];
-        RecipeIngredient ri = RecipeIngredient();
-        newRecipe.ingredients.add();
-      }
-    }
-  }
+  late final RecipeService _storageService =
+      RecipeService(controller, widget.service);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +29,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _save();
+          _storageService.save(_formKey, context);
         },
         child: const Icon(Icons.save),
       ),
