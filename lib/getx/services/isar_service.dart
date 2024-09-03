@@ -1,4 +1,6 @@
 import 'package:cooking_friend/getx/models/recipe/recipe.dart';
+import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart';
+import 'package:cooking_friend/getx/models/recipe/recipe_step.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -65,7 +67,12 @@ class IsarService {
     if (Isar.instanceNames.isEmpty) {
       final dir = await getApplicationDocumentsDirectory();
       return await Isar.open(
-        [StorageItemSchema],
+        [
+          StorageItemSchema,
+          RecipeSchema,
+          RecipeIngredientSchema,
+          RecipeStepSchema
+        ],
         inspector: true,
         directory: dir.path,
       );

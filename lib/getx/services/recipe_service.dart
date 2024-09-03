@@ -5,6 +5,7 @@ import 'package:cooking_friend/getx/models/recipe/recipe_step.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:isar/isar.dart';
 
 class RecipeService {
   final RecipeController controller;
@@ -25,7 +26,7 @@ class RecipeService {
         RecipeIngredient ri = RecipeIngredient();
         ri.ingredient = formKey.currentState?.value["ri_${v.guid}"];
         ri.measuringUnit = formKey.currentState?.value["riu_${v.guid}"];
-        ri.quantity = formKey.currentState?.value["riq_${v.guid}"];
+        ri.quantity = float.parse(formKey.currentState?.value["riq_${v.guid}"]);
         newRecipe.ingredients.add(ri);
       }
 

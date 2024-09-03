@@ -39,6 +39,8 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
           ),
           Expanded(
             child: FormBuilderTextField(
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               name: "riq_${widget.guid}",
               validator: FormBuilderValidators.compose(
                 [
