@@ -26,6 +26,12 @@ class StorageService {
     );
   }
 
+  Future<void> updateList(String path, BuildContext context) async {
+    var listReturned = await Navigator.pushNamed(context, path);
+    storageController.modifyLstStorageItemDisplayed(
+        listReturned as List<StorageItemModification>);
+  }
+
   Future<void> _saveUpdate(
       StorageItem item,
       List<StorageItemModification> lstStorageItemModification,

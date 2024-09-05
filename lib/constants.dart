@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 enum StorageManagementAction { add, view, edit, none, delete }
+enum RecipeManagementAction { add, view, edit, none, delete }
 const List<DropdownMenuItem> measurementUnits = [
   DropdownMenuItem(
     value: "cup",

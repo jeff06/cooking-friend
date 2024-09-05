@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
 import 'package:cooking_friend/getx/models/storage/storage_item.dart';
-import 'package:cooking_friend/getx/models/storage/storage_item_modification.dart';
+import 'package:cooking_friend/getx/services/storage_service.dart';
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,6 +22,8 @@ class StorageView extends StatefulWidget {
 class _StorageViewState extends State<StorageView> {
   String currentSearchString = "";
   final StorageController storageController = Get.find<StorageController>();
+  late final StorageService storageService =
+      StorageService(storageController, widget.service);
   Future<List<StorageItem>> storageItemToDisplay =
       Completer<List<StorageItem>>().future;
 
@@ -43,12 +45,6 @@ class _StorageViewState extends State<StorageView> {
     });
   }
 
-  Future<void> updateList(String path) async {
-    var listReturned = await Navigator.pushNamed(context, path);
-    storageController.modifyLstStorageItemDisplayed(
-        listReturned as List<StorageItemModification>);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +58,7 @@ class _StorageViewState extends State<StorageView> {
             ),
             onPressed: () async {
               storageController.updateAction(StorageManagementAction.add);
-              await updateList("/storageAdd");
+              await storageService.updateList("/storageAdd", context);
             },
           )
         ],
@@ -77,7 +73,7 @@ class _StorageViewState extends State<StorageView> {
             child: TextField(
               onChanged: (newVal) {
                 setState(
-                      () {
+                  () {
                     currentSearchString = newVal;
                   },
                 );
@@ -111,12 +107,12 @@ class _StorageViewState extends State<StorageView> {
                       child: RefreshIndicator(
                         onRefresh: () => refreshList(),
                         child: Obx(
-                              () => ListView.builder(
+                          () => ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,
                               padding: const EdgeInsets.all(8),
                               itemCount:
-                              storageController.lstStorageItem.length,
+                                  storageController.lstStorageItem.length,
                               itemBuilder: (BuildContext context, int index) {
                                 String name = storageController
                                     .lstStorageItem[index].name
@@ -131,10 +127,16 @@ class _StorageViewState extends State<StorageView> {
                                   child: InkWell(
                                     onTap: () async {
                                       await storageController
-                                          .updateSelectedId(id);
-                                      await storageController.updateAction(
-                                          StorageManagementAction.view);
-                                      await updateList("/storageView");
+                                          .updateSelectedId(id)
+                                          .then((res) async {
+                                        await storageController
+                                            .updateAction(
+                                                StorageManagementAction.view)
+                                            .then((resp) async {
+                                          await storageService.updateList(
+                                              "/storageManagement", context);
+                                        });
+                                      });
                                     },
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,

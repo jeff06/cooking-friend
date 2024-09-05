@@ -22,10 +22,7 @@ class _StorageNavigationState extends State<StorageNavigation> {
       key: storageNavigatorKey,
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(builder: (BuildContext context) {
-          if (settings.name == "/storageAdd") {
-            return StorageManagement(widget.service);
-          }
-          else if (settings.name == "/storageView") {
+          if (settings.name == "/storageAdd" || settings.name == "/storageManagement") {
             return StorageManagement(widget.service);
           }
           return StorageView(widget.service);

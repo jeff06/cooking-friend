@@ -22,10 +22,10 @@ class _RecipeNavigationState extends State<RecipeNavigation> {
       key: recipeNavigatorKey,
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(builder: (BuildContext context) {
-          if (settings.name != "/recipeAdd") {
+          if (settings.name == "/recipeAdd" || settings.name == "/recipeManagement") {
             return RecipeManagement(widget.service);
           }
-          return const RecipeView();
+          return RecipeView(widget.service);
         });
       },
     );

@@ -1,4 +1,6 @@
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
+import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart'
+    as ri_model;
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -8,8 +10,10 @@ import 'package:cooking_friend/constants.dart';
 
 class RecipeIngredient extends StatefulWidget {
   final String guid = const Uuid().v4();
+  final ri_model.RecipeIngredient? ingredient;
+  final bool enable;
 
-  RecipeIngredient({super.key});
+  RecipeIngredient(this.ingredient, this.enable, {super.key});
 
   @override
   State<RecipeIngredient> createState() => _RecipeIngredientState();
@@ -27,7 +31,7 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
         children: [
           Obx(
             () => Visibility(
-              visible: controller.steps.length > 1,
+              visible: controller.ingredients.length > 1,
               child: IconButton(
                 color: Colors.amber,
                 icon: const Icon(Icons.delete),
@@ -39,6 +43,10 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
           ),
           Expanded(
             child: FormBuilderTextField(
+              enabled: widget.enable,
+              initialValue: widget.ingredient == null
+                  ? ""
+                  : widget.ingredient!.quantity.toString(),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               name: "riq_${widget.guid}",
@@ -51,12 +59,20 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
           ),
           Expanded(
             child: FormBuilderDropdown(
+              enabled: widget.enable,
+              initialValue: widget.ingredient == null
+                  ? ""
+                  : widget.ingredient!.measuringUnit.toString(),
               name: "riu_${widget.guid}",
               items: measurementUnits,
             ),
           ),
           Expanded(
             child: FormBuilderTextField(
+              enabled: widget.enable,
+              initialValue: widget.ingredient == null
+                  ? ""
+                  : widget.ingredient!.ingredient.toString(),
               name: "ri_${widget.guid}",
               validator: FormBuilderValidators.compose(
                 [FormBuilderValidators.required()],
@@ -66,9 +82,7 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
           IconButton(
             color: Colors.amber,
             icon: const Icon(Icons.add),
-            onPressed: () {
-              controller.addEmptyIngredient(widget.guid);
-            },
+            onPressed: widget.enable ? () => controller.addEmptyIngredient(widget.guid) : null,
           ),
         ],
       ),

@@ -7,8 +7,10 @@ import 'package:uuid/uuid.dart';
 
 class RecipeStep extends StatefulWidget {
   final String guid = const Uuid().v4();
+  final TextEditingController? tec;
+  final bool enable;
 
-  RecipeStep({super.key});
+  RecipeStep(this.tec, this.enable, {super.key});
 
   @override
   State<RecipeStep> createState() => _RecipeStepState();
@@ -38,7 +40,9 @@ class _RecipeStepState extends State<RecipeStep> {
           ),
           Expanded(
             child: FormBuilderTextField(
+              enabled: widget.enable,
               name: "rs_${widget.guid}",
+              controller: widget.tec,
               validator: FormBuilderValidators.compose(
                 [FormBuilderValidators.required()],
               ),
@@ -47,9 +51,9 @@ class _RecipeStepState extends State<RecipeStep> {
           IconButton(
             color: Colors.amber,
             icon: const Icon(Icons.add),
-            onPressed: () {
-              controller.addEmptyStep(widget.guid);
-            },
+            onPressed: widget.enable
+                ? () => controller.addEmptyStep(widget.guid)
+                : null,
           ),
         ],
       ),

@@ -18,6 +18,11 @@ class IsarService {
     return await isar.storageItems.filter().idEqualTo(id).findFirst();
   }
 
+  Future<Recipe?> getSingleRecipe(int id) async {
+    final isar = await db;
+    return await isar.recipes.filter().idEqualTo(id).findFirst();
+  }
+
   Future<int> saveNewStorageItem(StorageItem storageItem) async {
     final isar = await db;
     return isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));
@@ -61,6 +66,15 @@ class IsarService {
           .findAll();
     }
     return await isar.storageItems.filter().nameIsNotEmpty().findAll();
+  }
+
+  Future<List<Recipe>> getAllRecipeByFilter(String currentFilter) async {
+    final isar = await db;
+
+    if (currentFilter != "") {
+      return await isar.recipes.filter().nameContains(currentFilter).findAll();
+    }
+    return await isar.recipes.filter().nameIsNotEmpty().findAll();
   }
 
   Future<Isar> openDB() async {

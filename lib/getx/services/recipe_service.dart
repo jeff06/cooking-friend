@@ -1,6 +1,7 @@
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart';
+import 'package:cooking_friend/getx/models/recipe/recipe_modification.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe_step.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,12 @@ class RecipeService {
   final IsarService isarService;
 
   RecipeService(this.controller, this.isarService);
+
+  Future<void> updateList(String path, BuildContext context) async {
+    var listReturned = await Navigator.pushNamed(context, path);
+    controller.modifyLstStorageItemDisplayed(
+        listReturned as List<RecipeModification>);
+  }
 
   save(GlobalKey<FormBuilderState> formKey, BuildContext context) async {
     if (formKey.currentState!.saveAndValidate()) {
