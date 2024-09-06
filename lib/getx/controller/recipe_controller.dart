@@ -12,9 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RecipeController extends GetxController {
-  var steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, true)].obs;
+  var steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null)].obs;
   var ingredients =
-      <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null, true)].obs;
+      <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
   int currentId = -1;
   var action = RecipeManagementAction.none.name.obs;
   var lstRecipe = <Recipe>[].obs;
@@ -24,27 +24,23 @@ class RecipeController extends GetxController {
   }
 
   updateLstRecipeStepsDisplayed(List<rs_model.RecipeStep> newRecipeSteps) {
-    bool enable = true;
     if (action != RecipeManagementAction.add.name.obs) {
       steps = <rs_widget.RecipeStep>[].obs;
-      enable = false;
     }
     for (var step in newRecipeSteps) {
       TextEditingController tec = TextEditingController();
       tec.text = step.step!;
-      steps.add(rs_widget.RecipeStep(tec, enable));
+      steps.add(rs_widget.RecipeStep(tec));
     }
   }
 
   updateLstRecipeIngredientsDisplayed(
       List<ri_model.RecipeIngredient> newRecipeIngredients) {
-    bool enable = true;
     if (action != RecipeManagementAction.add.name.obs) {
       ingredients = <ri_widget.RecipeIngredient>[].obs;
-      enable = false;
     }
     for (var ingredient in newRecipeIngredients) {
-      ingredients.add(ri_widget.RecipeIngredient(ingredient, enable));
+      ingredients.add(ri_widget.RecipeIngredient(ingredient));
     }
   }
 
@@ -81,7 +77,7 @@ class RecipeController extends GetxController {
 
   addEmptyStep(String guid) {
     int indexToInsert = steps.indexWhere((x) => x.guid == guid);
-    steps.insert(indexToInsert + 1, rs_widget.RecipeStep(null, true));
+    steps.insert(indexToInsert + 1, rs_widget.RecipeStep(null));
   }
 
   removeStep(String guid) {
@@ -90,7 +86,7 @@ class RecipeController extends GetxController {
 
   addEmptyIngredient(String guid) {
     int indexToInsert = ingredients.indexWhere((x) => x.guid == guid);
-    ingredients.insert(indexToInsert + 1, ri_widget.RecipeIngredient(null, true));
+    ingredients.insert(indexToInsert + 1, ri_widget.RecipeIngredient(null));
   }
 
   removeIngredient(String guid) {

@@ -45,6 +45,32 @@ class _RecipeManagementState extends State<RecipeManagement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions:
+            recipeController.action != RecipeManagementAction.add.name.obs
+                ? <Widget>[
+                    Obx(
+                      () => IconButton(
+                        icon: Icon(
+                          recipeController.action ==
+                              RecipeManagementAction.view.name.obs
+                              ? Icons.edit
+                              : Icons.edit_outlined,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          if (recipeController.action ==
+                              RecipeManagementAction.view.name.obs) {
+                            recipeController
+                                .updateAction(RecipeManagementAction.edit);
+                          } else {
+                            recipeController
+                                .updateAction(RecipeManagementAction.view);
+                          }
+                        },
+                      ),
+                    )
+                  ]
+                : [],
         title: const Text("add recipe"),
       ),
       floatingActionButton: FloatingActionButton(
@@ -78,7 +104,9 @@ class _RecipeManagementState extends State<RecipeManagement> {
                           name: "recipe_title",
                           controller: _recipeTitleController,
                           enabled: recipeController.action ==
-                              RecipeManagementAction.view.name.obs,
+                              StorageManagementAction.view.name.obs
+                              ? false
+                              : true,
                           validator: FormBuilderValidators.compose(
                             [
                               FormBuilderValidators.required(),

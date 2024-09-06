@@ -11,9 +11,8 @@ import 'package:cooking_friend/constants.dart';
 class RecipeIngredient extends StatefulWidget {
   final String guid = const Uuid().v4();
   final ri_model.RecipeIngredient? ingredient;
-  final bool enable;
 
-  RecipeIngredient(this.ingredient, this.enable, {super.key});
+  RecipeIngredient(this.ingredient, {super.key});
 
   @override
   State<RecipeIngredient> createState() => _RecipeIngredientState();
@@ -24,14 +23,14 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Theme.of(context).cardTheme.color,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Obx(
-            () => Visibility(
-              visible: controller.ingredients.length > 1,
+    return Obx(
+      () => Card(
+        color: Theme.of(context).cardTheme.color,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Visibility(
+              visible: controller.ingredients.length > 1 && controller.action != RecipeManagementAction.view.name.obs,
               child: IconButton(
                 color: Colors.amber,
                 icon: const Icon(Icons.delete),
@@ -40,51 +39,63 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
                 },
               ),
             ),
-          ),
-          Expanded(
-            child: FormBuilderTextField(
-              enabled: widget.enable,
-              initialValue: widget.ingredient == null
-                  ? ""
-                  : widget.ingredient!.quantity.toString(),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              name: "riq_${widget.guid}",
-              validator: FormBuilderValidators.compose(
-                [
-                  FormBuilderValidators.required(),
-                ],
+            Expanded(
+              child: FormBuilderTextField(
+                enabled:
+                    controller.action == RecipeManagementAction.view.name.obs
+                        ? false
+                        : true,
+                initialValue: widget.ingredient == null
+                    ? ""
+                    : widget.ingredient!.quantity.toString(),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                name: "riq_${widget.guid}",
+                validator: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(),
+                  ],
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: FormBuilderDropdown(
-              enabled: widget.enable,
-              initialValue: widget.ingredient == null
-                  ? ""
-                  : widget.ingredient!.measuringUnit.toString(),
-              name: "riu_${widget.guid}",
-              items: measurementUnits,
-            ),
-          ),
-          Expanded(
-            child: FormBuilderTextField(
-              enabled: widget.enable,
-              initialValue: widget.ingredient == null
-                  ? ""
-                  : widget.ingredient!.ingredient.toString(),
-              name: "ri_${widget.guid}",
-              validator: FormBuilderValidators.compose(
-                [FormBuilderValidators.required()],
+            Expanded(
+              child: FormBuilderDropdown(
+                enabled:
+                    controller.action == RecipeManagementAction.view.name.obs
+                        ? false
+                        : true,
+                initialValue: widget.ingredient == null
+                    ? ""
+                    : widget.ingredient!.measuringUnit.toString(),
+                name: "riu_${widget.guid}",
+                items: measurementUnits,
               ),
             ),
-          ),
-          IconButton(
-            color: Colors.amber,
-            icon: const Icon(Icons.add),
-            onPressed: widget.enable ? () => controller.addEmptyIngredient(widget.guid) : null,
-          ),
-        ],
+            Expanded(
+              child: FormBuilderTextField(
+                enabled:
+                    controller.action == RecipeManagementAction.view.name.obs
+                        ? false
+                        : true,
+                initialValue: widget.ingredient == null
+                    ? ""
+                    : widget.ingredient!.ingredient.toString(),
+                name: "ri_${widget.guid}",
+                validator: FormBuilderValidators.compose(
+                  [FormBuilderValidators.required()],
+                ),
+              ),
+            ),
+            IconButton(
+              color: Colors.amber,
+              icon: const Icon(Icons.add),
+              onPressed:
+                  controller.action == RecipeManagementAction.view.name.obs
+                      ? null
+                      : () => controller.addEmptyIngredient(widget.guid),
+            ),
+          ],
+        ),
       ),
     );
   }
