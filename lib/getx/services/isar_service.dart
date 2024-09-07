@@ -33,6 +33,20 @@ class IsarService {
     return isar.writeTxnSync<int>(() => isar.recipes.putSync(recipe));
   }
 
+  Future<int> updateRecipe(Recipe recipe, int currentId) async {
+    final isar = await db;
+    recipe.id = currentId;
+
+    return isar.writeTxnSync<int>(() {
+      return isar.recipes.putSync(recipe);
+    });
+  }
+
+  Future<int> updateRecipeStep(RecipeStep step) async {
+    final isar = await db;
+    return isar.writeTxnSync<int>(() => isar.recipeSteps.putSync(step));
+  }
+
   Future<int> updateStorageItem(StorageItem storageItem, int currentId) async {
     final isar = await db;
     storageItem.id = currentId;

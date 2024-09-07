@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class RecipeController extends GetxController {
-  var steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null)].obs;
+  var steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
   var ingredients =
       <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
   int currentId = -1;
@@ -30,7 +30,7 @@ class RecipeController extends GetxController {
     for (var step in newRecipeSteps) {
       TextEditingController tec = TextEditingController();
       tec.text = step.step!;
-      steps.add(rs_widget.RecipeStep(tec));
+      steps.add(rs_widget.RecipeStep(tec, step));
     }
   }
 
@@ -77,7 +77,7 @@ class RecipeController extends GetxController {
 
   addEmptyStep(String guid) {
     int indexToInsert = steps.indexWhere((x) => x.guid == guid);
-    steps.insert(indexToInsert + 1, rs_widget.RecipeStep(null));
+    steps.insert(indexToInsert + 1, rs_widget.RecipeStep(null, null));
   }
 
   removeStep(String guid) {

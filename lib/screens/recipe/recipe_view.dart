@@ -21,7 +21,7 @@ class _RecipeViewState extends State<RecipeView> {
   String currentSearchString = "";
   final RecipeController recipeController = Get.find<RecipeController>();
   Future<List<Recipe>> recipeToDisplay = Completer<List<Recipe>>().future;
-  late final RecipeService storageService =
+  late final RecipeService recipeService =
   RecipeService(recipeController, widget.service);
 
   @override
@@ -57,8 +57,8 @@ class _RecipeViewState extends State<RecipeView> {
               color: Colors.white,
             ),
             onPressed: () async {
-              var listReturned =
-              await Navigator.pushNamed(context, "/recipeAdd");
+              recipeController.updateAction(RecipeManagementAction.add);
+              await recipeService.updateList("/recipeAdd", context);
             },
           )
         ],
@@ -104,7 +104,7 @@ class _RecipeViewState extends State<RecipeView> {
                                         .updateAction(
                                         RecipeManagementAction.view)
                                         .then((resp) async {
-                                      await storageService.updateList(
+                                      await recipeService.updateList(
                                           "/recipeManagement", context);
                                     });
                                   });

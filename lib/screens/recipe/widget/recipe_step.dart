@@ -1,5 +1,7 @@
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
+import 'package:cooking_friend/getx/models/recipe/recipe_step.dart'
+as rs_model;
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -9,8 +11,9 @@ import 'package:uuid/uuid.dart';
 class RecipeStep extends StatefulWidget {
   final String guid = const Uuid().v4();
   final TextEditingController? tec;
+  final rs_model.RecipeStep? step;
 
-  RecipeStep(this.tec, {super.key});
+  RecipeStep(this.tec, this.step, {super.key});
 
   @override
   State<RecipeStep> createState() => _RecipeStepState();

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe.dart';
+import 'package:cooking_friend/getx/models/recipe/recipe_modification.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
 import 'package:cooking_friend/screens/support/loading.dart';
@@ -27,6 +28,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
   late final RecipeService _storageService =
       RecipeService(recipeController, widget.service);
   Future<Recipe?> recipeToDisplay = Completer<Recipe?>().future;
+  List<RecipeModification> lstRecipeModification = [];
 
   @override
   void initState() {
@@ -45,37 +47,45 @@ class _RecipeManagementState extends State<RecipeManagement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions:
-            recipeController.action != RecipeManagementAction.add.name.obs
-                ? <Widget>[
-                    Obx(
-                      () => IconButton(
-                        icon: Icon(
-                          recipeController.action ==
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context, lstRecipeModification);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
+        actions: recipeController.action != RecipeManagementAction.add.name.obs
+            ? <Widget>[
+                Obx(
+                  () => IconButton(
+                    icon: Icon(
+                      recipeController.action ==
                               RecipeManagementAction.view.name.obs
-                              ? Icons.edit
-                              : Icons.edit_outlined,
-                          color: Colors.white,
-                        ),
-                        onPressed: () {
-                          if (recipeController.action ==
-                              RecipeManagementAction.view.name.obs) {
-                            recipeController
-                                .updateAction(RecipeManagementAction.edit);
-                          } else {
-                            recipeController
-                                .updateAction(RecipeManagementAction.view);
-                          }
-                        },
-                      ),
-                    )
-                  ]
-                : [],
+                          ? Icons.edit
+                          : Icons.edit_outlined,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      if (recipeController.action ==
+                          RecipeManagementAction.view.name.obs) {
+                        recipeController
+                            .updateAction(RecipeManagementAction.edit);
+                      } else {
+                        recipeController
+                            .updateAction(RecipeManagementAction.view);
+                      }
+                    },
+                  ),
+                )
+              ]
+            : [],
         title: const Text("add recipe"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _storageService.save(_formKey, context);
+        onPressed: () async {
+          await _storageService.save(_formKey, context, lstRecipeModification);
         },
         child: const Icon(Icons.save),
       ),
@@ -87,12 +97,16 @@ class _RecipeManagementState extends State<RecipeManagement> {
             if (snapshot.hasData ||
                 recipeController.action ==
                     RecipeManagementAction.add.name.obs) {
-              _recipeTitleController.text =
-                  (snapshot.data != null ? snapshot.data?.name : "")!;
-              recipeController
-                  .updateLstRecipeStepsDisplayed(snapshot.data!.steps.toList());
-              recipeController.updateLstRecipeIngredientsDisplayed(
-                  snapshot.data!.ingredients.toList());
+              if (recipeController.action ==
+                  RecipeManagementAction.view.name.obs || recipeController.action ==
+                  RecipeManagementAction.edit.name.obs) {
+                _recipeTitleController.text =
+                    (snapshot.data != null ? snapshot.data?.name : "")!;
+                recipeController.updateLstRecipeStepsDisplayed(
+                    snapshot.data!.steps.toList());
+                recipeController.updateLstRecipeIngredientsDisplayed(
+                    snapshot.data!.ingredients.toList());
+              }
               return Obx(
                 () => FormBuilder(
                   key: _formKey,
@@ -104,7 +118,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
                           name: "recipe_title",
                           controller: _recipeTitleController,
                           enabled: recipeController.action ==
-                              StorageManagementAction.view.name.obs
+                                  StorageManagementAction.view.name.obs
                               ? false
                               : true,
                           validator: FormBuilderValidators.compose(
