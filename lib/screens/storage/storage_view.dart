@@ -21,6 +21,7 @@ class StorageView extends StatefulWidget {
 
 class _StorageViewState extends State<StorageView> {
   String currentSearchString = "";
+  TextEditingController searchBarController = TextEditingController();
   final StorageController storageController = Get.find<StorageController>();
   late final StorageService storageService =
       StorageService(storageController, widget.service);
@@ -79,6 +80,7 @@ class _StorageViewState extends State<StorageView> {
                 );
                 refreshList();
               },
+              controller: searchBarController,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: CustomTheme.searchBarBackground,
@@ -88,6 +90,15 @@ class _StorageViewState extends State<StorageView> {
                 ),
                 hintText: "Search for Items",
                 prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  onPressed: () async {
+                    await storageController.navigateAndDisplaySelection(
+                        context, searchBarController);
+                    currentSearchString = searchBarController.text;
+                    refreshList();
+                  },
+                  icon: const Icon(Icons.camera),
+                ),
                 prefixIconColor: Colors.black,
               ),
             ),

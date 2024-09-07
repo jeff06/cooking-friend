@@ -30,7 +30,7 @@ class StorageController extends GetxController {
           break;
         case StorageManagementAction.edit:
           lstStorageItem[lstStorageItem.indexWhere((x) => x.id == v.id)] =
-          v.item!;
+              v.item!;
           break;
         case StorageManagementAction.none:
           break;
@@ -48,20 +48,19 @@ class StorageController extends GetxController {
     action.value = newAction.name;
   }
 
-  navigateAndDisplaySelection(
+  Future<void> navigateAndDisplaySelection(
       BuildContext context, TextEditingController textController) async {
     final String? cameraScanResult = await Get.to(
-          () => const BarcodeScanner(),
+      () => const BarcodeScanner(),
       preventDuplicates: false,
       fullscreenDialog: true,
     );
     if (cameraScanResult == null) {
-      barcode.value = "";
       textController.text = "";
     } else {
-      barcode.value = cameraScanResult;
       textController.text = cameraScanResult;
     }
+    updateBarcode(textController.text);
   }
 
   updateBarcode(newVal) {

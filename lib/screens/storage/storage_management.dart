@@ -166,8 +166,8 @@ class _StorageManagementState extends State<StorageManagement> {
                                 storageController.action ==
                                     StorageManagementAction.edit.name.obs,
                             child: IconButton(
-                              onPressed: () {
-                                storageController.navigateAndDisplaySelection(
+                              onPressed: () async {
+                                await storageController.navigateAndDisplaySelection(
                                     context, _textController);
                               },
                               icon: const Icon(Icons.camera),
