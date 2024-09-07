@@ -21,8 +21,8 @@ class RecipeController extends GetxController {
 
   resetController()
   {
-    steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
-    ingredients =
+    steps.value = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
+    ingredients.value =
         <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
     currentId = -1;
     action = RecipeManagementAction.none.name.obs;

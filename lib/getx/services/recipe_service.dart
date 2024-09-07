@@ -94,6 +94,7 @@ class RecipeService {
             content: Text("Recipe added"),
           ),
         );
+        controller.resetController();
       });
     }
   }
