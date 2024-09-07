@@ -81,7 +81,12 @@ class _RecipeManagementState extends State<RecipeManagement> {
                 )
               ]
             : [],
-        title: const Text("add recipe"),
+        title: Obx(
+              () => Text(
+            "${recipeController.action.string} recipe",
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -98,8 +103,9 @@ class _RecipeManagementState extends State<RecipeManagement> {
                 recipeController.action ==
                     RecipeManagementAction.add.name.obs) {
               if (recipeController.action ==
-                  RecipeManagementAction.view.name.obs || recipeController.action ==
-                  RecipeManagementAction.edit.name.obs) {
+                      RecipeManagementAction.view.name.obs ||
+                  recipeController.action ==
+                      RecipeManagementAction.edit.name.obs) {
                 _recipeTitleController.text =
                     (snapshot.data != null ? snapshot.data?.name : "")!;
                 recipeController.updateLstRecipeStepsDisplayed(
@@ -165,6 +171,16 @@ class _RecipeManagementState extends State<RecipeManagement> {
                                   key: ValueKey(element), child: element);
                             },
                           ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: recipeController.action ==
+                            RecipeManagementAction.edit.name.obs,
+                        child: IconButton(
+                          color: Colors.amber,
+                          icon: const Icon(Icons.delete),
+                          onPressed: () async => await _storageService.delete(
+                              lstRecipeModification, context),
                         ),
                       ),
                     ],

@@ -23,6 +23,19 @@ class RecipeService {
     controller.resetController();
   }
 
+  Future<void> delete(List<RecipeModification> lstStorageItemModification,
+      BuildContext context) async {
+    await isarService.deleteRecipe(controller.currentId).then(
+      (res) {
+        lstStorageItemModification.add(RecipeModification()
+          ..id = controller.currentId
+          ..action = RecipeManagementAction.delete
+          ..item = null);
+        Navigator.pop(context, lstStorageItemModification);
+      },
+    );
+  }
+
   Future<void> _saveAndUpdate(
       Recipe recipe,
       List<RecipeModification> lstRecipeModification,

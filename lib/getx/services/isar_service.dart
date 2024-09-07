@@ -1,7 +1,6 @@
 import 'package:cooking_friend/getx/models/recipe/recipe.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe_step.dart';
-import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -67,6 +66,15 @@ class IsarService {
     return await isar.writeTxn(
       () async {
         return await isar.storageItems.delete(currentId);
+      },
+    );
+  }
+
+  Future<bool> deleteRecipe(int currentId) async {
+    final isar = await db;
+    return await isar.writeTxn(
+      () async {
+        return await isar.recipes.delete(currentId);
       },
     );
   }
