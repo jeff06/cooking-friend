@@ -19,6 +19,15 @@ class RecipeController extends GetxController {
   var action = RecipeManagementAction.none.name.obs;
   var lstRecipe = <Recipe>[].obs;
 
+  resetController()
+  {
+    steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
+    ingredients =
+        <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
+    currentId = -1;
+    action = RecipeManagementAction.none.name.obs;
+  }
+
   updateLstRecipeDisplayed(List<Recipe> newLstStorageItem) {
     lstRecipe.value = newLstStorageItem;
   }

@@ -1,6 +1,7 @@
 import 'package:cooking_friend/getx/models/recipe/recipe.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe_step.dart';
+import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -30,6 +31,8 @@ class IsarService {
 
   Future<int> saveNewRecipe(Recipe recipe) async {
     final isar = await db;
+    recipe.steps.addAll(recipe.lstSteps);
+    recipe.ingredients.addAll(recipe.lstIngredients);
     return isar.writeTxnSync<int>(() => isar.recipes.putSync(recipe));
   }
 
@@ -38,7 +41,13 @@ class IsarService {
     recipe.id = currentId;
 
     return isar.writeTxnSync<int>(() {
-      return isar.recipes.putSync(recipe);
+      int id = isar.recipes.putSync(recipe);
+      isar.recipeIngredients.putAllSync(recipe.lstIngredients);
+      isar.recipeSteps.putAllSync(recipe.lstSteps);
+
+      recipe.ingredients.saveSync();
+      recipe.steps.saveSync();
+      return id;
     });
   }
 

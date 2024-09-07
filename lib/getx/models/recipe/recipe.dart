@@ -8,6 +8,11 @@ part 'recipe.g.dart';
 class Recipe {
   Id id = Isar.autoIncrement;
   String? name;
-  final IsarLinks<RecipeStep> steps = IsarLinks<RecipeStep>();
-  final IsarLinks<RecipeIngredient> ingredients = IsarLinks<RecipeIngredient>();
+  IsarLinks<RecipeStep> steps = IsarLinks<RecipeStep>();
+  IsarLinks<RecipeIngredient> ingredients = IsarLinks<RecipeIngredient>();
+
+  @ignore
+  List<RecipeStep> lstSteps = [];
+  @ignore
+  List<RecipeIngredient> lstIngredients = [];
 }

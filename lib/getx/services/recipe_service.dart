@@ -20,6 +20,7 @@ class RecipeService {
     var listReturned = await Navigator.pushNamed(context, path);
     controller.modifyLstStorageItemDisplayed(
         listReturned as List<RecipeModification>);
+    controller.resetController();
   }
 
   Future<void> _saveAndUpdate(
@@ -59,7 +60,7 @@ class RecipeService {
         if (v.step != null) {
           step.id = v.step!.id;
         }
-        newRecipe.steps.add(step);
+        newRecipe.lstSteps.add(step);
       }
 
       for (var v in controller.ingredients) {
@@ -70,7 +71,7 @@ class RecipeService {
         if (v.ingredient != null) {
           ri.id = v.ingredient!.id;
         }
-        newRecipe.ingredients.add(ri);
+        newRecipe.lstIngredients.add(ri);
       }
 
       await _saveAndUpdate(newRecipe, lstRecipeModification, context, formKey)
