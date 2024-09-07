@@ -1,5 +1,4 @@
 import 'package:cooking_friend/navigation/recipe_navigation.dart';
-import 'package:cooking_friend/navigation/shopping_list_navigation.dart';
 import 'package:cooking_friend/navigation/storage_navigation.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +19,7 @@ class _MainWrapperState extends State<MainWrapper> {
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
     storageNavigatorKey,
     recipeNavigatorKey,
-    shoppingNavigatorKey
+    //shoppingNavigatorKey
   ];
 
   Future<bool> _systemBackButtonPressed() async {
@@ -38,7 +37,7 @@ class _MainWrapperState extends State<MainWrapper> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvoked: (didPop) => _systemBackButtonPressed,
+      onPopInvokedWithResult: (didPop, result) => _systemBackButtonPressed,
       child: Scaffold(
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (int index) {
@@ -50,8 +49,8 @@ class _MainWrapperState extends State<MainWrapper> {
           destinations: const <NavigationDestination>[
             NavigationDestination(icon: Icon(Icons.kitchen), label: "Storage"),
             NavigationDestination(icon: Icon(Icons.fastfood), label: "Recipe"),
-            NavigationDestination(
-                icon: Icon(Icons.receipt), label: "Shopping list"),
+            /*NavigationDestination(
+                icon: Icon(Icons.receipt), label: "Shopping list"),*/
             //NavigationDestination(icon: Icon(Icons.menu), label: "Menu of the week")
           ],
         ),
@@ -61,7 +60,7 @@ class _MainWrapperState extends State<MainWrapper> {
             children: [
               StorageNavigation(widget.service),
               RecipeNavigation(widget.service),
-              ShoppingListNavigation(widget.service),
+              //ShoppingListNavigation(widget.service),
             ],
           ),
         ),

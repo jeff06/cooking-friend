@@ -10,6 +10,14 @@ class ShoppingList extends StatefulWidget {
 class _ShoppingListState extends State<ShoppingList> {
   @override
   Widget build(BuildContext context) {
-    return const Text("Shopping list");
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        title: const Text(
+          "Shopping list",
+        ),
+      ),
+      body: const Column(children: [],),
+    );
   }
 }
