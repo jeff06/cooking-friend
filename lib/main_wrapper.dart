@@ -38,18 +38,20 @@ class _MainWrapperState extends State<MainWrapper> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: (didPop, result) => _systemBackButtonPressed,
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        await _systemBackButtonPressed();
+      },
       child: Scaffold(
         bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
-            labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
-              (Set<WidgetState> states) =>
-                  states.contains(WidgetState.selected)
-                      ? const TextStyle(color: Colors.white)
-                      : const TextStyle(color: Colors.white),
-            ),
-            indicatorColor: CustomTheme.accent
-          ),
+              labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>(
+                (Set<WidgetState> states) =>
+                    states.contains(WidgetState.selected)
+                        ? const TextStyle(color: Colors.white)
+                        : const TextStyle(color: Colors.white),
+              ),
+              indicatorColor: CustomTheme.accent),
           child: NavigationBar(
             backgroundColor: CustomTheme.navbar,
             onDestinationSelected: (int index) {

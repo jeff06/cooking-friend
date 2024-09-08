@@ -21,15 +21,13 @@ class StorageService {
           ..id = storageController.currentId
           ..action = StorageManagementAction.delete
           ..item = null);
-        Navigator.pop(context, lstStorageItemModification);
       },
     );
   }
 
   Future<void> updateList(String path, BuildContext context) async {
-    var listReturned = await Navigator.pushNamed(context, path);
-    storageController.modifyLstStorageItemDisplayed(
-        listReturned as List<StorageItemModification>);
+    await Navigator.pushNamed(context, path);
+    storageController.modifyLstStorageItemDisplayed();
   }
 
   Future<void> _saveUpdate(

@@ -101,16 +101,7 @@ class _StorageViewState extends State<StorageView> {
                       return RefreshIndicator(
                         onRefresh: () => refreshList(),
                         child: Obx(
-                          () => GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                // number of items in each row
-                                mainAxisSpacing: 8.0,
-                                // spacing between rows
-                                crossAxisSpacing:
-                                    8.0, // spacing between columns
-                              ),
+                          () => ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,
                               padding: const EdgeInsets.all(8),
@@ -129,12 +120,16 @@ class _StorageViewState extends State<StorageView> {
                                   () => clickOnCard(id),
                                   ListTile(
                                     leading: const Icon(Icons.album),
-                                    title: Text(name,
-                                        style: const TextStyle(
-                                            color: Colors.black)),
-                                    subtitle: Text(date,
-                                        style: const TextStyle(
-                                            color: Colors.black)),
+                                    title: ClipRect(
+                                      child: Text(name,
+                                          style: const TextStyle(
+                                              color: Colors.black)),
+                                    ),
+                                    subtitle: ClipRect(
+                                      child: Text(date,
+                                          style: const TextStyle(
+                                              color: Colors.black)),
+                                    ),
                                   ),
                                 );
                               }),
