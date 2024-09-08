@@ -155,6 +155,12 @@ class _RecipeManagementState extends State<RecipeManagement> {
                         const SizedBox(height: 10),
                         FormBuilderTextField(
                           name: "recipe_title",
+                          decoration: const InputDecoration(
+                            labelText: "Title",
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
                           controller: _recipeTitleController,
                           enabled: recipeController.action ==
                                   StorageManagementAction.view.name.obs
