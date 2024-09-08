@@ -1,6 +1,7 @@
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart'
     as ri_model;
+import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -32,7 +33,7 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
             Visibility(
               visible: controller.ingredients.length > 1 && controller.action != RecipeManagementAction.view.name.obs,
               child: IconButton(
-                color: Colors.amber,
+                color: CustomTheme.accent,
                 icon: const Icon(Icons.delete),
                 onPressed: () {
                   controller.removeIngredient(widget.guid);
@@ -87,7 +88,7 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
               ),
             ),
             IconButton(
-              color: Colors.amber,
+              color: CustomTheme.navbar,
               icon: const Icon(Icons.add),
               onPressed:
                   controller.action == RecipeManagementAction.view.name.obs

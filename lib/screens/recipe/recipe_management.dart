@@ -167,53 +167,40 @@ class _RecipeManagementState extends State<RecipeManagement> {
                           ),
                         ),
                         const Text("Steps"),
-                        Expanded(
-                          child: Obx(
-                            () => ReorderableListView.builder(
-                              onReorder: (int oldIndex, int newIndex) {
-                                if (newIndex > oldIndex) newIndex--;
-                                final step =
-                                    recipeController.steps.removeAt(oldIndex);
-                                recipeController.steps.insert(newIndex, step);
-                              },
-                              itemCount: recipeController.steps.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                var element = recipeController.steps[index];
-                                return Container(
-                                    key: ValueKey(element), child: element);
-                              },
-                            ),
+                        Obx(
+                          () => ReorderableListView.builder(
+                            shrinkWrap: true,
+                            onReorder: (int oldIndex, int newIndex) {
+                              if (newIndex > oldIndex) newIndex--;
+                              final step =
+                                  recipeController.steps.removeAt(oldIndex);
+                              recipeController.steps.insert(newIndex, step);
+                            },
+                            itemCount: recipeController.steps.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              var element = recipeController.steps[index];
+                              return Container(
+                                  key: ValueKey(element), child: element);
+                            },
                           ),
                         ),
                         const Text("Ingredients"),
-                        Expanded(
-                          child: Obx(
-                            () => ReorderableListView.builder(
-                              onReorder: (int oldIndex, int newIndex) {
-                                if (newIndex > oldIndex) newIndex--;
-                                final step = recipeController.ingredients
-                                    .removeAt(oldIndex);
-                                recipeController.ingredients
-                                    .insert(newIndex, step);
-                              },
-                              itemCount: recipeController.ingredients.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                var element =
-                                    recipeController.ingredients[index];
-                                return Container(
-                                    key: ValueKey(element), child: element);
-                              },
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: recipeController.action ==
-                              RecipeManagementAction.edit.name.obs,
-                          child: IconButton(
-                            color: Colors.amber,
-                            icon: const Icon(Icons.delete),
-                            onPressed: () async => await _recipeService.delete(
-                                lstRecipeModification, context),
+                        Obx(
+                          () => ReorderableListView.builder(
+                            shrinkWrap: true,
+                            onReorder: (int oldIndex, int newIndex) {
+                              if (newIndex > oldIndex) newIndex--;
+                              final step = recipeController.ingredients
+                                  .removeAt(oldIndex);
+                              recipeController.ingredients
+                                  .insert(newIndex, step);
+                            },
+                            itemCount: recipeController.ingredients.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              var element = recipeController.ingredients[index];
+                              return Container(
+                                  key: ValueKey(element), child: element);
+                            },
                           ),
                         ),
                       ],

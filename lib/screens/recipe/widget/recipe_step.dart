@@ -2,6 +2,7 @@ import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe_step.dart'
 as rs_model;
+import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -33,7 +34,7 @@ class _RecipeStepState extends State<RecipeStep> {
             Visibility(
               visible: controller.steps.length > 1 && controller.action != RecipeManagementAction.view.name.obs,
               child: IconButton(
-                color: Colors.amber,
+                color: CustomTheme.accent,
                 icon: const Icon(Icons.delete),
                 onPressed: () {
                   controller.removeStep(widget.guid);
@@ -55,7 +56,7 @@ class _RecipeStepState extends State<RecipeStep> {
               ),
             ),
             IconButton(
-              color: Colors.amber,
+              color: CustomTheme.navbar,
               icon: const Icon(Icons.add),
               onPressed:
                   controller.action == RecipeManagementAction.view.name.obs
