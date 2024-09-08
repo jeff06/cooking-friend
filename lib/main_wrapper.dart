@@ -51,7 +51,7 @@ class _MainWrapperState extends State<MainWrapper> {
             indicatorColor: CustomTheme.accent
           ),
           child: NavigationBar(
-            backgroundColor: const Color(0xff1d3557),
+            backgroundColor: CustomTheme.navbar,
             onDestinationSelected: (int index) {
               setState(() {
                 _selectedIndex = index;

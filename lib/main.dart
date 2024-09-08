@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
                 bodyMedium: TextStyle(),
                 bodyLarge: TextStyle())
             .apply(bodyColor: Colors.white),
-        scaffoldBackgroundColor: CustomTheme.backgroundColor,
+        scaffoldBackgroundColor: Colors.transparent,
         appBarTheme: AppBarTheme(backgroundColor: CustomTheme.backgroundColor),
         cardTheme: CardTheme(color: CustomTheme.elementOnScreen));
     return baseTheme;

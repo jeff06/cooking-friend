@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../models/storage/storage_item_modification.dart';
 
-class StorageController extends GetxController {
+class StorageController extends  GetxController {
   var barcode = "".obs;
   int currentId = -1;
   var action = StorageManagementAction.none.name.obs;
@@ -16,11 +16,11 @@ class StorageController extends GetxController {
     currentId = selectedId;
   }
 
-  updateLstStorageItemDisplayed(List<StorageItem> newLstStorageItem) {
+  void updateLstStorageItemDisplayed(List<StorageItem> newLstStorageItem) {
     lstStorageItem.value = newLstStorageItem;
   }
 
-  modifyLstStorageItemDisplayed(List<StorageItemModification> lst) {
+  void modifyLstStorageItemDisplayed(List<StorageItemModification> lst) {
     for (var v in lst) {
       switch (v.action) {
         case StorageManagementAction.add:
@@ -63,7 +63,7 @@ class StorageController extends GetxController {
     updateBarcode(textController.text);
   }
 
-  updateBarcode(newVal) {
+  void updateBarcode(newVal) {
     barcode.value = newVal;
   }
 }
