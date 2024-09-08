@@ -5,7 +5,7 @@ import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
-import 'package:cooking_friend/theme/custom_theme.dart';
+import 'package:cooking_friend/screens/support/search_bar_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +19,7 @@ class RecipeView extends StatefulWidget {
 }
 
 class _RecipeViewState extends State<RecipeView> {
-  String currentSearchString = "";
+  final TextEditingController searchBarController = TextEditingController();
   final RecipeController recipeController = Get.find<RecipeController>();
   Future<List<Recipe>> recipeToDisplay = Completer<List<Recipe>>().future;
   late final RecipeService recipeService =
@@ -31,7 +31,7 @@ class _RecipeViewState extends State<RecipeView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         recipeToDisplay =
-            widget.service.getAllRecipeByFilter(currentSearchString);
+            widget.service.getAllRecipeByFilter(searchBarController.text);
       });
     });
   }
@@ -39,7 +39,7 @@ class _RecipeViewState extends State<RecipeView> {
   Future<void> refreshList() async {
     setState(() {
       recipeToDisplay =
-          widget.service.getAllRecipeByFilter(currentSearchString);
+          widget.service.getAllRecipeByFilter(searchBarController.text);
     });
   }
 
@@ -47,46 +47,17 @@ class _RecipeViewState extends State<RecipeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            onPressed: () async {
-              recipeController.updateAction(RecipeManagementAction.add);
-              await recipeService.updateList("/recipeAdd", context);
-            },
-          )
-        ],
-        title: const Text(
-          "Recipe",
-        ),
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          title: SearchBarCustom(searchBarController, refreshList, null)),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          recipeController.updateAction(RecipeManagementAction.add);
+          await recipeService.updateList("/recipeAdd", context);
+        },
+        child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
-          TextField(
-            onChanged: (newVal) {
-              setState(
-                () {
-                  currentSearchString = newVal;
-                },
-              );
-              refreshList();
-            },
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: CustomTheme.searchBarBackground,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(25),
-                borderSide: BorderSide.none,
-              ),
-              hintText: "Search for Items",
-              prefixIcon: const Icon(Icons.search),
-              prefixIconColor: Colors.black,
-            ),
-          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),

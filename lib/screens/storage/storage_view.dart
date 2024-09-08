@@ -4,7 +4,7 @@ import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
 import 'package:cooking_friend/getx/models/storage/storage_item.dart';
 import 'package:cooking_friend/getx/services/storage_service.dart';
-import 'package:cooking_friend/theme/custom_theme.dart';
+import 'package:cooking_friend/screens/support/search_bar_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +20,6 @@ class StorageView extends StatefulWidget {
 }
 
 class _StorageViewState extends State<StorageView> {
-  String currentSearchString = "";
   TextEditingController searchBarController = TextEditingController();
   final StorageController storageController = Get.find<StorageController>();
   late final StorageService storageService =
@@ -31,7 +30,7 @@ class _StorageViewState extends State<StorageView> {
   Future<void> refreshList() async {
     setState(() {
       storageItemToDisplay =
-          widget.service.getAllStorageItemByFilter(currentSearchString);
+          widget.service.getAllStorageItemByFilter(searchBarController.text);
     });
   }
 
@@ -41,71 +40,44 @@ class _StorageViewState extends State<StorageView> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {
         storageItemToDisplay =
-            widget.service.getAllStorageItemByFilter(currentSearchString);
+            widget.service.getAllStorageItemByFilter(searchBarController.text);
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    num screenWidth = MediaQuery.of(context).size.width;
+    double tenP = (screenWidth * 0.10).floorToDouble();
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        actions: <Widget>[
+        //backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        title: SearchBarCustom(
+          searchBarController,
+          refreshList,
           IconButton(
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
+            color: Colors.white,
             onPressed: () async {
-              storageController.updateAction(StorageManagementAction.add);
-              await storageService.updateList("/storageAdd", context);
+              await storageController.navigateAndDisplaySelection(
+                  context, searchBarController);
+              refreshList();
             },
-          )
-        ],
-        title: const Text(
-          "Storage",
+            icon: const Icon(Icons.camera),
+          ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          storageController.updateAction(StorageManagementAction.add);
+          await storageService.updateList("/storageAdd", context);
+        },
+        child: const Icon(Icons.add),
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-            child: TextField(
-              onChanged: (newVal) {
-                setState(
-                  () {
-                    currentSearchString = newVal;
-                  },
-                );
-                refreshList();
-              },
-              controller: searchBarController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: CustomTheme.searchBarBackground,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide.none,
-                ),
-                hintText: "Search for Items",
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: IconButton(
-                  onPressed: () async {
-                    await storageController.navigateAndDisplaySelection(
-                        context, searchBarController);
-                    currentSearchString = searchBarController.text;
-                    refreshList();
-                  },
-                  icon: const Icon(Icons.camera),
-                ),
-                prefixIconColor: Colors.black,
-              ),
-            ),
-          ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(5, 0, 5, 10),
+              padding: EdgeInsets.fromLTRB(tenP, 0, tenP, 10),
               child: FutureBuilder<List<StorageItem>>(
                 future: storageItemToDisplay,
                 builder: (context, snapshot) {
@@ -113,56 +85,56 @@ class _StorageViewState extends State<StorageView> {
                     snapshot.data!.sort((a, b) => b.id.compareTo(a.id));
                     storageController
                         .updateLstStorageItemDisplayed(snapshot.data!);
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RefreshIndicator(
-                        onRefresh: () => refreshList(),
-                        child: Obx(
-                          () => ListView.builder(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.all(8),
-                              itemCount:
-                                  storageController.lstStorageItem.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                String name = storageController
-                                    .lstStorageItem[index].name
-                                    .toString();
-                                String date = storageController
-                                    .lstStorageItem[index].date
-                                    .toString();
-                                int id =
-                                    storageController.lstStorageItem[index].id;
-                                return Card(
-                                  color: Theme.of(context).cardTheme.color,
-                                  child: InkWell(
-                                    onTap: () async {
+                    return RefreshIndicator(
+                      onRefresh: () => refreshList(),
+                      child: Obx(
+                        () => ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.all(8),
+                            itemCount: storageController.lstStorageItem.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              String name = storageController
+                                  .lstStorageItem[index].name
+                                  .toString();
+                              String date = storageController
+                                  .lstStorageItem[index].date
+                                  .toString();
+                              int id =
+                                  storageController.lstStorageItem[index].id;
+                              return Card(
+                                color: Theme.of(context).cardTheme.color,
+                                child: InkWell(
+                                  onTap: () async {
+                                    await storageController
+                                        .updateSelectedId(id)
+                                        .then((res) async {
                                       await storageController
-                                          .updateSelectedId(id)
-                                          .then((res) async {
-                                        await storageController
-                                            .updateAction(
-                                                StorageManagementAction.view)
-                                            .then((resp) async {
-                                          await storageService.updateList(
-                                              "/storageManagement", context);
-                                        });
+                                          .updateAction(
+                                              StorageManagementAction.view)
+                                          .then((resp) async {
+                                        await storageService.updateList(
+                                            "/storageManagement", context);
                                       });
-                                    },
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        ListTile(
-                                          leading: const Icon(Icons.album),
-                                          title: Text(name),
-                                          subtitle: Text(date),
-                                        ),
-                                      ],
-                                    ),
+                                    });
+                                  },
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      ListTile(
+                                        leading: const Icon(Icons.album),
+                                        title: Text(name,
+                                            style: const TextStyle(
+                                                color: Colors.black)),
+                                        subtitle: Text(date,
+                                            style: const TextStyle(
+                                                color: Colors.black)),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              }),
-                        ),
+                                ),
+                              );
+                            }),
                       ),
                     );
                   }
