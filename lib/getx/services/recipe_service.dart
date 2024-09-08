@@ -17,9 +17,8 @@ class RecipeService {
   RecipeService(this.controller, this.isarService);
 
   Future<void> updateList(String path, BuildContext context) async {
-    var listReturned = await Navigator.pushNamed(context, path);
-    controller.modifyLstStorageItemDisplayed(
-        listReturned as List<RecipeModification>);
+    await Navigator.pushNamed(context, path);
+    controller.modifyLstStorageItemDisplayed(controller.lstRecipeModification);
     controller.resetController();
   }
 
@@ -31,7 +30,6 @@ class RecipeService {
           ..id = controller.currentId
           ..action = RecipeManagementAction.delete
           ..item = null);
-        Navigator.pop(context, lstStorageItemModification);
       },
     );
   }

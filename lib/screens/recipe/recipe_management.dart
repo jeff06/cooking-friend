@@ -6,9 +6,12 @@ import 'package:cooking_friend/getx/models/recipe/recipe.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe_modification.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
+import 'package:cooking_friend/screens/support/gradient_background.dart';
 import 'package:cooking_friend/screens/support/loading.dart';
+import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +28,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
   final _formKey = GlobalKey<FormBuilderState>();
   final RecipeController recipeController = Get.find<RecipeController>();
   final TextEditingController _recipeTitleController = TextEditingController();
-  late final RecipeService _storageService =
+  late final RecipeService _recipeService =
       RecipeService(recipeController, widget.service);
   Future<Recipe?> recipeToDisplay = Completer<Recipe?>().future;
   List<RecipeModification> lstRecipeModification = [];
@@ -43,84 +46,114 @@ class _RecipeManagementState extends State<RecipeManagement> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context, lstRecipeModification);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
+  _save() async {
+    await _recipeService.save(_formKey, context, lstRecipeModification);
+    recipeController.updateLstRecipeModification(lstRecipeModification);
+  }
+
+  _delete(BuildContext context) async {
+    await _recipeService.delete(lstRecipeModification, context);
+    recipeController.updateLstRecipeModification(lstRecipeModification);
+    Navigator.pop(context);
+  }
+
+  _edit() async {
+    if (recipeController.action == RecipeManagementAction.view.name.obs) {
+      await recipeController.updateAction(RecipeManagementAction.edit);
+    } else {
+      await recipeController.updateAction(RecipeManagementAction.view);
+    }
+  }
+
+  Future<SpeedDial> availableFloatingAction(BuildContext context) async {
+    List<SpeedDialChild> lst = [];
+    if (recipeController.action == RecipeManagementAction.edit.name.obs ||
+        recipeController.action == RecipeManagementAction.add.name.obs) {
+      lst.add(SpeedDialChild(
+        child: const Icon(
+          Icons.save,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.green,
+        onTap: _save,
+      ));
+    }
+
+    if (recipeController.action != RecipeManagementAction.add.name.obs) {
+      lst.add(
+        SpeedDialChild(
+          child: Icon(
+            recipeController.action == RecipeManagementAction.view.name.obs
+                ? Icons.edit
+                : Icons.edit_outlined,
             color: Colors.white,
           ),
+          backgroundColor: CustomTheme.navbar,
+          onTap: _edit,
         ),
-        actions: recipeController.action != RecipeManagementAction.add.name.obs
-            ? <Widget>[
-                Obx(
-                  () => IconButton(
-                    icon: Icon(
-                      recipeController.action ==
-                              RecipeManagementAction.view.name.obs
-                          ? Icons.edit
-                          : Icons.edit_outlined,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      if (recipeController.action ==
-                          RecipeManagementAction.view.name.obs) {
-                        recipeController
-                            .updateAction(RecipeManagementAction.edit);
-                      } else {
-                        recipeController
-                            .updateAction(RecipeManagementAction.view);
-                      }
-                    },
-                  ),
-                )
-              ]
-            : [],
-        title: Obx(
-              () => Text(
-            "${recipeController.action.string} recipe",
-            style: const TextStyle(color: Colors.white),
+      );
+    }
+
+    if (recipeController.action == RecipeManagementAction.edit.name.obs) {
+      lst.add(
+        SpeedDialChild(
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.red,
+          onTap: () => _delete(context),
+        ),
+      );
+    }
+
+    return SpeedDial(
+      animatedIcon: AnimatedIcons.menu_close,
+      children: lst,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GradientBackground(
+      Scaffold(
+        floatingActionButton: Obx(
+          () => FutureBuilder<SpeedDial>(
+            future: availableFloatingAction(context),
+            builder: (builder, AsyncSnapshot<SpeedDial> snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data as SpeedDial;
+              }
+              return const SpeedDial();
+            },
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await _storageService.save(_formKey, context, lstRecipeModification);
-        },
-        child: const Icon(Icons.save),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: FutureBuilder<Recipe?>(
-          future: recipeToDisplay,
-          builder: (BuildContext context, AsyncSnapshot<Recipe?> snapshot) {
-            if (snapshot.hasData ||
-                recipeController.action ==
-                    RecipeManagementAction.add.name.obs) {
-              if (recipeController.action ==
-                      RecipeManagementAction.view.name.obs ||
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FutureBuilder<Recipe?>(
+            future: recipeToDisplay,
+            builder: (BuildContext context, AsyncSnapshot<Recipe?> snapshot) {
+              if (snapshot.hasData ||
                   recipeController.action ==
-                      RecipeManagementAction.edit.name.obs) {
-                _recipeTitleController.text =
-                    (snapshot.data != null ? snapshot.data?.name : "")!;
-                recipeController.updateLstRecipeStepsDisplayed(
-                    snapshot.data!.steps.toList());
-                recipeController.updateLstRecipeIngredientsDisplayed(
-                    snapshot.data!.ingredients.toList());
-              }
-              return Obx(
-                () => FormBuilder(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      Expanded(
-                        child: FormBuilderTextField(
+                      RecipeManagementAction.add.name.obs) {
+                if (recipeController.action ==
+                        RecipeManagementAction.view.name.obs ||
+                    recipeController.action ==
+                        RecipeManagementAction.edit.name.obs) {
+                  _recipeTitleController.text =
+                      (snapshot.data != null ? snapshot.data?.name : "")!;
+                  recipeController.updateLstRecipeStepsDisplayed(
+                      snapshot.data!.steps.toList());
+                  recipeController.updateLstRecipeIngredientsDisplayed(
+                      snapshot.data!.ingredients.toList());
+                }
+                return Obx(
+                  () => FormBuilder(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        FormBuilderTextField(
                           name: "recipe_title",
                           controller: _recipeTitleController,
                           enabled: recipeController.action ==
@@ -133,64 +166,65 @@ class _RecipeManagementState extends State<RecipeManagement> {
                             ],
                           ),
                         ),
-                      ),
-                      const Text("Steps"),
-                      Expanded(
-                        child: Obx(
-                          () => ReorderableListView.builder(
-                            onReorder: (int oldIndex, int newIndex) {
-                              if (newIndex > oldIndex) newIndex--;
-                              final step =
-                                  recipeController.steps.removeAt(oldIndex);
-                              recipeController.steps.insert(newIndex, step);
-                            },
-                            itemCount: recipeController.steps.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              var element = recipeController.steps[index];
-                              return Container(
-                                  key: ValueKey(element), child: element);
-                            },
+                        const Text("Steps"),
+                        Expanded(
+                          child: Obx(
+                            () => ReorderableListView.builder(
+                              onReorder: (int oldIndex, int newIndex) {
+                                if (newIndex > oldIndex) newIndex--;
+                                final step =
+                                    recipeController.steps.removeAt(oldIndex);
+                                recipeController.steps.insert(newIndex, step);
+                              },
+                              itemCount: recipeController.steps.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                var element = recipeController.steps[index];
+                                return Container(
+                                    key: ValueKey(element), child: element);
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      const Text("Ingredients"),
-                      Expanded(
-                        child: Obx(
-                          () => ReorderableListView.builder(
-                            onReorder: (int oldIndex, int newIndex) {
-                              if (newIndex > oldIndex) newIndex--;
-                              final step = recipeController.ingredients
-                                  .removeAt(oldIndex);
-                              recipeController.ingredients
-                                  .insert(newIndex, step);
-                            },
-                            itemCount: recipeController.ingredients.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              var element = recipeController.ingredients[index];
-                              return Container(
-                                  key: ValueKey(element), child: element);
-                            },
+                        const Text("Ingredients"),
+                        Expanded(
+                          child: Obx(
+                            () => ReorderableListView.builder(
+                              onReorder: (int oldIndex, int newIndex) {
+                                if (newIndex > oldIndex) newIndex--;
+                                final step = recipeController.ingredients
+                                    .removeAt(oldIndex);
+                                recipeController.ingredients
+                                    .insert(newIndex, step);
+                              },
+                              itemCount: recipeController.ingredients.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                var element =
+                                    recipeController.ingredients[index];
+                                return Container(
+                                    key: ValueKey(element), child: element);
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                      Visibility(
-                        visible: recipeController.action ==
-                            RecipeManagementAction.edit.name.obs,
-                        child: IconButton(
-                          color: Colors.amber,
-                          icon: const Icon(Icons.delete),
-                          onPressed: () async => await _storageService.delete(
-                              lstRecipeModification, context),
+                        Visibility(
+                          visible: recipeController.action ==
+                              RecipeManagementAction.edit.name.obs,
+                          child: IconButton(
+                            color: Colors.amber,
+                            icon: const Icon(Icons.delete),
+                            onPressed: () async => await _recipeService.delete(
+                                lstRecipeModification, context),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              );
-            } else {
-              return const Loading();
-            }
-          },
+                );
+              } else {
+                return const Loading();
+              }
+            },
+          ),
         ),
       ),
     );

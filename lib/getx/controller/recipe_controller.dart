@@ -18,6 +18,7 @@ class RecipeController extends GetxController {
   int currentId = -1;
   var action = RecipeManagementAction.none.name.obs;
   var lstRecipe = <Recipe>[].obs;
+  var lstRecipeModification = <RecipeModification>[].obs;
 
   resetController()
   {
@@ -100,5 +101,9 @@ class RecipeController extends GetxController {
 
   removeIngredient(String guid) {
     ingredients.removeWhere((x) => x.guid == guid);
+  }
+
+  void updateLstRecipeModification(List<RecipeModification> lst) {
+    lstRecipeModification.value = lst;
   }
 }

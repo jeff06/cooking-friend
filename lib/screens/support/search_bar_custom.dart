@@ -20,6 +20,7 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
       onChanged: (newVal) async {
         await widget.refreshList();
       },
+      style: const TextStyle(color: Colors.white),
       controller: widget.searchBarController,
       decoration: InputDecoration(
         filled: true,
