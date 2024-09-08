@@ -72,7 +72,15 @@ class _RecipeViewState extends State<RecipeView> {
                       child: RefreshIndicator(
                         onRefresh: () => refreshList(),
                         child: Obx(
-                          () => ListView.builder(
+                          () => GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              // number of items in each row
+                              mainAxisSpacing: 8.0,
+                              // spacing between rows
+                              crossAxisSpacing: 8.0, // spacing between columns
+                            ),
                             physics: const AlwaysScrollableScrollPhysics(),
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(8),
