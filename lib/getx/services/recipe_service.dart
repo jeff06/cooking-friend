@@ -45,7 +45,7 @@ class RecipeService {
           ..id = controller.currentId
           ..action = RecipeManagementAction.edit
           ..item = recipe);
-        Navigator.pop(context, lstRecipeModification);
+        Navigator.pop(context);
       });
     } else {
       await isarService.saveNewRecipe(recipe).then((res) {
@@ -59,7 +59,7 @@ class RecipeService {
     }
   }
 
-  save(GlobalKey<FormBuilderState> formKey, BuildContext context,
+  Future<void> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
       List<RecipeModification> lstRecipeModification) async {
     // ne pas saver ce qui ont le meme id
     if (formKey.currentState!.saveAndValidate()) {

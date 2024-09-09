@@ -45,16 +45,10 @@ class _RecipeViewState extends State<RecipeView> {
     });
   }
 
-  clickOnCard(int id) async {
-    await recipeController.updateSelectedId(id).then(
-      (res) async {
-        await recipeController.updateAction(RecipeManagementAction.view).then(
-          (resp) async {
-            await recipeService.updateList("/recipeManagement", context);
-          },
-        );
-      },
-    );
+  Future<void> clickOnCard(int id) async {
+    recipeController.updateSelectedId(id);
+    recipeController.updateAction(RecipeManagementAction.view);
+    await recipeService.updateList("/recipeManagement", context);
   }
 
   @override

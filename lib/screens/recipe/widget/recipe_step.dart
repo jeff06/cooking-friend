@@ -1,7 +1,6 @@
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe_step.dart'
-as rs_model;
+import 'package:cooking_friend/getx/models/recipe/recipe_step.dart' as rs_model;
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -32,14 +31,14 @@ class _RecipeStepState extends State<RecipeStep> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
-              visible: controller.steps.length > 1 && controller.action != RecipeManagementAction.view.name.obs,
+              visible: controller.steps.length > 1 &&
+                  controller.action != RecipeManagementAction.view.name.obs,
               child: IconButton(
                 color: CustomTheme.accent,
                 icon: const Icon(Icons.delete),
                 onPressed: () {
                   controller.removeStep(widget.guid);
                 },
-
               ),
             ),
             Expanded(
@@ -62,6 +61,14 @@ class _RecipeStepState extends State<RecipeStep> {
                   controller.action == RecipeManagementAction.view.name.obs
                       ? null
                       : () => controller.addEmptyStep(widget.guid),
+            ),
+            IconButton(
+              color: CustomTheme.navbar,
+              icon: const Icon(Icons.reorder),
+              onPressed:
+                  controller.action == RecipeManagementAction.view.name.obs
+                      ? null
+                      : () => controller.addEmptyIngredient(widget.guid),
             ),
           ],
         ),

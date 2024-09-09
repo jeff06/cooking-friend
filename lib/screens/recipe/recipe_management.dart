@@ -46,22 +46,22 @@ class _RecipeManagementState extends State<RecipeManagement> {
     }
   }
 
-  _save() async {
+  Future<void> _save() async {
     await _recipeService.save(_formKey, context, lstRecipeModification);
     recipeController.updateLstRecipeModification(lstRecipeModification);
   }
 
-  _delete(BuildContext context) async {
+  Future<void> _delete(BuildContext context) async {
     await _recipeService.delete(lstRecipeModification, context);
     recipeController.updateLstRecipeModification(lstRecipeModification);
     Navigator.pop(context);
   }
 
-  _edit() async {
+  Future<void> _edit() async {
     if (recipeController.action == RecipeManagementAction.view.name.obs) {
-      await recipeController.updateAction(RecipeManagementAction.edit);
+      recipeController.updateAction(RecipeManagementAction.edit);
     } else {
-      await recipeController.updateAction(RecipeManagementAction.view);
+      recipeController.updateAction(RecipeManagementAction.view);
     }
   }
 
@@ -69,14 +69,18 @@ class _RecipeManagementState extends State<RecipeManagement> {
     List<SpeedDialChild> lst = [];
     if (recipeController.action == RecipeManagementAction.edit.name.obs ||
         recipeController.action == RecipeManagementAction.add.name.obs) {
-      lst.add(SpeedDialChild(
-        child: const Icon(
-          Icons.save,
-          color: Colors.white,
+      lst.add(
+        SpeedDialChild(
+          child: const Icon(
+            Icons.save,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.green,
+          onTap: () async {
+            await _save();
+          },
         ),
-        backgroundColor: Colors.green,
-        onTap: _save,
-      ));
+      );
     }
 
     if (recipeController.action != RecipeManagementAction.add.name.obs) {
@@ -89,7 +93,9 @@ class _RecipeManagementState extends State<RecipeManagement> {
             color: Colors.white,
           ),
           backgroundColor: CustomTheme.navbar,
-          onTap: _edit,
+          onTap: () async {
+            await _edit();
+          },
         ),
       );
     }
@@ -102,7 +108,9 @@ class _RecipeManagementState extends State<RecipeManagement> {
             color: Colors.white,
           ),
           backgroundColor: Colors.red,
-          onTap: () => _delete(context),
+          onTap: () async {
+            await _delete(context);
+          },
         ),
       );
     }
@@ -186,7 +194,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
                             itemBuilder: (BuildContext context, int index) {
                               var element = recipeController.steps[index];
                               return Container(
-                                  key: ValueKey(element), child: element);
+                                  key: Key('$index'), child: element);
                             },
                           ),
                         ),
@@ -203,9 +211,9 @@ class _RecipeManagementState extends State<RecipeManagement> {
                             },
                             itemCount: recipeController.ingredients.length,
                             itemBuilder: (BuildContext context, int index) {
-                              var element = recipeController.ingredients[index];
                               return Container(
-                                  key: ValueKey(element), child: element);
+                                  key: Key('$index'),
+                                  child: recipeController.ingredients[index]);
                             },
                           ),
                         ),

@@ -47,20 +47,20 @@ class _StorageManagementState extends State<StorageManagement> {
     }
   }
 
-  _save() async {
+  Future<void> _save() async {
     await _storageService.save(_formKey, context, lstStorageItemModification);
     storageController
         .updateLstStorageItemModification(lstStorageItemModification);
   }
 
-  _delete(BuildContext context) async {
+  Future<void> _delete(BuildContext context) async {
     await _storageService.delete(lstStorageItemModification, context);
     storageController
         .updateLstStorageItemModification(lstStorageItemModification);
     Navigator.pop(context);
   }
 
-  _edit() async {
+  Future<void> _edit() async {
     if (storageController.action == StorageManagementAction.view.name.obs) {
       await storageController.updateAction(StorageManagementAction.edit);
     } else {
@@ -72,14 +72,18 @@ class _StorageManagementState extends State<StorageManagement> {
     List<SpeedDialChild> lst = [];
     if (storageController.action == StorageManagementAction.edit.name.obs ||
         storageController.action == StorageManagementAction.add.name.obs) {
-      lst.add(SpeedDialChild(
-        child: const Icon(
-          Icons.save,
-          color: Colors.white,
+      lst.add(
+        SpeedDialChild(
+          child: const Icon(
+            Icons.save,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.green,
+          onTap: () async {
+            await _save();
+          },
         ),
-        backgroundColor: Colors.green,
-        onTap: _save,
-      ));
+      );
     }
 
     if (storageController.action != StorageManagementAction.add.name.obs) {
@@ -92,7 +96,9 @@ class _StorageManagementState extends State<StorageManagement> {
             color: Colors.white,
           ),
           backgroundColor: CustomTheme.navbar,
-          onTap: _edit,
+          onTap: () async {
+            await _edit();
+          },
         ),
       );
     }
@@ -105,7 +111,9 @@ class _StorageManagementState extends State<StorageManagement> {
             color: Colors.white,
           ),
           backgroundColor: Colors.red,
-          onTap: () => _delete(context),
+          onTap: () async {
+            await _delete(context);
+          },
         ),
       );
     }

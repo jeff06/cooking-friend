@@ -95,6 +95,14 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
                       ? null
                       : () => controller.addEmptyIngredient(widget.guid),
             ),
+            IconButton(
+              color: CustomTheme.navbar,
+              icon: const Icon(Icons.reorder),
+              onPressed:
+              controller.action == RecipeManagementAction.view.name.obs
+                  ? null
+                  : () => controller.addEmptyIngredient(widget.guid),
+            ),
           ],
         ),
       ),

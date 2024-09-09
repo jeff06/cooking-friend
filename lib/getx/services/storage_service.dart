@@ -62,8 +62,8 @@ class StorageService {
     // Validate and save the form values
     if (formKey.currentState!.saveAndValidate()) {
       String name = formKey.currentState?.value["form_product_name"];
-      DateTime date = formKey.currentState?.value["form_product_date"];
-      String code = formKey.currentState?.value["form_product_code"];
+      DateTime? date = formKey.currentState?.value["form_product_date"];
+      String? code = formKey.currentState?.value["form_product_code"];
       StorageItem item = StorageItem()
         ..name = name
         ..date = date

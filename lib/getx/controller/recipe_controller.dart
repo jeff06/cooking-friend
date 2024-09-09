@@ -20,20 +20,20 @@ class RecipeController extends GetxController {
   var lstRecipe = <Recipe>[].obs;
   var lstRecipeModification = <RecipeModification>[].obs;
 
-  resetController()
-  {
+  void resetController() {
     steps.value = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
     ingredients.value =
         <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
     currentId = -1;
     action = RecipeManagementAction.none.name.obs;
+    lstRecipeModification = <RecipeModification>[].obs;
   }
 
-  updateLstRecipeDisplayed(List<Recipe> newLstStorageItem) {
+  void updateLstRecipeDisplayed(List<Recipe> newLstStorageItem) {
     lstRecipe.value = newLstStorageItem;
   }
 
-  updateLstRecipeStepsDisplayed(List<rs_model.RecipeStep> newRecipeSteps) {
+  void updateLstRecipeStepsDisplayed(List<rs_model.RecipeStep> newRecipeSteps) {
     if (action != RecipeManagementAction.add.name.obs) {
       steps = <rs_widget.RecipeStep>[].obs;
     }
@@ -44,7 +44,7 @@ class RecipeController extends GetxController {
     }
   }
 
-  updateLstRecipeIngredientsDisplayed(
+  void updateLstRecipeIngredientsDisplayed(
       List<ri_model.RecipeIngredient> newRecipeIngredients) {
     if (action != RecipeManagementAction.add.name.obs) {
       ingredients = <ri_widget.RecipeIngredient>[].obs;
@@ -54,7 +54,7 @@ class RecipeController extends GetxController {
     }
   }
 
-  modifyLstStorageItemDisplayed(List<RecipeModification> lst) {
+  void modifyLstStorageItemDisplayed(List<RecipeModification> lst) {
     for (var v in lst) {
       switch (v.action) {
         case RecipeManagementAction.add:
@@ -77,29 +77,29 @@ class RecipeController extends GetxController {
     lstRecipe.sort((a, b) => b.id.compareTo(a.id));
   }
 
-  Future<void> updateSelectedId(int selectedId) async {
+  void updateSelectedId(int selectedId) async {
     currentId = selectedId;
   }
 
-  Future<void> updateAction(RecipeManagementAction newAction) async {
+  void updateAction(RecipeManagementAction newAction) async {
     action.value = newAction.name;
   }
 
-  addEmptyStep(String guid) {
+  void addEmptyStep(String guid) {
     int indexToInsert = steps.indexWhere((x) => x.guid == guid);
     steps.insert(indexToInsert + 1, rs_widget.RecipeStep(null, null));
   }
 
-  removeStep(String guid) {
+  void removeStep(String guid) {
     steps.removeWhere((x) => x.guid == guid);
   }
 
-  addEmptyIngredient(String guid) {
+  void addEmptyIngredient(String guid) {
     int indexToInsert = ingredients.indexWhere((x) => x.guid == guid);
     ingredients.insert(indexToInsert + 1, ri_widget.RecipeIngredient(null));
   }
 
-  removeIngredient(String guid) {
+  void removeIngredient(String guid) {
     ingredients.removeWhere((x) => x.guid == guid);
   }
 
