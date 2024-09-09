@@ -13,7 +13,7 @@ class StorageService {
 
   StorageService(this.storageController, this.isarService);
 
-  Future<void> delete(List<StorageItemModification> lstStorageItemModification,
+  Future<void> _delete(List<StorageItemModification> lstStorageItemModification,
       BuildContext context) async {
     await isarService.deleteStorageItem(storageController.currentId).then(
       (res) {
@@ -23,6 +23,37 @@ class StorageService {
           ..item = null);
       },
     );
+  }
+
+  Future<void> clickOnCard(int id, BuildContext context) async {
+    storageController.updateSelectedId(id);
+    storageController.updateAction(StorageManagementAction.view);
+    if (!context.mounted) return;
+    await updateList("/storageManagement", context);
+  }
+
+  Future<void> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
+      List<StorageItemModification> lstStorageItemModification) async {
+    await _save(formKey, context, lstStorageItemModification);
+    storageController
+        .updateLstStorageItemModification(lstStorageItemModification);
+  }
+
+  void edit() {
+    if (storageController.action == StorageManagementAction.view.name.obs) {
+      storageController.updateAction(StorageManagementAction.edit);
+    } else {
+      storageController.updateAction(StorageManagementAction.view);
+    }
+  }
+
+  Future<void> delete(BuildContext context,
+      List<StorageItemModification> lstStorageItemModification) async {
+    await _delete(lstStorageItemModification, context);
+    storageController
+        .updateLstStorageItemModification(lstStorageItemModification);
+    if (!context.mounted) return;
+    Navigator.pop(context);
   }
 
   Future<void> updateList(String path, BuildContext context) async {
@@ -58,7 +89,7 @@ class StorageService {
     }
   }
 
-  Future<void> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
+  Future<void> _save(GlobalKey<FormBuilderState> formKey, BuildContext context,
       List<StorageItemModification> lstStorageItemModification) async {
     // Validate and save the form values
     if (formKey.currentState!.saveAndValidate()) {

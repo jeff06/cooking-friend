@@ -30,11 +30,8 @@ class _RecipeViewState extends State<RecipeView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        recipeToDisplay =
-            widget.service.getAllRecipeByFilter(searchBarController.text);
-      });
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await refreshList();
     });
   }
 
@@ -43,12 +40,6 @@ class _RecipeViewState extends State<RecipeView> {
       recipeToDisplay =
           widget.service.getAllRecipeByFilter(searchBarController.text);
     });
-  }
-
-  Future<void> clickOnCard(int id) async {
-    recipeController.updateSelectedId(id);
-    recipeController.updateAction(RecipeManagementAction.view);
-    await recipeService.updateList("/recipeManagement", context);
   }
 
   @override
@@ -92,7 +83,7 @@ class _RecipeViewState extends State<RecipeView> {
                                   recipeController.lstRecipe[index].name!;
                               int id = recipeController.lstRecipe[index].id;
                               return SearchDisplayCard(
-                                () => clickOnCard(id),
+                                () => recipeService.clickOnCard(id, context),
                                 ListTile(
                                   leading: const Icon(Icons.album),
                                   title: Text(name),

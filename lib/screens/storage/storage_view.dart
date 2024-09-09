@@ -36,21 +36,11 @@ class _StorageViewState extends State<StorageView> {
     });
   }
 
-  clickOnCard(int id) async {
-    storageController.updateSelectedId(id);
-    storageController.updateAction(StorageManagementAction.view);
-    if (!context.mounted) return;
-    await storageService.updateList("/storageManagement", context);
-  }
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        storageItemToDisplay =
-            widget.service.getAllStorageItemByFilter(searchBarController.text);
-      });
+      refreshList();
     });
   }
 
@@ -114,7 +104,8 @@ class _StorageViewState extends State<StorageView> {
                                 int id =
                                     storageController.lstStorageItem[index].id;
                                 return SearchDisplayCard(
-                                  () => clickOnCard(id),
+                                  () async => await storageService.clickOnCard(
+                                      id, context),
                                   ListTile(
                                     leading: const Icon(Icons.album),
                                     title: ClipRect(

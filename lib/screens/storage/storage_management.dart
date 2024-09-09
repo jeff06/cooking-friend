@@ -47,28 +47,6 @@ class _StorageManagementState extends State<StorageManagement> {
     }
   }
 
-  Future<void> _save() async {
-    await _storageService.save(_formKey, context, lstStorageItemModification);
-    storageController
-        .updateLstStorageItemModification(lstStorageItemModification);
-  }
-
-  Future<void> _delete(BuildContext context) async {
-    await _storageService.delete(lstStorageItemModification, context);
-    storageController
-        .updateLstStorageItemModification(lstStorageItemModification);
-    if (!context.mounted) return;
-    Navigator.pop(context);
-  }
-
-  void _edit() {
-    if (storageController.action == StorageManagementAction.view.name.obs) {
-      storageController.updateAction(StorageManagementAction.edit);
-    } else {
-      storageController.updateAction(StorageManagementAction.view);
-    }
-  }
-
   Future<SpeedDial> availableFloatingAction(BuildContext context) async {
     List<SpeedDialChild> lst = [];
     if (storageController.action == StorageManagementAction.edit.name.obs ||
@@ -81,7 +59,8 @@ class _StorageManagementState extends State<StorageManagement> {
           ),
           backgroundColor: Colors.green,
           onTap: () async {
-            await _save();
+            await _storageService.save(
+                _formKey, context, lstStorageItemModification);
           },
         ),
       );
@@ -98,7 +77,7 @@ class _StorageManagementState extends State<StorageManagement> {
           ),
           backgroundColor: CustomTheme.navbar,
           onTap: () {
-            _edit();
+            _storageService.edit();
           },
         ),
       );
@@ -113,7 +92,7 @@ class _StorageManagementState extends State<StorageManagement> {
           ),
           backgroundColor: Colors.red,
           onTap: () async {
-            await _delete(context);
+            await _storageService.delete(context, lstStorageItemModification);
           },
         ),
       );

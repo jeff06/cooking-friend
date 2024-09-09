@@ -60,6 +60,12 @@ class RecipeService {
     formKey.currentState!.reset();
   }
 
+  Future<void> clickOnCard(int id, BuildContext context) async {
+    controller.updateSelectedId(id);
+    controller.updateAction(RecipeManagementAction.view);
+    await updateList("/recipeManagement", context);
+  }
+
   Future<void> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
       List<RecipeModification> lstRecipeModification) async {
     // ne pas saver ce qui ont le meme id
