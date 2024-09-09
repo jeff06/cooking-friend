@@ -16,6 +16,8 @@ class RecipeService {
 
   RecipeService(this.recipeController, this.isarService);
 
+  //#region Public
+
   Future<void> updateList(String path, BuildContext context) async {
     await Navigator.pushNamed(context, path);
     recipeController.modifyLstStorageItemDisplayed(recipeController.lstRecipeModification);
@@ -43,6 +45,16 @@ class RecipeService {
     await _save(formKey, context, lstRecipeModification);
     recipeController.updateLstRecipeModification(lstRecipeModification);
   }
+
+  Future<void> clickOnCard(int id, BuildContext context) async {
+    recipeController.updateSelectedId(id);
+    recipeController.updateAction(RecipeManagementAction.view);
+    await updateList("/recipeManagement", context);
+  }
+
+  //#endregion
+
+  //#region Private
 
   Future<void> _delete(List<RecipeModification> lstStorageItemModification,
       BuildContext context) async {
@@ -85,12 +97,6 @@ class RecipeService {
     formKey.currentState!.reset();
   }
 
-  Future<void> clickOnCard(int id, BuildContext context) async {
-    recipeController.updateSelectedId(id);
-    recipeController.updateAction(RecipeManagementAction.view);
-    await updateList("/recipeManagement", context);
-  }
-
   Future<void> _save(GlobalKey<FormBuilderState> formKey, BuildContext context,
       List<RecipeModification> lstRecipeModification) async {
     // ne pas saver ce qui ont le meme id
@@ -113,9 +119,9 @@ class RecipeService {
         var currentElement = recipeController.ingredients[i];
         RecipeIngredient ri = RecipeIngredient();
         ri.ingredient =
-            formKey.currentState?.value["ri_${currentElement.guid}"];
+        formKey.currentState?.value["ri_${currentElement.guid}"];
         ri.measuringUnit =
-            formKey.currentState?.value["riu_${currentElement.guid}"];
+        formKey.currentState?.value["riu_${currentElement.guid}"];
         ri.quantity = float
             .parse(formKey.currentState?.value["riq_${currentElement.guid}"]);
         if (currentElement.ingredient != null) {
@@ -137,4 +143,6 @@ class RecipeService {
       });
     }
   }
+
+  //#endregion
 }

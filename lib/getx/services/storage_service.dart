@@ -13,18 +13,7 @@ class StorageService {
 
   StorageService(this.storageController, this.isarService);
 
-  Future<void> _delete(List<StorageItemModification> lstStorageItemModification,
-      BuildContext context) async {
-    await isarService.deleteStorageItem(storageController.currentId).then(
-      (res) {
-        lstStorageItemModification.add(StorageItemModification()
-          ..id = storageController.currentId
-          ..action = StorageManagementAction.delete
-          ..item = null);
-      },
-    );
-  }
-
+  //#region Public
   Future<void> clickOnCard(int id, BuildContext context) async {
     storageController.updateSelectedId(id);
     storageController.updateAction(StorageManagementAction.view);
@@ -59,6 +48,22 @@ class StorageService {
   Future<void> updateList(String path, BuildContext context) async {
     await Navigator.pushNamed(context, path);
     storageController.modifyLstStorageItemDisplayed();
+  }
+
+  //#endregion
+
+
+  //#region Private
+  Future<void> _delete(List<StorageItemModification> lstStorageItemModification,
+      BuildContext context) async {
+    await isarService.deleteStorageItem(storageController.currentId).then(
+      (res) {
+        lstStorageItemModification.add(StorageItemModification()
+          ..id = storageController.currentId
+          ..action = StorageManagementAction.delete
+          ..item = null);
+      },
+    );
   }
 
   Future<void> _saveUpdate(
@@ -115,4 +120,6 @@ class StorageService {
       );
     }
   }
+
+  //#endregion
 }
