@@ -8,4 +8,5 @@ class RecipeIngredient {
   String? ingredient;
   String? measuringUnit;
   float? quantity;
+  int? order;
 }

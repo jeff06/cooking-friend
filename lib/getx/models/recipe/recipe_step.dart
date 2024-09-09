@@ -6,4 +6,5 @@ part 'recipe_step.g.dart';
 class RecipeStep {
   Id id = Isar.autoIncrement;
   String? step;
+  int? order;
 }

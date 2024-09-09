@@ -37,6 +37,7 @@ class RecipeController extends GetxController {
     if (action != RecipeManagementAction.add.name.obs) {
       steps = <rs_widget.RecipeStep>[].obs;
     }
+    newRecipeSteps.sort((a, b) => a.order!.compareTo(b.order!));
     for (var step in newRecipeSteps) {
       TextEditingController tec = TextEditingController();
       tec.text = step.step!;
@@ -49,6 +50,7 @@ class RecipeController extends GetxController {
     if (action != RecipeManagementAction.add.name.obs) {
       ingredients = <ri_widget.RecipeIngredient>[].obs;
     }
+    newRecipeIngredients.sort((a, b) => a.order!.compareTo(b.order!));
     for (var ingredient in newRecipeIngredients) {
       ingredients.add(ri_widget.RecipeIngredient(ingredient));
     }

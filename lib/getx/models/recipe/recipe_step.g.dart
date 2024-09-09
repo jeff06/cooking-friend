@@ -17,8 +17,13 @@ const RecipeStepSchema = CollectionSchema(
   name: r'RecipeStep',
   id: 4627384835942223803,
   properties: {
-    r'step': PropertySchema(
+    r'order': PropertySchema(
       id: 0,
+      name: r'order',
+      type: IsarType.long,
+    ),
+    r'step': PropertySchema(
+      id: 1,
       name: r'step',
       type: IsarType.string,
     )
@@ -58,7 +63,8 @@ void _recipeStepSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.step);
+  writer.writeLong(offsets[0], object.order);
+  writer.writeString(offsets[1], object.step);
 }
 
 RecipeStep _recipeStepDeserialize(
@@ -69,7 +75,8 @@ RecipeStep _recipeStepDeserialize(
 ) {
   final object = RecipeStep();
   object.id = id;
-  object.step = reader.readStringOrNull(offsets[0]);
+  object.order = reader.readLongOrNull(offsets[0]);
+  object.step = reader.readStringOrNull(offsets[1]);
   return object;
 }
 
@@ -81,6 +88,8 @@ P _recipeStepDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readLongOrNull(offset)) as P;
+    case 1:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -223,6 +232,75 @@ extension RecipeStepQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeStep, RecipeStep, QAfterFilterCondition> orderIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'order',
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeStep, RecipeStep, QAfterFilterCondition> orderIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'order',
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeStep, RecipeStep, QAfterFilterCondition> orderEqualTo(
+      int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeStep, RecipeStep, QAfterFilterCondition> orderGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeStep, RecipeStep, QAfterFilterCondition> orderLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeStep, RecipeStep, QAfterFilterCondition> orderBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'order',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -386,6 +464,18 @@ extension RecipeStepQueryLinks
 
 extension RecipeStepQuerySortBy
     on QueryBuilder<RecipeStep, RecipeStep, QSortBy> {
+  QueryBuilder<RecipeStep, RecipeStep, QAfterSortBy> sortByOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecipeStep, RecipeStep, QAfterSortBy> sortByOrderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.desc);
+    });
+  }
+
   QueryBuilder<RecipeStep, RecipeStep, QAfterSortBy> sortByStep() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'step', Sort.asc);
@@ -413,6 +503,18 @@ extension RecipeStepQuerySortThenBy
     });
   }
 
+  QueryBuilder<RecipeStep, RecipeStep, QAfterSortBy> thenByOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecipeStep, RecipeStep, QAfterSortBy> thenByOrderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.desc);
+    });
+  }
+
   QueryBuilder<RecipeStep, RecipeStep, QAfterSortBy> thenByStep() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'step', Sort.asc);
@@ -428,6 +530,12 @@ extension RecipeStepQuerySortThenBy
 
 extension RecipeStepQueryWhereDistinct
     on QueryBuilder<RecipeStep, RecipeStep, QDistinct> {
+  QueryBuilder<RecipeStep, RecipeStep, QDistinct> distinctByOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'order');
+    });
+  }
+
   QueryBuilder<RecipeStep, RecipeStep, QDistinct> distinctByStep(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -441,6 +549,12 @@ extension RecipeStepQueryProperty
   QueryBuilder<RecipeStep, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<RecipeStep, int?, QQueryOperations> orderProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'order');
     });
   }
 

@@ -65,23 +65,28 @@ class RecipeService {
     if (formKey.currentState!.saveAndValidate()) {
       Recipe newRecipe = Recipe()
         ..name = formKey.currentState?.value["recipe_title"];
-      for (var v in controller.steps) {
-        var content = formKey.currentState?.value["rs_${v.guid}"];
+      for (int i =0; i < controller.steps.length; i++) {
+        var currentElement = controller.steps[i];
+        var content = formKey.currentState?.value["rs_${currentElement.guid}"];
         RecipeStep step = RecipeStep()..step = content;
-        if (v.step != null) {
-          step.id = v.step!.id;
+        step.order = i;
+        if (currentElement.step != null) {
+          step.id = currentElement.step!.id;
         }
+
         newRecipe.lstSteps.add(step);
       }
 
-      for (var v in controller.ingredients) {
+      for (int i = 0; i < controller.ingredients.length; i++) {
+        var currentElement = controller.ingredients[i];
         RecipeIngredient ri = RecipeIngredient();
-        ri.ingredient = formKey.currentState?.value["ri_${v.guid}"];
-        ri.measuringUnit = formKey.currentState?.value["riu_${v.guid}"];
-        ri.quantity = float.parse(formKey.currentState?.value["riq_${v.guid}"]);
-        if (v.ingredient != null) {
-          ri.id = v.ingredient!.id;
+        ri.ingredient = formKey.currentState?.value["ri_${currentElement.guid}"];
+        ri.measuringUnit = formKey.currentState?.value["riu_${currentElement.guid}"];
+        ri.quantity = float.parse(formKey.currentState?.value["riq_${currentElement.guid}"]);
+        if (currentElement.ingredient != null) {
+          ri.id = currentElement.ingredient!.id;
         }
+        ri.order = i;
         newRecipe.lstIngredients.add(ri);
       }
 

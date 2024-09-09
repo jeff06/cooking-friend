@@ -194,7 +194,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
                             itemBuilder: (BuildContext context, int index) {
                               var element = recipeController.steps[index];
                               return Container(
-                                  key: Key('$index'), child: element);
+                                  key: ValueKey(element), child: element);
                             },
                           ),
                         ),
@@ -211,9 +211,9 @@ class _RecipeManagementState extends State<RecipeManagement> {
                             },
                             itemCount: recipeController.ingredients.length,
                             itemBuilder: (BuildContext context, int index) {
+                              var element = recipeController.ingredients[index];
                               return Container(
-                                  key: Key('$index'),
-                                  child: recipeController.ingredients[index]);
+                                  key: ValueKey(element), child: element);
                             },
                           ),
                         ),

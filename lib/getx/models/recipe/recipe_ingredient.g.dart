@@ -27,8 +27,13 @@ const RecipeIngredientSchema = CollectionSchema(
       name: r'measuringUnit',
       type: IsarType.string,
     ),
-    r'quantity': PropertySchema(
+    r'order': PropertySchema(
       id: 2,
+      name: r'order',
+      type: IsarType.long,
+    ),
+    r'quantity': PropertySchema(
+      id: 3,
       name: r'quantity',
       type: IsarType.float,
     )
@@ -76,7 +81,8 @@ void _recipeIngredientSerialize(
 ) {
   writer.writeString(offsets[0], object.ingredient);
   writer.writeString(offsets[1], object.measuringUnit);
-  writer.writeFloat(offsets[2], object.quantity);
+  writer.writeLong(offsets[2], object.order);
+  writer.writeFloat(offsets[3], object.quantity);
 }
 
 RecipeIngredient _recipeIngredientDeserialize(
@@ -89,7 +95,8 @@ RecipeIngredient _recipeIngredientDeserialize(
   object.id = id;
   object.ingredient = reader.readStringOrNull(offsets[0]);
   object.measuringUnit = reader.readStringOrNull(offsets[1]);
-  object.quantity = reader.readFloatOrNull(offsets[2]);
+  object.order = reader.readLongOrNull(offsets[2]);
+  object.quantity = reader.readFloatOrNull(offsets[3]);
   return object;
 }
 
@@ -105,6 +112,8 @@ P _recipeIngredientDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
+      return (reader.readLongOrNull(offset)) as P;
+    case 3:
       return (reader.readFloatOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -570,6 +579,80 @@ extension RecipeIngredientQueryFilter
   }
 
   QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterFilterCondition>
+      orderIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'order',
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterFilterCondition>
+      orderIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'order',
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterFilterCondition>
+      orderEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterFilterCondition>
+      orderGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterFilterCondition>
+      orderLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterFilterCondition>
+      orderBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'order',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterFilterCondition>
       quantityIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -690,6 +773,19 @@ extension RecipeIngredientQuerySortBy
     });
   }
 
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterSortBy> sortByOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterSortBy>
+      sortByOrderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.desc);
+    });
+  }
+
   QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterSortBy>
       sortByQuantity() {
     return QueryBuilder.apply(this, (query) {
@@ -748,6 +844,19 @@ extension RecipeIngredientQuerySortThenBy
     });
   }
 
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterSortBy> thenByOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.asc);
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterSortBy>
+      thenByOrderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.desc);
+    });
+  }
+
   QueryBuilder<RecipeIngredient, RecipeIngredient, QAfterSortBy>
       thenByQuantity() {
     return QueryBuilder.apply(this, (query) {
@@ -781,6 +890,13 @@ extension RecipeIngredientQueryWhereDistinct
   }
 
   QueryBuilder<RecipeIngredient, RecipeIngredient, QDistinct>
+      distinctByOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'order');
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, RecipeIngredient, QDistinct>
       distinctByQuantity() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'quantity');
@@ -807,6 +923,12 @@ extension RecipeIngredientQueryProperty
       measuringUnitProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'measuringUnit');
+    });
+  }
+
+  QueryBuilder<RecipeIngredient, int?, QQueryOperations> orderProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'order');
     });
   }
 
