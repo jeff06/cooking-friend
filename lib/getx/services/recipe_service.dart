@@ -40,11 +40,12 @@ class RecipeService {
       BuildContext context,
       GlobalKey<FormBuilderState> formKey) async {
     if (controller.action == RecipeManagementAction.edit.name.obs) {
-      await isarService.updateRecipe(recipe, controller.currentId).then((res) {
+      await isarService.updateRecipe(recipe, controller.currentId, controller.ingredientsToRemove, controller.stepsToRemove).then((res) {
         lstRecipeModification.add(RecipeModification()
           ..id = controller.currentId
           ..action = RecipeManagementAction.edit
           ..item = recipe);
+        if (!context.mounted) return;
         Navigator.pop(context);
       });
     } else {
@@ -54,9 +55,9 @@ class RecipeService {
           ..id = res
           ..action = RecipeManagementAction.add
           ..item = recipe);
-        formKey.currentState!.reset();
       });
     }
+    formKey.currentState!.reset();
   }
 
   Future<void> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
@@ -92,6 +93,7 @@ class RecipeService {
 
       await _saveAndUpdate(newRecipe, lstRecipeModification, context, formKey)
           .then((res) {
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Recipe added"),

@@ -36,12 +36,18 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
                 color: CustomTheme.accent,
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  controller.removeIngredient(widget.guid);
+                  controller.removeIngredient(widget.guid, widget.ingredient?.id);
                 },
               ),
             ),
             Expanded(
               child: FormBuilderTextField(
+                decoration: const InputDecoration(
+                  labelText: "Quantity",
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
                 enabled:
                     controller.action == RecipeManagementAction.view.name.obs
                         ? false
@@ -61,6 +67,12 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
             ),
             Expanded(
               child: FormBuilderDropdown(
+                decoration: const InputDecoration(
+                  labelText: "Unit",
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
                 enabled:
                     controller.action == RecipeManagementAction.view.name.obs
                         ? false
@@ -74,6 +86,12 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
             ),
             Expanded(
               child: FormBuilderTextField(
+                decoration: const InputDecoration(
+                  labelText: "Ingredient",
+                  labelStyle: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
                 enabled:
                     controller.action == RecipeManagementAction.view.name.obs
                         ? false

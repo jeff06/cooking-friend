@@ -37,13 +37,10 @@ class _StorageViewState extends State<StorageView> {
   }
 
   clickOnCard(int id) async {
-    await storageController.updateSelectedId(id).then((res) async {
-      await storageController
-          .updateAction(StorageManagementAction.view)
-          .then((resp) async {
-        await storageService.updateList("/storageManagement", context);
-      });
-    });
+    storageController.updateSelectedId(id);
+    storageController.updateAction(StorageManagementAction.view);
+    if (!context.mounted) return;
+    await storageService.updateList("/storageManagement", context);
   }
 
   @override
@@ -126,9 +123,11 @@ class _StorageViewState extends State<StorageView> {
                                               color: Colors.black)),
                                     ),
                                     subtitle: ClipRect(
-                                      child: Text(date,
-                                          style: const TextStyle(
-                                              color: Colors.black)),
+                                      child: date == "null"
+                                          ? Container()
+                                          : Text(date,
+                                              style: const TextStyle(
+                                                  color: Colors.black)),
                                     ),
                                   ),
                                 );

@@ -57,14 +57,15 @@ class _StorageManagementState extends State<StorageManagement> {
     await _storageService.delete(lstStorageItemModification, context);
     storageController
         .updateLstStorageItemModification(lstStorageItemModification);
+    if (!context.mounted) return;
     Navigator.pop(context);
   }
 
-  Future<void> _edit() async {
+  void _edit() {
     if (storageController.action == StorageManagementAction.view.name.obs) {
-      await storageController.updateAction(StorageManagementAction.edit);
+      storageController.updateAction(StorageManagementAction.edit);
     } else {
-      await storageController.updateAction(StorageManagementAction.view);
+      storageController.updateAction(StorageManagementAction.view);
     }
   }
 
@@ -96,8 +97,8 @@ class _StorageManagementState extends State<StorageManagement> {
             color: Colors.white,
           ),
           backgroundColor: CustomTheme.navbar,
-          onTap: () async {
-            await _edit();
+          onTap: () {
+            _edit();
           },
         ),
       );

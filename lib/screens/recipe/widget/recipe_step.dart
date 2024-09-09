@@ -37,7 +37,7 @@ class _RecipeStepState extends State<RecipeStep> {
                 color: CustomTheme.accent,
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  controller.removeStep(widget.guid);
+                  controller.removeStep(widget.guid, widget.step?.id);
                 },
               ),
             ),

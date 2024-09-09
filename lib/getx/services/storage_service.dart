@@ -4,7 +4,7 @@ import 'package:cooking_friend/getx/models/storage/storage_item.dart';
 import 'package:cooking_friend/getx/models/storage/storage_item_modification.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/src/form_builder.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
 class StorageService {
@@ -43,7 +43,8 @@ class StorageService {
           ..id = storageController.currentId
           ..action = StorageManagementAction.edit
           ..item = item);
-        Navigator.pop(context, lstStorageItemModification);
+        if (!context.mounted) return;
+        Navigator.of(context).pop;
       });
     } else {
       await isarService.saveNewStorageItem(item).then((res) {
@@ -71,6 +72,7 @@ class StorageService {
       await _saveUpdate(item, lstStorageItemModification, context, formKey)
           .then(
         (res) {
+          if (!context.mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(storageController.action.string == "add"

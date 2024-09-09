@@ -14,6 +14,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class RecipeManagement extends StatefulWidget {
   final IsarService service;
@@ -52,9 +53,11 @@ class _RecipeManagementState extends State<RecipeManagement> {
   }
 
   Future<void> _delete(BuildContext context) async {
-    await _recipeService.delete(lstRecipeModification, context);
-    recipeController.updateLstRecipeModification(lstRecipeModification);
-    Navigator.pop(context);
+    await _recipeService.delete(lstRecipeModification, context).then((res) {
+      recipeController.updateLstRecipeModification(lstRecipeModification);
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+    });
   }
 
   Future<void> _edit() async {
@@ -181,40 +184,62 @@ class _RecipeManagementState extends State<RecipeManagement> {
                           ),
                         ),
                         Obx(
-                          () => ReorderableListView.builder(
-                            header: const Text("Steps"),
-                            shrinkWrap: true,
-                            onReorder: (int oldIndex, int newIndex) {
-                              if (newIndex > oldIndex) newIndex--;
-                              final step =
-                                  recipeController.steps.removeAt(oldIndex);
-                              recipeController.steps.insert(newIndex, step);
-                            },
-                            itemCount: recipeController.steps.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              var element = recipeController.steps[index];
-                              return Container(
-                                  key: ValueKey(element), child: element);
-                            },
+                          () => Container(
+                            child: recipeController.steps.isEmpty
+                                ? IconButton(
+                                    onPressed: () => recipeController
+                                        .addEmptyStep(const Uuid().v4()),
+                                    icon: const Icon(Icons.add))
+                                : ReorderableListView.builder(
+                                    header: const Text("Steps"),
+                                    shrinkWrap: true,
+                                    onReorder: (int oldIndex, int newIndex) {
+                                      if (newIndex > oldIndex) newIndex--;
+                                      final step = recipeController.steps
+                                          .removeAt(oldIndex);
+                                      recipeController.steps
+                                          .insert(newIndex, step);
+                                    },
+                                    itemCount: recipeController.steps.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      var element =
+                                          recipeController.steps[index];
+                                      return Container(
+                                          key: ValueKey(element),
+                                          child: element);
+                                    },
+                                  ),
                           ),
                         ),
                         Obx(
-                          () => ReorderableListView.builder(
-                            header: const Text("Ingredients"),
-                            shrinkWrap: true,
-                            onReorder: (int oldIndex, int newIndex) {
-                              if (newIndex > oldIndex) newIndex--;
-                              final step = recipeController.ingredients
-                                  .removeAt(oldIndex);
-                              recipeController.ingredients
-                                  .insert(newIndex, step);
-                            },
-                            itemCount: recipeController.ingredients.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              var element = recipeController.ingredients[index];
-                              return Container(
-                                  key: ValueKey(element), child: element);
-                            },
+                          () => Container(
+                            child: recipeController.ingredients.isEmpty
+                                ? IconButton(
+                                    onPressed: () => recipeController
+                                        .addEmptyIngredient(const Uuid().v4()),
+                                    icon: const Icon(Icons.add))
+                                : ReorderableListView.builder(
+                                    header: const Text("Ingredients"),
+                                    shrinkWrap: true,
+                                    onReorder: (int oldIndex, int newIndex) {
+                                      if (newIndex > oldIndex) newIndex--;
+                                      final step = recipeController.ingredients
+                                          .removeAt(oldIndex);
+                                      recipeController.ingredients
+                                          .insert(newIndex, step);
+                                    },
+                                    itemCount:
+                                        recipeController.ingredients.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      var element =
+                                          recipeController.ingredients[index];
+                                      return Container(
+                                          key: ValueKey(element),
+                                          child: element);
+                                    },
+                                  ),
                           ),
                         ),
                       ],

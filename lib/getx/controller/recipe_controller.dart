@@ -10,6 +10,7 @@ import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart'
     as ri_model;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:isar/isar.dart';
 
 class RecipeController extends GetxController {
   var steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
@@ -19,6 +20,8 @@ class RecipeController extends GetxController {
   var action = RecipeManagementAction.none.name.obs;
   var lstRecipe = <Recipe>[].obs;
   var lstRecipeModification = <RecipeModification>[].obs;
+  List<int> ingredientsToRemove = [];
+  List<int> stepsToRemove = [];
 
   void resetController() {
     steps.value = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
@@ -27,6 +30,8 @@ class RecipeController extends GetxController {
     currentId = -1;
     action = RecipeManagementAction.none.name.obs;
     lstRecipeModification = <RecipeModification>[].obs;
+    ingredientsToRemove = [];
+    stepsToRemove = [];
   }
 
   void updateLstRecipeDisplayed(List<Recipe> newLstStorageItem) {
@@ -92,8 +97,11 @@ class RecipeController extends GetxController {
     steps.insert(indexToInsert + 1, rs_widget.RecipeStep(null, null));
   }
 
-  void removeStep(String guid) {
+  void removeStep(String guid, [int? id]) {
     steps.removeWhere((x) => x.guid == guid);
+    if (id != null){
+      stepsToRemove.add(id);
+    }
   }
 
   void addEmptyIngredient(String guid) {
@@ -101,8 +109,11 @@ class RecipeController extends GetxController {
     ingredients.insert(indexToInsert + 1, ri_widget.RecipeIngredient(null));
   }
 
-  void removeIngredient(String guid) {
+  void removeIngredient(String guid, [Id? id]) {
     ingredients.removeWhere((x) => x.guid == guid);
+    if (id != null){
+      ingredientsToRemove.add(id);
+    }
   }
 
   void updateLstRecipeModification(List<RecipeModification> lst) {

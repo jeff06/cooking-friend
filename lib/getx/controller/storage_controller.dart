@@ -13,7 +13,7 @@ class StorageController extends GetxController {
   var lstStorageItem = <StorageItem>[].obs;
   var lstStorageItemModification = <StorageItemModification>[].obs;
 
-  Future<void> updateSelectedId(int selectedId) async {
+  void updateSelectedId(int selectedId) {
     currentId = selectedId;
   }
 
@@ -49,7 +49,7 @@ class StorageController extends GetxController {
     lstStorageItem.sort((a, b) => b.id.compareTo(a.id));
   }
 
-  Future<void> updateAction(StorageManagementAction newAction) async {
+  void updateAction(StorageManagementAction newAction) {
     action.value = newAction.name;
   }
 

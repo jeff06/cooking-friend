@@ -35,10 +35,10 @@ class IsarService {
     return isar.writeTxnSync<int>(() => isar.recipes.putSync(recipe));
   }
 
-  Future<int> updateRecipe(Recipe recipe, int currentId) async {
+  Future<int> updateRecipe(Recipe recipe, int currentId, List<int> ingredientsToDelete, List<int> stepsToDelete) async {
     final isar = await db;
-    recipe.id = currentId;
 
+    recipe.id = currentId;
     recipe.steps.addAll(recipe.lstSteps);
     recipe.ingredients.addAll(recipe.lstIngredients);
 
@@ -46,6 +46,9 @@ class IsarService {
       int id = isar.recipes.putSync(recipe);
       isar.recipeIngredients.putAllSync(recipe.lstIngredients);
       isar.recipeSteps.putAllSync(recipe.lstSteps);
+
+      isar.recipeIngredients.deleteAllSync(ingredientsToDelete);
+      isar.recipeSteps.deleteAllSync(stepsToDelete);
 
       recipe.ingredients.saveSync();
       recipe.steps.saveSync();
