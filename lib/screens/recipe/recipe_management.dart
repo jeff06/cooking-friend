@@ -47,27 +47,6 @@ class _RecipeManagementState extends State<RecipeManagement> {
     }
   }
 
-  Future<void> _save() async {
-    await _recipeService.save(_formKey, context, lstRecipeModification);
-    recipeController.updateLstRecipeModification(lstRecipeModification);
-  }
-
-  Future<void> _delete(BuildContext context) async {
-    await _recipeService.delete(lstRecipeModification, context).then((res) {
-      recipeController.updateLstRecipeModification(lstRecipeModification);
-      if (!context.mounted) return;
-      Navigator.of(context).pop();
-    });
-  }
-
-  Future<void> _edit() async {
-    if (recipeController.action == RecipeManagementAction.view.name.obs) {
-      recipeController.updateAction(RecipeManagementAction.edit);
-    } else {
-      recipeController.updateAction(RecipeManagementAction.view);
-    }
-  }
-
   Future<SpeedDial> availableFloatingAction(BuildContext context) async {
     List<SpeedDialChild> lst = [];
     if (recipeController.action == RecipeManagementAction.edit.name.obs ||
@@ -80,7 +59,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
           ),
           backgroundColor: Colors.green,
           onTap: () async {
-            await _save();
+            await _recipeService.save(_formKey, context, lstRecipeModification);
           },
         ),
       );
@@ -97,7 +76,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
           ),
           backgroundColor: CustomTheme.navbar,
           onTap: () async {
-            await _edit();
+            _recipeService.edit();
           },
         ),
       );
@@ -112,7 +91,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
           ),
           backgroundColor: Colors.red,
           onTap: () async {
-            await _delete(context);
+            await _recipeService.delete(context, lstRecipeModification);
           },
         ),
       );

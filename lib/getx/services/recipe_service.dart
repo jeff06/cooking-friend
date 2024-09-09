@@ -11,23 +11,45 @@ import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 
 class RecipeService {
-  final RecipeController controller;
+  final RecipeController recipeController;
   final IsarService isarService;
 
-  RecipeService(this.controller, this.isarService);
+  RecipeService(this.recipeController, this.isarService);
 
   Future<void> updateList(String path, BuildContext context) async {
     await Navigator.pushNamed(context, path);
-    controller.modifyLstStorageItemDisplayed(controller.lstRecipeModification);
-    controller.resetController();
+    recipeController.modifyLstStorageItemDisplayed(recipeController.lstRecipeModification);
+    recipeController.resetController();
   }
 
-  Future<void> delete(List<RecipeModification> lstStorageItemModification,
+  Future<void> delete(BuildContext context, List<RecipeModification> lstRecipeModification) async {
+    await _delete(lstRecipeModification, context).then((res) {
+      recipeController.updateLstRecipeModification(lstRecipeModification);
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+    });
+  }
+
+  void edit() async {
+    if (recipeController.action == RecipeManagementAction.view.name.obs) {
+      recipeController.updateAction(RecipeManagementAction.edit);
+    } else {
+      recipeController.updateAction(RecipeManagementAction.view);
+    }
+  }
+
+  Future<void> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
+      List<RecipeModification> lstRecipeModification) async {
+    await _save(formKey, context, lstRecipeModification);
+    recipeController.updateLstRecipeModification(lstRecipeModification);
+  }
+
+  Future<void> _delete(List<RecipeModification> lstStorageItemModification,
       BuildContext context) async {
-    await isarService.deleteRecipe(controller.currentId).then(
+    await isarService.deleteRecipe(recipeController.currentId).then(
       (res) {
         lstStorageItemModification.add(RecipeModification()
-          ..id = controller.currentId
+          ..id = recipeController.currentId
           ..action = RecipeManagementAction.delete
           ..item = null);
       },
@@ -39,10 +61,13 @@ class RecipeService {
       List<RecipeModification> lstRecipeModification,
       BuildContext context,
       GlobalKey<FormBuilderState> formKey) async {
-    if (controller.action == RecipeManagementAction.edit.name.obs) {
-      await isarService.updateRecipe(recipe, controller.currentId, controller.ingredientsToRemove, controller.stepsToRemove).then((res) {
+    if (recipeController.action == RecipeManagementAction.edit.name.obs) {
+      await isarService
+          .updateRecipe(recipe, recipeController.currentId,
+              recipeController.ingredientsToRemove, recipeController.stepsToRemove)
+          .then((res) {
         lstRecipeModification.add(RecipeModification()
-          ..id = controller.currentId
+          ..id = recipeController.currentId
           ..action = RecipeManagementAction.edit
           ..item = recipe);
         if (!context.mounted) return;
@@ -61,19 +86,19 @@ class RecipeService {
   }
 
   Future<void> clickOnCard(int id, BuildContext context) async {
-    controller.updateSelectedId(id);
-    controller.updateAction(RecipeManagementAction.view);
+    recipeController.updateSelectedId(id);
+    recipeController.updateAction(RecipeManagementAction.view);
     await updateList("/recipeManagement", context);
   }
 
-  Future<void> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
+  Future<void> _save(GlobalKey<FormBuilderState> formKey, BuildContext context,
       List<RecipeModification> lstRecipeModification) async {
     // ne pas saver ce qui ont le meme id
     if (formKey.currentState!.saveAndValidate()) {
       Recipe newRecipe = Recipe()
         ..name = formKey.currentState?.value["recipe_title"];
-      for (int i =0; i < controller.steps.length; i++) {
-        var currentElement = controller.steps[i];
+      for (int i = 0; i < recipeController.steps.length; i++) {
+        var currentElement = recipeController.steps[i];
         var content = formKey.currentState?.value["rs_${currentElement.guid}"];
         RecipeStep step = RecipeStep()..step = content;
         step.order = i;
@@ -84,12 +109,15 @@ class RecipeService {
         newRecipe.lstSteps.add(step);
       }
 
-      for (int i = 0; i < controller.ingredients.length; i++) {
-        var currentElement = controller.ingredients[i];
+      for (int i = 0; i < recipeController.ingredients.length; i++) {
+        var currentElement = recipeController.ingredients[i];
         RecipeIngredient ri = RecipeIngredient();
-        ri.ingredient = formKey.currentState?.value["ri_${currentElement.guid}"];
-        ri.measuringUnit = formKey.currentState?.value["riu_${currentElement.guid}"];
-        ri.quantity = float.parse(formKey.currentState?.value["riq_${currentElement.guid}"]);
+        ri.ingredient =
+            formKey.currentState?.value["ri_${currentElement.guid}"];
+        ri.measuringUnit =
+            formKey.currentState?.value["riu_${currentElement.guid}"];
+        ri.quantity = float
+            .parse(formKey.currentState?.value["riq_${currentElement.guid}"]);
         if (currentElement.ingredient != null) {
           ri.id = currentElement.ingredient!.id;
         }
@@ -105,7 +133,7 @@ class RecipeService {
             content: Text("Recipe added"),
           ),
         );
-        controller.resetController();
+        recipeController.resetController();
       });
     }
   }
