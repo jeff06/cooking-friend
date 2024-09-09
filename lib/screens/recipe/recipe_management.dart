@@ -180,9 +180,9 @@ class _RecipeManagementState extends State<RecipeManagement> {
                             ],
                           ),
                         ),
-                        const Text("Steps"),
                         Obx(
                           () => ReorderableListView.builder(
+                            header: const Text("Steps"),
                             shrinkWrap: true,
                             onReorder: (int oldIndex, int newIndex) {
                               if (newIndex > oldIndex) newIndex--;
@@ -198,9 +198,9 @@ class _RecipeManagementState extends State<RecipeManagement> {
                             },
                           ),
                         ),
-                        const Text("Ingredients"),
                         Obx(
                           () => ReorderableListView.builder(
+                            header: const Text("Ingredients"),
                             shrinkWrap: true,
                             onReorder: (int oldIndex, int newIndex) {
                               if (newIndex > oldIndex) newIndex--;
