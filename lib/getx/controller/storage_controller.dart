@@ -47,6 +47,7 @@ class StorageController extends GetxController {
       }
     }
     lstStorageItem.sort((a, b) => b.id.compareTo(a.id));
+    lstStorageItemModification = <StorageItemModification>[].obs;
   }
 
   void updateAction(StorageManagementAction newAction) {

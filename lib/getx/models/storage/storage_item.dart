@@ -8,4 +8,6 @@ class StorageItem {
   String? name;
   DateTime? date;
   String? code;
+  int? quantity;
+  String? location;
 }
