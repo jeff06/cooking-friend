@@ -6,9 +6,9 @@ on:
       test:
         type: choice
         options:
-          - yes
-          - non
-        default: yes
+          - 'yes'
+          - 'non'
+        default: 'yes'
         description: 'Run test'
         required: true
 jobs:
@@ -16,4 +16,4 @@ jobs:
     uses: ./.github/workflows/reuse-test-and-build.yml
     with:
       environment: dev
-      should_run_test: ${{inputs.test}}
+      should_run_test: ${{ inputs.test }}

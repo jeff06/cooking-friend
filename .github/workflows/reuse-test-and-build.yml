@@ -1,6 +1,5 @@
-name: ~change log level
+name: ~test and build
 
-# Controls when the workflow will run
 on:
   workflow_call:
     inputs:
@@ -13,12 +12,8 @@ on:
         description: should run test
         required: true
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
-  log-level:
+  build:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
@@ -34,16 +29,19 @@ jobs:
           channel: 'stable'
 
       - name: Set up java
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
-          java-version: '21'
+          java-version: '17'
+          
+      - name: Flutter doctor
+        run: flutter doctor --verbose
 
       - name: Get Dependencies
         run: flutter pub get
 
       - name: Run test
-        if: ${{inputs.should_run_test}}
+        if: ${{ inputs.should_run_test }}
         run: flutter test
 
       - name: Build APK
