@@ -33,6 +33,9 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '21'
+          
+      - name: Flutter doctor
+        run: flutter doctor --verbose
 
       - name: Get Dependencies
         run: flutter pub get
