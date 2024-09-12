@@ -166,6 +166,38 @@ class _StorageManagementState extends State<StorageManagement> {
                                   const InputDecoration(labelText: 'Date'),
                               inputType: InputType.date,
                             ),
+                            FormBuilderTextField(
+                              initialValue: snapshot.data != null
+                                  ? snapshot.data?.quantity.toString()
+                                  : "",
+                              enabled: storageController.action ==
+                                      StorageManagementAction.view.name.obs
+                                  ? false
+                                  : true,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(),
+                              name: 'form_product_quantity',
+                              decoration:
+                                  const InputDecoration(labelText: 'Quantity'),
+                              onChanged: (newVal) {
+                                storageController.updateBarcode(newVal);
+                              },
+                            ),
+                            FormBuilderTextField(
+                              initialValue: snapshot.data != null
+                                  ? snapshot.data?.location
+                                  : "",
+                              enabled: storageController.action ==
+                                      StorageManagementAction.view.name.obs
+                                  ? false
+                                  : true,
+                              name: 'form_product_location',
+                              decoration:
+                                  const InputDecoration(labelText: 'Location'),
+                              onChanged: (newVal) {
+                                storageController.updateBarcode(newVal);
+                              },
+                            ),
                             //Obx(() => Text(storageController.barcode.string)),
                             Row(
                               children: [

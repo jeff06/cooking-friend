@@ -98,13 +98,12 @@ class StorageService {
       List<StorageItemModification> lstStorageItemModification) async {
     // Validate and save the form values
     if (formKey.currentState!.saveAndValidate()) {
-      String name = formKey.currentState?.value["form_product_name"];
-      DateTime? date = formKey.currentState?.value["form_product_date"];
-      String? code = formKey.currentState?.value["form_product_code"];
       StorageItem item = StorageItem()
-        ..name = name
-        ..date = date
-        ..code = code;
+        ..name = formKey.currentState?.value["form_product_name"]
+        ..date = formKey.currentState?.value["form_product_date"]
+        ..code = formKey.currentState?.value["form_product_code"]
+        ..location = formKey.currentState?.value["form_product_location"]
+        ..quantity =  int.parse(formKey.currentState?.value["form_product_quantity"]);
       await _saveUpdate(item, lstStorageItemModification, context, formKey)
           .then(
         (res) {
