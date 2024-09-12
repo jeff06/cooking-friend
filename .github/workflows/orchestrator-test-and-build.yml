@@ -1,0 +1,19 @@
+name: orchestrator
+
+on:
+  workflow_dispatch:
+    inputs:
+      test:
+        type: choice
+        options:
+          - yes
+          - non
+        default: yes
+        description: 'Run test'
+        required: true
+jobs:
+  deploy-dev:
+    uses: ./.github/workflows/reuse-test-and-build.yml
+    with:
+      environment: dev
+      should_run_test: ${{inputs.test}}
