@@ -138,90 +138,98 @@ class _RecipeManagementState extends State<RecipeManagement> {
                       snapshot.data!.ingredients.toList());
                 }
                 return Obx(
-                  () => FormBuilder(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 10),
-                        FormBuilderTextField(
-                          name: "recipe_title",
-                          decoration: const InputDecoration(
-                            labelText: "Title",
-                            labelStyle: TextStyle(
-                              color: Colors.black,
+                  () => SingleChildScrollView(
+                    child: FormBuilder(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          FormBuilderTextField(
+                            name: "recipe_title",
+                            decoration: const InputDecoration(
+                              labelText: "Title",
+                              labelStyle: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            controller: _recipeTitleController,
+                            enabled: recipeController.action ==
+                                    StorageManagementAction.view.name.obs
+                                ? false
+                                : true,
+                            validator: FormBuilderValidators.compose(
+                              [
+                                FormBuilderValidators.required(),
+                              ],
                             ),
                           ),
-                          controller: _recipeTitleController,
-                          enabled: recipeController.action ==
-                                  StorageManagementAction.view.name.obs
-                              ? false
-                              : true,
-                          validator: FormBuilderValidators.compose(
-                            [
-                              FormBuilderValidators.required(),
-                            ],
+                          Obx(
+                            () => Container(
+                              child: recipeController.steps.isEmpty
+                                  ? IconButton(
+                                      onPressed: () => recipeController
+                                          .addEmptyStep(const Uuid().v4()),
+                                      icon: const Icon(Icons.add))
+                                  : ReorderableListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      header: const Text("Steps"),
+                                      shrinkWrap: true,
+                                      onReorder: (int oldIndex, int newIndex) {
+                                        if (newIndex > oldIndex) newIndex--;
+                                        final step = recipeController.steps
+                                            .removeAt(oldIndex);
+                                        recipeController.steps
+                                            .insert(newIndex, step);
+                                      },
+                                      itemCount: recipeController.steps.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        var element =
+                                            recipeController.steps[index];
+                                        return Container(
+                                            key: ValueKey(element),
+                                            child: element);
+                                      },
+                                    ),
+                            ),
                           ),
-                        ),
-                        Obx(
-                          () => Container(
-                            child: recipeController.steps.isEmpty
-                                ? IconButton(
-                                    onPressed: () => recipeController
-                                        .addEmptyStep(const Uuid().v4()),
-                                    icon: const Icon(Icons.add))
-                                : ReorderableListView.builder(
-                                    header: const Text("Steps"),
-                                    shrinkWrap: true,
-                                    onReorder: (int oldIndex, int newIndex) {
-                                      if (newIndex > oldIndex) newIndex--;
-                                      final step = recipeController.steps
-                                          .removeAt(oldIndex);
-                                      recipeController.steps
-                                          .insert(newIndex, step);
-                                    },
-                                    itemCount: recipeController.steps.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      var element =
-                                          recipeController.steps[index];
-                                      return Container(
-                                          key: ValueKey(element),
-                                          child: element);
-                                    },
-                                  ),
+                          Obx(
+                            () => Container(
+                              child: recipeController.ingredients.isEmpty
+                                  ? IconButton(
+                                      onPressed: () =>
+                                          recipeController.addEmptyIngredient(
+                                              const Uuid().v4()),
+                                      icon: const Icon(Icons.add))
+                                  : ReorderableListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      header: const Text("Ingredients"),
+                                      shrinkWrap: true,
+                                      onReorder: (int oldIndex, int newIndex) {
+                                        if (newIndex > oldIndex) newIndex--;
+                                        final step = recipeController
+                                            .ingredients
+                                            .removeAt(oldIndex);
+                                        recipeController.ingredients
+                                            .insert(newIndex, step);
+                                      },
+                                      itemCount:
+                                          recipeController.ingredients.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        var element =
+                                            recipeController.ingredients[index];
+                                        return Container(
+                                            key: ValueKey(element),
+                                            child: element);
+                                      },
+                                    ),
+                            ),
                           ),
-                        ),
-                        Obx(
-                          () => Container(
-                            child: recipeController.ingredients.isEmpty
-                                ? IconButton(
-                                    onPressed: () => recipeController
-                                        .addEmptyIngredient(const Uuid().v4()),
-                                    icon: const Icon(Icons.add))
-                                : ReorderableListView.builder(
-                                    header: const Text("Ingredients"),
-                                    shrinkWrap: true,
-                                    onReorder: (int oldIndex, int newIndex) {
-                                      if (newIndex > oldIndex) newIndex--;
-                                      final step = recipeController.ingredients
-                                          .removeAt(oldIndex);
-                                      recipeController.ingredients
-                                          .insert(newIndex, step);
-                                    },
-                                    itemCount:
-                                        recipeController.ingredients.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      var element =
-                                          recipeController.ingredients[index];
-                                      return Container(
-                                          key: ValueKey(element),
-                                          child: element);
-                                    },
-                                  ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 );
