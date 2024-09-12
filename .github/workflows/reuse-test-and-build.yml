@@ -32,7 +32,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
-          java-version: '20'
+          java-version: '17'
           
       - name: Flutter doctor
         run: flutter doctor --verbose
