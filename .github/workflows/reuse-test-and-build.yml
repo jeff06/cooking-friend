@@ -1,6 +1,5 @@
 name: ~change log level
 
-# Controls when the workflow will run
 on:
   workflow_call:
     inputs:
@@ -12,10 +11,6 @@ on:
         type: string
         description: should run test
         required: true
-
-permissions:
-  id-token: write
-  contents: read
 
 jobs:
   log-level:
@@ -43,7 +38,7 @@ jobs:
         run: flutter pub get
 
       - name: Run test
-        if: ${{inputs.should_run_test}}
+        if: ${{ inputs.should_run_test }}
         run: flutter test
 
       - name: Build APK
