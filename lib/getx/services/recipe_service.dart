@@ -20,7 +20,7 @@ class RecipeService {
 
   Future<void> updateList(String path, BuildContext context) async {
     await Navigator.pushNamed(context, path);
-    recipeController.modifyLstStorageItemDisplayed(recipeController.lstRecipeModification);
+    recipeController.modifyLstStorageItemDisplayed();
     recipeController.resetController();
   }
 

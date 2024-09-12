@@ -61,8 +61,8 @@ class RecipeController extends GetxController {
     }
   }
 
-  void modifyLstStorageItemDisplayed(List<RecipeModification> lst) {
-    for (var v in lst) {
+  void modifyLstStorageItemDisplayed() {
+    for (var v in lstRecipeModification) {
       switch (v.action) {
         case RecipeManagementAction.add:
           lstRecipe.add(v.item!);
