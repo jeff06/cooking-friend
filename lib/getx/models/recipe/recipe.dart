@@ -8,6 +8,7 @@ part 'recipe.g.dart';
 class Recipe {
   Id id = Isar.autoIncrement;
   String? name;
+  bool? isFavorite;
   IsarLinks<RecipeStep> steps = IsarLinks<RecipeStep>();
   IsarLinks<RecipeIngredient> ingredients = IsarLinks<RecipeIngredient>();
 

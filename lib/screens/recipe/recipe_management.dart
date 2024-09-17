@@ -33,6 +33,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
       RecipeService(recipeController, widget.service);
   Future<Recipe?> recipeToDisplay = Completer<Recipe?>().future;
   List<RecipeModification> lstRecipeModification = [];
+  bool isFavorite = false;
 
   @override
   void initState() {
@@ -59,7 +60,16 @@ class _RecipeManagementState extends State<RecipeManagement> {
           ),
           backgroundColor: Colors.green,
           onTap: () async {
-            await _recipeService.save(_formKey, context, lstRecipeModification);
+            await _recipeService
+                .save(_formKey, context, lstRecipeModification,
+                    recipeController.currentFavorite.value)
+                .then((success) {
+              if (success) {
+                _recipeTitleController.text = "";
+                recipeController.updateFavorite(false);
+                setState(() {});
+              }
+            });
           },
         ),
       );
@@ -132,10 +142,14 @@ class _RecipeManagementState extends State<RecipeManagement> {
                         RecipeManagementAction.edit.name.obs) {
                   _recipeTitleController.text =
                       (snapshot.data != null ? snapshot.data?.name : "")!;
+
                   recipeController.updateLstRecipeStepsDisplayed(
                       snapshot.data!.steps.toList());
+
                   recipeController.updateLstRecipeIngredientsDisplayed(
                       snapshot.data!.ingredients.toList());
+
+                  recipeController.updateFavorite(snapshot.data!.isFavorite!);
                 }
                 return Obx(
                   () => SingleChildScrollView(
@@ -144,24 +158,46 @@ class _RecipeManagementState extends State<RecipeManagement> {
                       child: Column(
                         children: [
                           const SizedBox(height: 10),
-                          FormBuilderTextField(
-                            name: "recipe_title",
-                            decoration: const InputDecoration(
-                              labelText: "Title",
-                              labelStyle: TextStyle(
-                                color: Colors.black,
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: recipeController.action ==
+                                        StorageManagementAction.view.name.obs
+                                    ? null
+                                    : () {
+                                        recipeController.updateFavorite(
+                                            !recipeController
+                                                .currentFavorite.value);
+                                      },
+                                icon: Icon(
+                                  recipeController.currentFavorite.value
+                                      ? Icons.favorite
+                                      : Icons.favorite_outline,
+                                  color: Colors.red,
+                                ),
                               ),
-                            ),
-                            controller: _recipeTitleController,
-                            enabled: recipeController.action ==
-                                    StorageManagementAction.view.name.obs
-                                ? false
-                                : true,
-                            validator: FormBuilderValidators.compose(
-                              [
-                                FormBuilderValidators.required(),
-                              ],
-                            ),
+                              Expanded(
+                                child: FormBuilderTextField(
+                                  name: "recipe_title",
+                                  decoration: const InputDecoration(
+                                    labelText: "Title",
+                                    labelStyle: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  controller: _recipeTitleController,
+                                  enabled: recipeController.action ==
+                                          StorageManagementAction.view.name.obs
+                                      ? false
+                                      : true,
+                                  validator: FormBuilderValidators.compose(
+                                    [
+                                      FormBuilderValidators.required(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           Obx(
                             () => Container(
