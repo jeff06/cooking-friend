@@ -17,6 +17,7 @@ class RecipeController extends GetxController {
   var ingredients =
       <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
   int currentId = -1;
+  var currentFavorite = false.obs;
   var action = RecipeManagementAction.none.name.obs;
   var lstRecipe = <Recipe>[].obs;
   var lstRecipeModification = <RecipeModification>[].obs;
@@ -28,10 +29,11 @@ class RecipeController extends GetxController {
     ingredients.value =
         <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
     currentId = -1;
-    action = RecipeManagementAction.none.name.obs;
+    //action = RecipeManagementAction.none.name.obs;
     lstRecipeModification = <RecipeModification>[].obs;
     ingredientsToRemove = [];
     stepsToRemove = [];
+    currentFavorite = false.obs;
   }
 
   void updateLstRecipeDisplayed(List<Recipe> newLstStorageItem) {
@@ -48,6 +50,11 @@ class RecipeController extends GetxController {
       tec.text = step.step!;
       steps.add(rs_widget.RecipeStep(tec, step));
     }
+  }
+  
+  void updateFavorite(bool newVal)
+  {
+    currentFavorite.value = newVal;
   }
 
   void updateLstRecipeIngredientsDisplayed(

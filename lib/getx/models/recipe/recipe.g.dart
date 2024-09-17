@@ -17,8 +17,13 @@ const RecipeSchema = CollectionSchema(
   name: r'Recipe',
   id: 8054415271972849591,
   properties: {
-    r'name': PropertySchema(
+    r'isFavorite': PropertySchema(
       id: 0,
+      name: r'isFavorite',
+      type: IsarType.bool,
+    ),
+    r'name': PropertySchema(
+      id: 1,
       name: r'name',
       type: IsarType.string,
     )
@@ -71,7 +76,8 @@ void _recipeSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
+  writer.writeBool(offsets[0], object.isFavorite);
+  writer.writeString(offsets[1], object.name);
 }
 
 Recipe _recipeDeserialize(
@@ -82,7 +88,8 @@ Recipe _recipeDeserialize(
 ) {
   final object = Recipe();
   object.id = id;
-  object.name = reader.readStringOrNull(offsets[0]);
+  object.isFavorite = reader.readBoolOrNull(offsets[0]);
+  object.name = reader.readStringOrNull(offsets[1]);
   return object;
 }
 
@@ -94,6 +101,8 @@ P _recipeDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 1:
       return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -239,6 +248,32 @@ extension RecipeQueryFilter on QueryBuilder<Recipe, Recipe, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> isFavoriteIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isFavorite',
+      ));
+    });
+  }
+
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> isFavoriteIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isFavorite',
+      ));
+    });
+  }
+
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> isFavoriteEqualTo(
+      bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isFavorite',
+        value: value,
       ));
     });
   }
@@ -507,6 +542,18 @@ extension RecipeQueryLinks on QueryBuilder<Recipe, Recipe, QFilterCondition> {
 }
 
 extension RecipeQuerySortBy on QueryBuilder<Recipe, Recipe, QSortBy> {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByIsFavoriteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.desc);
+    });
+  }
+
   QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -533,6 +580,18 @@ extension RecipeQuerySortThenBy on QueryBuilder<Recipe, Recipe, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByIsFavoriteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.desc);
+    });
+  }
+
   QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -547,6 +606,12 @@ extension RecipeQuerySortThenBy on QueryBuilder<Recipe, Recipe, QSortThenBy> {
 }
 
 extension RecipeQueryWhereDistinct on QueryBuilder<Recipe, Recipe, QDistinct> {
+  QueryBuilder<Recipe, Recipe, QDistinct> distinctByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isFavorite');
+    });
+  }
+
   QueryBuilder<Recipe, Recipe, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -559,6 +624,12 @@ extension RecipeQueryProperty on QueryBuilder<Recipe, Recipe, QQueryProperty> {
   QueryBuilder<Recipe, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Recipe, bool?, QQueryOperations> isFavoriteProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isFavorite');
     });
   }
 

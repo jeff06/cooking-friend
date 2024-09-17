@@ -24,7 +24,8 @@ class RecipeService {
     recipeController.resetController();
   }
 
-  Future<void> delete(BuildContext context, List<RecipeModification> lstRecipeModification) async {
+  Future<void> delete(BuildContext context,
+      List<RecipeModification> lstRecipeModification) async {
     await _delete(lstRecipeModification, context).then((res) {
       recipeController.updateLstRecipeModification(lstRecipeModification);
       if (!context.mounted) return;
@@ -40,10 +41,15 @@ class RecipeService {
     }
   }
 
-  Future<void> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
-      List<RecipeModification> lstRecipeModification) async {
-    await _save(formKey, context, lstRecipeModification);
-    recipeController.updateLstRecipeModification(lstRecipeModification);
+  Future<bool> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
+      List<RecipeModification> lstRecipeModification, bool isFavorite) async {
+    return await _save(formKey, context, lstRecipeModification, isFavorite)
+        .then((success) {
+      if (success) {
+        recipeController.updateLstRecipeModification(lstRecipeModification);
+      }
+      return success;
+    });
   }
 
   Future<void> clickOnCard(int id, BuildContext context) async {
@@ -75,8 +81,11 @@ class RecipeService {
       GlobalKey<FormBuilderState> formKey) async {
     if (recipeController.action == RecipeManagementAction.edit.name.obs) {
       await isarService
-          .updateRecipe(recipe, recipeController.currentId,
-              recipeController.ingredientsToRemove, recipeController.stepsToRemove)
+          .updateRecipe(
+              recipe,
+              recipeController.currentId,
+              recipeController.ingredientsToRemove,
+              recipeController.stepsToRemove)
           .then((res) {
         lstRecipeModification.add(RecipeModification()
           ..id = recipeController.currentId
@@ -97,12 +106,13 @@ class RecipeService {
     formKey.currentState!.reset();
   }
 
-  Future<void> _save(GlobalKey<FormBuilderState> formKey, BuildContext context,
-      List<RecipeModification> lstRecipeModification) async {
+  Future<bool> _save(GlobalKey<FormBuilderState> formKey, BuildContext context,
+      List<RecipeModification> lstRecipeModification, bool isFavorite) async {
     // ne pas saver ce qui ont le meme id
     if (formKey.currentState!.saveAndValidate()) {
       Recipe newRecipe = Recipe()
-        ..name = formKey.currentState?.value["recipe_title"];
+        ..name = formKey.currentState?.value["recipe_title"]
+        ..isFavorite = isFavorite;
       for (int i = 0; i < recipeController.steps.length; i++) {
         var currentElement = recipeController.steps[i];
         var content = formKey.currentState?.value["rs_${currentElement.guid}"];
@@ -119,9 +129,9 @@ class RecipeService {
         var currentElement = recipeController.ingredients[i];
         RecipeIngredient ri = RecipeIngredient();
         ri.ingredient =
-        formKey.currentState?.value["ri_${currentElement.guid}"];
+            formKey.currentState?.value["ri_${currentElement.guid}"];
         ri.measuringUnit =
-        formKey.currentState?.value["riu_${currentElement.guid}"];
+            formKey.currentState?.value["riu_${currentElement.guid}"];
         ri.quantity = float
             .parse(formKey.currentState?.value["riq_${currentElement.guid}"]);
         if (currentElement.ingredient != null) {
@@ -141,8 +151,10 @@ class RecipeService {
         );
         recipeController.resetController();
       });
+      return true;
     }
+    return false;
   }
 
-  //#endregion
+//#endregion
 }
