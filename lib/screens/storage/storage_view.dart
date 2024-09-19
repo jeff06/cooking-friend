@@ -8,6 +8,7 @@ import 'package:cooking_friend/screens/support/gradient_background.dart';
 import 'package:cooking_friend/screens/support/search_bar_custom.dart';
 import 'package:cooking_friend/screens/support/search_display_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
 import '../../getx/services/isar_service.dart';
@@ -44,8 +45,14 @@ class _StorageViewState extends State<StorageView> {
     });
   }
 
+  void doTheThing(String one, String two){
+    String trois = one + two;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormBuilderState> filterMenuKey =
+    GlobalKey<FormBuilderState>();
     num screenWidth = MediaQuery.of(context).size.width;
     double tenP = (screenWidth * 0.10).floorToDouble();
     return GradientBackground(
@@ -64,6 +71,7 @@ class _StorageViewState extends State<StorageView> {
               child: SearchBarCustom(
                 searchBarController,
                 refreshList,
+                doTheThing,
                 IconButton(
                   color: Colors.white,
                   onPressed: () async {
@@ -73,6 +81,9 @@ class _StorageViewState extends State<StorageView> {
                   },
                   icon: const Icon(Icons.camera),
                 ),
+                StorageOrderBy.values.map((toElement) {
+                  return toElement.paramName;
+                }).toList(),
               ),
             ),
             Expanded(

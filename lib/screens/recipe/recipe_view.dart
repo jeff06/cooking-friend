@@ -9,6 +9,7 @@ import 'package:cooking_friend/screens/support/gradient_background.dart';
 import 'package:cooking_friend/screens/support/search_bar_custom.dart';
 import 'package:cooking_friend/screens/support/search_display_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
 class RecipeView extends StatefulWidget {
@@ -21,6 +22,8 @@ class RecipeView extends StatefulWidget {
 }
 
 class _RecipeViewState extends State<RecipeView> {
+  final GlobalKey<FormBuilderState> filterMenuKey =
+      GlobalKey<FormBuilderState>();
   final TextEditingController searchBarController = TextEditingController();
   final RecipeController recipeController = Get.find<RecipeController>();
   Future<List<Recipe>> recipeToDisplay = Completer<List<Recipe>>().future;
@@ -42,6 +45,45 @@ class _RecipeViewState extends State<RecipeView> {
     });
   }
 
+  void updateFilterRules(String orderBy, String direction) {
+    recipeController.currentDirection =
+        OrderByDirection.values.firstWhere((x) => x.paramName == direction);
+
+    recipeController.currentOrderBy =
+        RecipeOrderBy.values.firstWhere((x) => x.paramName == orderBy);
+  }
+
+  Future<void> orderBy(List<Recipe> lstRecipe) async {
+    switch (recipeController.currentOrderBy) {
+      case RecipeOrderBy.id:
+        if (recipeController.currentDirection == OrderByDirection.ascending) {
+          lstRecipe.sort((a, b) => a.id.compareTo(b.id));
+        } else {
+          lstRecipe.sort((a, b) => b.id.compareTo(a.id));
+        }
+      case RecipeOrderBy.name:
+        if (recipeController.currentDirection == OrderByDirection.ascending) {
+          lstRecipe.sort((a, b) => a.name!.compareTo(b.name!));
+        } else {
+          lstRecipe.sort((a, b) => b.name!.compareTo(a.name!));
+        }
+      case RecipeOrderBy.favorite:
+        if (recipeController.currentDirection == OrderByDirection.ascending) {
+          lstRecipe.sort(
+            (a, b) {
+              return b.isFavorite != null && b.isFavorite! ? 1 : 0;
+            },
+          );
+        } else {
+          lstRecipe.sort(
+            (a, b) {
+              return a.isFavorite != null && a.isFavorite! ? 1 : 0;
+            },
+          );
+        }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     num screenWidth = MediaQuery.of(context).size.width;
@@ -59,7 +101,15 @@ class _RecipeViewState extends State<RecipeView> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SearchBarCustom(searchBarController, refreshList, null),
+              child: SearchBarCustom(
+                searchBarController,
+                refreshList,
+                updateFilterRules,
+                null,
+                RecipeOrderBy.values.map((toElement) {
+                  return toElement.paramName;
+                }).toList(),
+              ),
             ),
             Expanded(
               child: Padding(
@@ -68,7 +118,7 @@ class _RecipeViewState extends State<RecipeView> {
                   future: recipeToDisplay,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      snapshot.data!.sort((a, b) => b.id.compareTo(a.id));
+                      orderBy(snapshot.data!);
                       recipeController.updateLstRecipeDisplayed(snapshot.data!);
                       return RefreshIndicator(
                         onRefresh: () => refreshList(),
