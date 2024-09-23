@@ -43,6 +43,7 @@ class _RecipeStepState extends State<RecipeStep> {
             ),
             Expanded(
               child: FormBuilderTextField(
+                maxLines: null,
                 enabled:
                     controller.action == RecipeManagementAction.view.name.obs
                         ? false
@@ -50,7 +51,9 @@ class _RecipeStepState extends State<RecipeStep> {
                 name: "rs_${widget.guid}",
                 controller: widget.tec,
                 validator: FormBuilderValidators.compose(
-                  [FormBuilderValidators.required()],
+                  [
+                    FormBuilderValidators.required(),
+                  ],
                 ),
               ),
             ),

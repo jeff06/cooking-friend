@@ -31,12 +31,14 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
-              visible: controller.ingredients.length > 1 && controller.action != RecipeManagementAction.view.name.obs,
+              visible: controller.ingredients.length > 1 &&
+                  controller.action != RecipeManagementAction.view.name.obs,
               child: IconButton(
                 color: CustomTheme.accent,
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  controller.removeIngredient(widget.guid, widget.ingredient?.id);
+                  controller.removeIngredient(
+                      widget.guid, widget.ingredient?.id);
                 },
               ),
             ),
@@ -82,6 +84,11 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
                     : widget.ingredient!.measuringUnit.toString(),
                 name: "riu_${widget.guid}",
                 items: measurementUnits,
+                validator: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(),
+                  ],
+                ),
               ),
             ),
             Expanded(
@@ -117,9 +124,9 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
               color: CustomTheme.navbar,
               icon: const Icon(Icons.reorder),
               onPressed:
-              controller.action == RecipeManagementAction.view.name.obs
-                  ? null
-                  : () => controller.addEmptyIngredient(widget.guid),
+                  controller.action == RecipeManagementAction.view.name.obs
+                      ? null
+                      : () => controller.addEmptyIngredient(widget.guid),
             ),
           ],
         ),
