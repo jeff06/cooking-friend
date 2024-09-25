@@ -12,6 +12,8 @@ class StorageController extends GetxController {
   var action = StorageManagementAction.none.name.obs;
   var lstStorageItem = <StorageItem>[].obs;
   var lstStorageItemModification = <StorageItemModification>[].obs;
+  StorageOrderBy currentOrderBy = StorageOrderBy.name;
+  OrderByDirection currentDirection = OrderByDirection.ascending;
 
   void updateSelectedId(int selectedId) {
     currentId = selectedId;
@@ -46,7 +48,6 @@ class StorageController extends GetxController {
           break;
       }
     }
-    lstStorageItem.sort((a, b) => b.id.compareTo(a.id));
     lstStorageItemModification = <StorageItemModification>[].obs;
   }
 

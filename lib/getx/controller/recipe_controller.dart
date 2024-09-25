@@ -89,7 +89,6 @@ class RecipeController extends GetxController {
           break;
       }
     }
-    lstRecipe.sort((a, b) => b.id.compareTo(a.id));
   }
 
   void updateSelectedId(int selectedId) async {

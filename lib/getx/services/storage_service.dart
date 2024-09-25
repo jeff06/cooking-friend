@@ -52,7 +52,6 @@ class StorageService {
 
   //#endregion
 
-
   //#region Private
   Future<void> _delete(List<StorageItemModification> lstStorageItemModification,
       BuildContext context) async {
@@ -103,7 +102,10 @@ class StorageService {
         ..date = formKey.currentState?.value["form_product_date"]
         ..code = formKey.currentState?.value["form_product_code"]
         ..location = formKey.currentState?.value["form_product_location"]
-        ..quantity =  int.parse(formKey.currentState?.value["form_product_quantity"]);
+        ..quantity = int.parse(
+            formKey.currentState?.value["form_product_quantity"] == ""
+                ? "0"
+                : formKey.currentState?.value["form_product_quantity"]);
       await _saveUpdate(item, lstStorageItemModification, context, formKey)
           .then(
         (res) {
@@ -120,5 +122,5 @@ class StorageService {
     }
   }
 
-  //#endregion
+//#endregion
 }

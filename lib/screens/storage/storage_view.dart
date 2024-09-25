@@ -8,7 +8,6 @@ import 'package:cooking_friend/screens/support/gradient_background.dart';
 import 'package:cooking_friend/screens/support/search_bar_custom.dart';
 import 'package:cooking_friend/screens/support/search_display_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
 import '../../getx/services/isar_service.dart';
@@ -45,14 +44,33 @@ class _StorageViewState extends State<StorageView> {
     });
   }
 
-  void doTheThing(String one, String two){
-    String trois = one + two;
+  void updateFilterRules(String orderBy, String direction) {
+    storageController.currentDirection =
+        OrderByDirection.values.firstWhere((x) => x.paramName == direction);
+
+    storageController.currentOrderBy =
+        StorageOrderBy.values.firstWhere((x) => x.paramName == orderBy);
+  }
+
+  Future<void> orderBy(List<StorageItem> lstStorageItem) async {
+    switch (storageController.currentOrderBy) {
+      case StorageOrderBy.id:
+        if (storageController.currentDirection == OrderByDirection.ascending) {
+          lstStorageItem.sort((a, b) => a.id.compareTo(b.id));
+        } else {
+          lstStorageItem.sort((a, b) => b.id.compareTo(a.id));
+        }
+      case StorageOrderBy.name:
+        if (storageController.currentDirection == OrderByDirection.ascending) {
+          lstStorageItem.sort((a, b) => a.name!.compareTo(b.name!));
+        } else {
+          lstStorageItem.sort((a, b) => b.name!.compareTo(a.name!));
+        }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormBuilderState> filterMenuKey =
-    GlobalKey<FormBuilderState>();
     num screenWidth = MediaQuery.of(context).size.width;
     double tenP = (screenWidth * 0.10).floorToDouble();
     return GradientBackground(
@@ -71,7 +89,7 @@ class _StorageViewState extends State<StorageView> {
               child: SearchBarCustom(
                 searchBarController,
                 refreshList,
-                doTheThing,
+                updateFilterRules,
                 IconButton(
                   color: Colors.white,
                   onPressed: () async {
@@ -93,13 +111,14 @@ class _StorageViewState extends State<StorageView> {
                   future: storageItemToDisplay,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      snapshot.data!.sort((a, b) => b.id.compareTo(a.id));
                       storageController
                           .updateLstStorageItemDisplayed(snapshot.data!);
                       return RefreshIndicator(
                         onRefresh: () => refreshList(),
                         child: Obx(
-                          () => ListView.builder(
+                          () {
+                            orderBy(snapshot.data!);
+                            return ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,
                               padding: const EdgeInsets.all(8),
@@ -133,7 +152,9 @@ class _StorageViewState extends State<StorageView> {
                                     ),
                                   ),
                                 );
-                              }),
+                              },
+                            );
+                          },
                         ),
                       );
                     }

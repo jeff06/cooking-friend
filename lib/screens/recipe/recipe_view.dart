@@ -9,7 +9,6 @@ import 'package:cooking_friend/screens/support/gradient_background.dart';
 import 'package:cooking_friend/screens/support/search_bar_custom.dart';
 import 'package:cooking_friend/screens/support/search_display_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 
 class RecipeView extends StatefulWidget {
@@ -22,8 +21,6 @@ class RecipeView extends StatefulWidget {
 }
 
 class _RecipeViewState extends State<RecipeView> {
-  final GlobalKey<FormBuilderState> filterMenuKey =
-      GlobalKey<FormBuilderState>();
   final TextEditingController searchBarController = TextEditingController();
   final RecipeController recipeController = Get.find<RecipeController>();
   Future<List<Recipe>> recipeToDisplay = Completer<List<Recipe>>().future;
@@ -118,12 +115,12 @@ class _RecipeViewState extends State<RecipeView> {
                   future: recipeToDisplay,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      orderBy(snapshot.data!);
                       recipeController.updateLstRecipeDisplayed(snapshot.data!);
                       return RefreshIndicator(
                         onRefresh: () => refreshList(),
-                        child: Obx(
-                          () => ListView.builder(
+                        child: Obx(() {
+                          orderBy(snapshot.data!);
+                          return ListView.builder(
                             physics: const AlwaysScrollableScrollPhysics(),
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(8),
@@ -140,8 +137,8 @@ class _RecipeViewState extends State<RecipeView> {
                                 ),
                               );
                             },
-                          ),
-                        ),
+                          );
+                        }),
                       );
                     }
                     return Container();
