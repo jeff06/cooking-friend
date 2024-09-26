@@ -23,6 +23,8 @@ class RecipeController extends GetxController {
   var lstRecipeModification = <RecipeModification>[].obs;
   List<int> ingredientsToRemove = [];
   List<int> stepsToRemove = [];
+  RecipeOrderBy currentOrderBy = RecipeOrderBy.name;
+  OrderByDirection currentDirection = OrderByDirection.ascending;
 
   void resetController() {
     steps.value = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
@@ -44,16 +46,14 @@ class RecipeController extends GetxController {
     if (action != RecipeManagementAction.add.name.obs) {
       steps = <rs_widget.RecipeStep>[].obs;
     }
-    newRecipeSteps.sort((a, b) => a.order!.compareTo(b.order!));
     for (var step in newRecipeSteps) {
       TextEditingController tec = TextEditingController();
       tec.text = step.step!;
       steps.add(rs_widget.RecipeStep(tec, step));
     }
   }
-  
-  void updateFavorite(bool newVal)
-  {
+
+  void updateFavorite(bool newVal) {
     currentFavorite.value = newVal;
   }
 
@@ -62,7 +62,6 @@ class RecipeController extends GetxController {
     if (action != RecipeManagementAction.add.name.obs) {
       ingredients = <ri_widget.RecipeIngredient>[].obs;
     }
-    newRecipeIngredients.sort((a, b) => a.order!.compareTo(b.order!));
     for (var ingredient in newRecipeIngredients) {
       ingredients.add(ri_widget.RecipeIngredient(ingredient));
     }
@@ -88,7 +87,6 @@ class RecipeController extends GetxController {
           break;
       }
     }
-    lstRecipe.sort((a, b) => b.id.compareTo(a.id));
   }
 
   void updateSelectedId(int selectedId) async {
@@ -106,7 +104,7 @@ class RecipeController extends GetxController {
 
   void removeStep(String guid, [int? id]) {
     steps.removeWhere((x) => x.guid == guid);
-    if (id != null){
+    if (id != null) {
       stepsToRemove.add(id);
     }
   }
@@ -118,7 +116,7 @@ class RecipeController extends GetxController {
 
   void removeIngredient(String guid, [Id? id]) {
     ingredients.removeWhere((x) => x.guid == guid);
-    if (id != null){
+    if (id != null) {
       ingredientsToRemove.add(id);
     }
   }
