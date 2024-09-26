@@ -68,7 +68,6 @@ class StorageService {
   Future<void> _saveUpdate(
       StorageItem item,
       List<StorageItemModification> lstStorageItemModification,
-      BuildContext context,
       GlobalKey<FormBuilderState> formKey) async {
     if (storageController.action == StorageManagementAction.edit.name.obs) {
       await isarService
@@ -78,8 +77,6 @@ class StorageService {
           ..id = storageController.currentId
           ..action = StorageManagementAction.edit
           ..item = item);
-        if (!context.mounted) return;
-        Navigator.of(context).pop;
       });
     } else {
       await isarService.saveNewStorageItem(item).then((res) {
@@ -106,7 +103,7 @@ class StorageService {
             formKey.currentState?.value["form_product_quantity"] == ""
                 ? "0"
                 : formKey.currentState?.value["form_product_quantity"]);
-      await _saveUpdate(item, lstStorageItemModification, context, formKey)
+      await _saveUpdate(item, lstStorageItemModification, formKey)
           .then(
         (res) {
           if (!context.mounted) return;
