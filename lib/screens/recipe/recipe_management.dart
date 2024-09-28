@@ -1,8 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
+import 'package:cooking_friend/getx/models/recipe/imported_recipe.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe.dart';
+import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'
+    as ri_widget;
+import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart'
+    as ri_model;
+import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart'
+    as rs_widget;
+import 'package:cooking_friend/getx/models/recipe/recipe_step.dart' as rs_model;
 import 'package:cooking_friend/getx/models/recipe/recipe_modification.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
@@ -15,6 +24,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
 
 class RecipeManagement extends StatefulWidget {
   final IsarService service;
@@ -67,9 +77,58 @@ class _RecipeManagementState extends State<RecipeManagement> {
               if (success) {
                 _recipeTitleController.text = "";
                 recipeController.updateFavorite(false);
-                setState(() {});
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
               }
             });
+          },
+        ),
+      );
+    }
+
+    if (recipeController.action == RecipeManagementAction.add.name.obs) {
+      lst.add(
+        SpeedDialChild(
+          child: const Icon(
+            Icons.download,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.pinkAccent,
+          onTap: () async {
+            String recipeUrl =
+                "https://www.ricardocuisine.com/en/recipes/6392-basic-risotto";
+            String urlToCall =
+                'https://www.justtherecipe.com/extractRecipeAtUrl?url=$recipeUrl';
+            var response = await http.get(Uri.parse(urlToCall));
+            if (response.statusCode == 200) {
+              ImportedRecipe importedRecipe =
+                  ImportedRecipe.fromJson(json.decode(response.body));
+              _recipeTitleController.text = importedRecipe.name!;
+              recipeController.ingredients.removeWhere((x) => true);
+              for (var v in importedRecipe.ingredients!) {
+                ri_model.RecipeIngredient recipeIngredient =
+                    ri_model.RecipeIngredient();
+                recipeIngredient.ingredient = v.name;
+                recipeController.ingredients
+                    .add(ri_widget.RecipeIngredient(recipeIngredient));
+              }
+
+              var steps = importedRecipe.instructions?.first.steps;
+              if (steps != null) {
+                recipeController.steps.removeWhere((x) => true);
+                for (var v in steps) {
+                  rs_model.RecipeStep recipeStep = rs_model.RecipeStep();
+                  recipeStep.step = v.text;
+                  TextEditingController textEditingController =
+                      TextEditingController();
+                  textEditingController.text = v.text!;
+                  recipeController.steps.add(
+                      rs_widget.RecipeStep(textEditingController, recipeStep));
+                }
+              }
+
+              print(importedRecipe.name);
+            }
           },
         ),
       );
@@ -245,11 +304,12 @@ class _RecipeManagementState extends State<RecipeManagement> {
                                       shrinkWrap: true,
                                       onReorder: (int oldIndex, int newIndex) {
                                         if (newIndex > oldIndex) newIndex--;
-                                        final step = recipeController
+                                        
+                                        final ingredient = recipeController
                                             .ingredients
                                             .removeAt(oldIndex);
                                         recipeController.ingredients
-                                            .insert(newIndex, step);
+                                            .insert(newIndex, ingredient);
                                       },
                                       itemCount:
                                           recipeController.ingredients.length,
