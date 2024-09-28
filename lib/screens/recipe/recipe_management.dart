@@ -36,6 +36,7 @@ class RecipeManagement extends StatefulWidget {
 }
 
 class _RecipeManagementState extends State<RecipeManagement> {
+  bool isLoading = false;
   final _formKey = GlobalKey<FormBuilderState>();
   final RecipeController recipeController = Get.find<RecipeController>();
   final TextEditingController _recipeTitleController = TextEditingController();
@@ -95,11 +96,75 @@ class _RecipeManagementState extends State<RecipeManagement> {
           ),
           backgroundColor: Colors.pinkAccent,
           onTap: () async {
-            String recipeUrl =
-                "https://www.ricardocuisine.com/en/recipes/6392-basic-risotto";
+            final GlobalKey<FormBuilderState> filterMenuKey =
+                GlobalKey<FormBuilderState>();
+
+            String? recipeUrl = await showDialog<String>(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        FormBuilder(
+                          key: filterMenuKey,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: FormBuilderTextField(
+                                  decoration: const InputDecoration(
+                                    labelText: "URL",
+                                    labelStyle: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  name: "url",
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            TextButton(
+                              child: const Text('Cancel'),
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                              },
+                            ),
+                            TextButton(
+                              child: const Text('Accept'),
+                              onPressed: () {
+                                filterMenuKey.currentState!.saveAndValidate();
+                                String url =
+                                    filterMenuKey.currentState?.value["url"];
+                                Navigator.of(context).pop(url);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+
+            setState(() {
+              isLoading = true;
+            });
             String urlToCall =
                 'https://www.justtherecipe.com/extractRecipeAtUrl?url=$recipeUrl';
             var response = await http.get(Uri.parse(urlToCall));
+            setState(() {
+              isLoading = false;
+            });
             if (response.statusCode == 200) {
               ImportedRecipe importedRecipe =
                   ImportedRecipe.fromJson(json.decode(response.body));
@@ -187,7 +252,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
             },
           ),
         ),
-        body: Padding(
+        body: isLoading ? const Loading() : Padding(
           padding: const EdgeInsets.all(8.0),
           child: FutureBuilder<Recipe?>(
             future: recipeToDisplay,
@@ -304,7 +369,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
                                       shrinkWrap: true,
                                       onReorder: (int oldIndex, int newIndex) {
                                         if (newIndex > oldIndex) newIndex--;
-                                        
+
                                         final ingredient = recipeController
                                             .ingredients
                                             .removeAt(oldIndex);
