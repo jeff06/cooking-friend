@@ -1,12 +1,12 @@
 import 'package:cooking_friend/constants.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe_modification.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
 import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart'
     as rs_widget;
-import 'package:cooking_friend/getx/models/recipe/recipe_step.dart' as rs_model;
+import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart' as rs_model;
 import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'
     as ri_widget;
-import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart'
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart'
     as ri_model;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

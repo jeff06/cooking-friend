@@ -1,6 +1,6 @@
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe_step.dart' as rs_model;
+import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart' as rs_model;
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
