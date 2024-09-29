@@ -1,8 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
+import 'package:cooking_friend/getx/models/recipe/imported_recipe.dart';
 import 'package:cooking_friend/getx/models/recipe/recipe.dart';
+import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'
+    as ri_widget;
+import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart'
+    as ri_model;
+import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart'
+    as rs_widget;
+import 'package:cooking_friend/getx/models/recipe/recipe_step.dart' as rs_model;
 import 'package:cooking_friend/getx/models/recipe/recipe_modification.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
@@ -15,6 +24,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:http/http.dart' as http;
 
 class RecipeManagement extends StatefulWidget {
   final IsarService service;
@@ -26,6 +36,7 @@ class RecipeManagement extends StatefulWidget {
 }
 
 class _RecipeManagementState extends State<RecipeManagement> {
+  bool isLoading = false;
   final _formKey = GlobalKey<FormBuilderState>();
   final RecipeController recipeController = Get.find<RecipeController>();
   final TextEditingController _recipeTitleController = TextEditingController();
@@ -48,6 +59,110 @@ class _RecipeManagementState extends State<RecipeManagement> {
     }
   }
 
+  Future<String?> requestUrlToImport() async {
+    final GlobalKey<FormBuilderState> filterMenuKey =
+        GlobalKey<FormBuilderState>();
+    return await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                FormBuilder(
+                  key: filterMenuKey,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: FormBuilderTextField(
+                          decoration: const InputDecoration(
+                            labelText: "URL",
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          name: "url",
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    TextButton(
+                      child: const Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Accept'),
+                      onPressed: () {
+                        filterMenuKey.currentState!.saveAndValidate();
+                        String url = filterMenuKey.currentState?.value["url"];
+                        Navigator.of(context).pop(url);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void processImportedRecipe(http.Response response) {
+    ImportedRecipe importedRecipe =
+        ImportedRecipe.fromJson(json.decode(response.body));
+    _recipeTitleController.text = importedRecipe.name!;
+    recipeController.ingredients.removeWhere((x) => true);
+
+    for (var v in importedRecipe.ingredients!) {
+      ri_model.RecipeIngredient recipeIngredient = ri_model.RecipeIngredient();
+      recipeIngredient.ingredient = v.name;
+      recipeController.ingredients
+          .add(ri_widget.RecipeIngredient(recipeIngredient));
+    }
+
+    var steps = importedRecipe.instructions?.first.steps;
+    if (steps != null) {
+      recipeController.steps.removeWhere((x) => true);
+      for (var v in steps) {
+        rs_model.RecipeStep recipeStep = rs_model.RecipeStep();
+        recipeStep.step = v.text;
+        TextEditingController textEditingController = TextEditingController();
+        textEditingController.text = v.text!;
+        recipeController.steps
+            .add(rs_widget.RecipeStep(textEditingController, recipeStep));
+      }
+    }
+  }
+
+  Future<void> importRecipeFromUrl() async {
+    String? recipeUrl = await requestUrlToImport();
+
+    setState(() {
+      isLoading = true;
+    });
+    String urlToCall =
+        'https://www.justtherecipe.com/extractRecipeAtUrl?url=$recipeUrl';
+    var response = await http.get(Uri.parse(urlToCall));
+    setState(() {
+      isLoading = false;
+    });
+    if (response.statusCode == 200) {
+      processImportedRecipe(response);
+    }
+  }
+
   Future<SpeedDial> availableFloatingAction(BuildContext context) async {
     List<SpeedDialChild> lst = [];
     if (recipeController.action == RecipeManagementAction.edit.name.obs ||
@@ -67,11 +182,24 @@ class _RecipeManagementState extends State<RecipeManagement> {
               if (success) {
                 _recipeTitleController.text = "";
                 recipeController.updateFavorite(false);
-                setState(() {});
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
               }
             });
           },
         ),
+      );
+    }
+
+    if (recipeController.action == RecipeManagementAction.add.name.obs) {
+      lst.add(
+        SpeedDialChild(
+            child: const Icon(
+              Icons.download,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.pinkAccent,
+            onTap: () async => importRecipeFromUrl()),
       );
     }
 
@@ -128,153 +256,168 @@ class _RecipeManagementState extends State<RecipeManagement> {
             },
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: FutureBuilder<Recipe?>(
-            future: recipeToDisplay,
-            builder: (BuildContext context, AsyncSnapshot<Recipe?> snapshot) {
-              if (snapshot.hasData ||
-                  recipeController.action ==
-                      RecipeManagementAction.add.name.obs) {
-                if (recipeController.action ==
-                        RecipeManagementAction.view.name.obs ||
-                    recipeController.action ==
-                        RecipeManagementAction.edit.name.obs) {
-                  _recipeTitleController.text =
-                      (snapshot.data != null ? snapshot.data?.name : "")!;
+        body: isLoading
+            ? const Loading()
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FutureBuilder<Recipe?>(
+                  future: recipeToDisplay,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<Recipe?> snapshot) {
+                    if (snapshot.hasData ||
+                        recipeController.action ==
+                            RecipeManagementAction.add.name.obs) {
+                      if (recipeController.action ==
+                              RecipeManagementAction.view.name.obs ||
+                          recipeController.action ==
+                              RecipeManagementAction.edit.name.obs) {
+                        _recipeTitleController.text =
+                            (snapshot.data != null ? snapshot.data?.name : "")!;
 
-                  recipeController.updateLstRecipeStepsDisplayed(
-                      snapshot.data!.steps.toList());
+                        recipeController.updateLstRecipeStepsDisplayed(
+                            snapshot.data!.steps.toList());
 
-                  recipeController.updateLstRecipeIngredientsDisplayed(
-                      snapshot.data!.ingredients.toList());
+                        recipeController.updateLstRecipeIngredientsDisplayed(
+                            snapshot.data!.ingredients.toList());
 
-                  recipeController.updateFavorite(snapshot.data!.isFavorite!);
-                }
-                return Obx(
-                  () => SingleChildScrollView(
-                    child: FormBuilder(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              IconButton(
-                                onPressed: recipeController.action ==
-                                        StorageManagementAction.view.name.obs
-                                    ? null
-                                    : () {
-                                        recipeController.updateFavorite(
-                                            !recipeController
-                                                .currentFavorite.value);
-                                      },
-                                icon: Icon(
-                                  recipeController.currentFavorite.value
-                                      ? Icons.favorite
-                                      : Icons.favorite_outline,
-                                  color: Colors.red,
-                                ),
-                              ),
-                              Expanded(
-                                child: FormBuilderTextField(
-                                  name: "recipe_title",
-                                  decoration: const InputDecoration(
-                                    labelText: "Title",
-                                    labelStyle: TextStyle(
-                                      color: Colors.black,
+                        recipeController
+                            .updateFavorite(snapshot.data!.isFavorite!);
+                      }
+                      return Obx(
+                        () => SingleChildScrollView(
+                          child: FormBuilder(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: recipeController.action ==
+                                              StorageManagementAction
+                                                  .view.name.obs
+                                          ? null
+                                          : () {
+                                              recipeController.updateFavorite(
+                                                  !recipeController
+                                                      .currentFavorite.value);
+                                            },
+                                      icon: Icon(
+                                        recipeController.currentFavorite.value
+                                            ? Icons.favorite
+                                            : Icons.favorite_outline,
+                                        color: Colors.red,
+                                      ),
                                     ),
-                                  ),
-                                  controller: _recipeTitleController,
-                                  enabled: recipeController.action ==
-                                          StorageManagementAction.view.name.obs
-                                      ? false
-                                      : true,
-                                  validator: FormBuilderValidators.compose(
-                                    [
-                                      FormBuilderValidators.required(),
-                                    ],
+                                    Expanded(
+                                      child: FormBuilderTextField(
+                                        name: "recipe_title",
+                                        decoration: const InputDecoration(
+                                          labelText: "Title",
+                                          labelStyle: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        controller: _recipeTitleController,
+                                        enabled: recipeController.action ==
+                                                StorageManagementAction
+                                                    .view.name.obs
+                                            ? false
+                                            : true,
+                                        validator:
+                                            FormBuilderValidators.compose(
+                                          [
+                                            FormBuilderValidators.required(),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Obx(
+                                  () => Container(
+                                    child: recipeController.steps.isEmpty
+                                        ? IconButton(
+                                            onPressed: () =>
+                                                recipeController.addEmptyStep(
+                                                    const Uuid().v4()),
+                                            icon: const Icon(Icons.add))
+                                        : ReorderableListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            header: const Text("Steps"),
+                                            shrinkWrap: true,
+                                            onReorder:
+                                                (int oldIndex, int newIndex) {
+                                              if (newIndex > oldIndex)
+                                                newIndex--;
+                                              final step = recipeController
+                                                  .steps
+                                                  .removeAt(oldIndex);
+                                              recipeController.steps
+                                                  .insert(newIndex, step);
+                                            },
+                                            itemCount:
+                                                recipeController.steps.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              var element =
+                                                  recipeController.steps[index];
+                                              return Container(
+                                                  key: ValueKey(element),
+                                                  child: element);
+                                            },
+                                          ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Obx(
-                            () => Container(
-                              child: recipeController.steps.isEmpty
-                                  ? IconButton(
-                                      onPressed: () => recipeController
-                                          .addEmptyStep(const Uuid().v4()),
-                                      icon: const Icon(Icons.add))
-                                  : ReorderableListView.builder(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      header: const Text("Steps"),
-                                      shrinkWrap: true,
-                                      onReorder: (int oldIndex, int newIndex) {
-                                        if (newIndex > oldIndex) newIndex--;
-                                        final step = recipeController.steps
-                                            .removeAt(oldIndex);
-                                        recipeController.steps
-                                            .insert(newIndex, step);
-                                      },
-                                      itemCount: recipeController.steps.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        var element =
-                                            recipeController.steps[index];
-                                        return Container(
-                                            key: ValueKey(element),
-                                            child: element);
-                                      },
-                                    ),
+                                Obx(
+                                  () => Container(
+                                    child: recipeController.ingredients.isEmpty
+                                        ? IconButton(
+                                            onPressed: () => recipeController
+                                                .addEmptyIngredient(
+                                                    const Uuid().v4()),
+                                            icon: const Icon(Icons.add))
+                                        : ReorderableListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            header: const Text("Ingredients"),
+                                            shrinkWrap: true,
+                                            onReorder:
+                                                (int oldIndex, int newIndex) {
+                                              if (newIndex > oldIndex)
+                                                newIndex--;
+
+                                              final ingredient =
+                                                  recipeController.ingredients
+                                                      .removeAt(oldIndex);
+                                              recipeController.ingredients
+                                                  .insert(newIndex, ingredient);
+                                            },
+                                            itemCount: recipeController
+                                                .ingredients.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              var element = recipeController
+                                                  .ingredients[index];
+                                              return Container(
+                                                  key: ValueKey(element),
+                                                  child: element);
+                                            },
+                                          ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Obx(
-                            () => Container(
-                              child: recipeController.ingredients.isEmpty
-                                  ? IconButton(
-                                      onPressed: () =>
-                                          recipeController.addEmptyIngredient(
-                                              const Uuid().v4()),
-                                      icon: const Icon(Icons.add))
-                                  : ReorderableListView.builder(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      header: const Text("Ingredients"),
-                                      shrinkWrap: true,
-                                      onReorder: (int oldIndex, int newIndex) {
-                                        if (newIndex > oldIndex) newIndex--;
-                                        final step = recipeController
-                                            .ingredients
-                                            .removeAt(oldIndex);
-                                        recipeController.ingredients
-                                            .insert(newIndex, step);
-                                      },
-                                      itemCount:
-                                          recipeController.ingredients.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        var element =
-                                            recipeController.ingredients[index];
-                                        return Container(
-                                            key: ValueKey(element),
-                                            child: element);
-                                      },
-                                    ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                return const Loading();
-              }
-            },
-          ),
-        ),
+                        ),
+                      );
+                    } else {
+                      return const Loading();
+                    }
+                  },
+                ),
+              ),
       ),
     );
   }

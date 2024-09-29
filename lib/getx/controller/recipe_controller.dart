@@ -43,6 +43,7 @@ class RecipeController extends GetxController {
   }
 
   void updateLstRecipeStepsDisplayed(List<rs_model.RecipeStep> newRecipeSteps) {
+    newRecipeSteps.sort((a, b) => a.order!.compareTo(b.order!));
     if (action != RecipeManagementAction.add.name.obs) {
       steps = <rs_widget.RecipeStep>[].obs;
     }
@@ -59,6 +60,7 @@ class RecipeController extends GetxController {
 
   void updateLstRecipeIngredientsDisplayed(
       List<ri_model.RecipeIngredient> newRecipeIngredients) {
+    newRecipeIngredients.sort((a, b) => a.order!.compareTo(b.order!));
     if (action != RecipeManagementAction.add.name.obs) {
       ingredients = <ri_widget.RecipeIngredient>[].obs;
     }

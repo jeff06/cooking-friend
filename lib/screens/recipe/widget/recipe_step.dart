@@ -4,7 +4,6 @@ import 'package:cooking_friend/getx/models/recipe/recipe_step.dart' as rs_model;
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
@@ -50,11 +49,6 @@ class _RecipeStepState extends State<RecipeStep> {
                         : true,
                 name: "rs_${widget.guid}",
                 controller: widget.tec,
-                validator: FormBuilderValidators.compose(
-                  [
-                    FormBuilderValidators.required(),
-                  ],
-                ),
               ),
             ),
             IconButton(

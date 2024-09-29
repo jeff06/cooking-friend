@@ -4,7 +4,6 @@ import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart'
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cooking_friend/constants.dart';
@@ -56,15 +55,12 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
                         : true,
                 initialValue: widget.ingredient == null
                     ? ""
-                    : widget.ingredient!.quantity.toString(),
+                    : widget.ingredient!.quantity != null
+                        ? widget.ingredient!.quantity.toString()
+                        : "0",
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 name: "riq_${widget.guid}",
-                validator: FormBuilderValidators.compose(
-                  [
-                    FormBuilderValidators.required(),
-                  ],
-                ),
               ),
             ),
             Expanded(
@@ -81,14 +77,11 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
                         : true,
                 initialValue: widget.ingredient == null
                     ? ""
-                    : widget.ingredient!.measuringUnit.toString(),
+                    : widget.ingredient!.measuringUnit != "null"
+                        ? widget.ingredient!.measuringUnit.toString()
+                        : "",
                 name: "riu_${widget.guid}",
                 items: measurementUnits,
-                validator: FormBuilderValidators.compose(
-                  [
-                    FormBuilderValidators.required(),
-                  ],
-                ),
               ),
             ),
             Expanded(
@@ -107,9 +100,6 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
                     ? ""
                     : widget.ingredient!.ingredient.toString(),
                 name: "ri_${widget.guid}",
-                validator: FormBuilderValidators.compose(
-                  [FormBuilderValidators.required()],
-                ),
               ),
             ),
             IconButton(
@@ -121,13 +111,9 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
                       : () => controller.addEmptyIngredient(widget.guid),
             ),
             IconButton(
-              color: CustomTheme.navbar,
-              icon: const Icon(Icons.reorder),
-              onPressed:
-                  controller.action == RecipeManagementAction.view.name.obs
-                      ? null
-                      : () => controller.addEmptyIngredient(widget.guid),
-            ),
+                color: CustomTheme.navbar,
+                icon: const Icon(Icons.reorder),
+                onPressed: () => {}),
           ],
         ),
       ),
