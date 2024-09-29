@@ -4,7 +4,7 @@ import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../models/storage/storage_item.dart';
+import 'package:cooking_friend/features/storage/data/models/storage_item.dart';
 
 class IsarService {
   late Future<Isar> db;

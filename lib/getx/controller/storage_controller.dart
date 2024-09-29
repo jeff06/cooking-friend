@@ -1,10 +1,10 @@
 import 'package:cooking_friend/constants.dart';
-import 'package:cooking_friend/getx/models/storage/storage_item.dart';
+import 'package:cooking_friend/features/storage/data/models/storage_item.dart';
 import 'package:cooking_friend/screens/support/barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import '../models/storage/storage_item_modification.dart';
+import 'package:cooking_friend/features/storage/data/models/storage_item_modification.dart';
 
 class StorageController extends GetxController {
   var barcode = "".obs;
