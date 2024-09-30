@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'storage_item.dart';
+part of 'storage_model.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,13 @@ part of 'storage_item.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetStorageItemCollection on Isar {
-  IsarCollection<StorageItem> get storageItems => this.collection();
+extension GetStorageModelCollection on Isar {
+  IsarCollection<StorageModel> get storageModels => this.collection();
 }
 
-const StorageItemSchema = CollectionSchema(
-  name: r'StorageItem',
-  id: -431757290192779884,
+const StorageModelSchema = CollectionSchema(
+  name: r'StorageModel',
+  id: -5609282730017723910,
   properties: {
     r'code': PropertySchema(
       id: 0,
@@ -43,22 +43,22 @@ const StorageItemSchema = CollectionSchema(
       type: IsarType.long,
     )
   },
-  estimateSize: _storageItemEstimateSize,
-  serialize: _storageItemSerialize,
-  deserialize: _storageItemDeserialize,
-  deserializeProp: _storageItemDeserializeProp,
+  estimateSize: _storageModelEstimateSize,
+  serialize: _storageModelSerialize,
+  deserialize: _storageModelDeserialize,
+  deserializeProp: _storageModelDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {},
   embeddedSchemas: {},
-  getId: _storageItemGetId,
-  getLinks: _storageItemGetLinks,
-  attach: _storageItemAttach,
+  getId: _storageModelGetId,
+  getLinks: _storageModelGetLinks,
+  attach: _storageModelAttach,
   version: '3.1.0+1',
 );
 
-int _storageItemEstimateSize(
-  StorageItem object,
+int _storageModelEstimateSize(
+  StorageModel object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -84,8 +84,8 @@ int _storageItemEstimateSize(
   return bytesCount;
 }
 
-void _storageItemSerialize(
-  StorageItem object,
+void _storageModelSerialize(
+  StorageModel object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -97,23 +97,24 @@ void _storageItemSerialize(
   writer.writeLong(offsets[4], object.quantity);
 }
 
-StorageItem _storageItemDeserialize(
+StorageModel _storageModelDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = StorageItem();
-  object.code = reader.readStringOrNull(offsets[0]);
-  object.date = reader.readDateTimeOrNull(offsets[1]);
-  object.id = id;
-  object.location = reader.readStringOrNull(offsets[2]);
-  object.name = reader.readStringOrNull(offsets[3]);
-  object.quantity = reader.readLongOrNull(offsets[4]);
+  final object = StorageModel(
+    reader.readStringOrNull(offsets[3]),
+    reader.readDateTimeOrNull(offsets[1]),
+    reader.readStringOrNull(offsets[0]),
+    reader.readLongOrNull(offsets[4]),
+    reader.readStringOrNull(offsets[2]),
+    id,
+  );
   return object;
 }
 
-P _storageItemDeserializeProp<P>(
+P _storageModelDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -135,31 +136,31 @@ P _storageItemDeserializeProp<P>(
   }
 }
 
-Id _storageItemGetId(StorageItem object) {
-  return object.id;
+Id _storageModelGetId(StorageModel object) {
+  return object.id ?? Isar.autoIncrement;
 }
 
-List<IsarLinkBase<dynamic>> _storageItemGetLinks(StorageItem object) {
+List<IsarLinkBase<dynamic>> _storageModelGetLinks(StorageModel object) {
   return [];
 }
 
-void _storageItemAttach(
-    IsarCollection<dynamic> col, Id id, StorageItem object) {
+void _storageModelAttach(
+    IsarCollection<dynamic> col, Id id, StorageModel object) {
   object.id = id;
 }
 
-extension StorageItemQueryWhereSort
-    on QueryBuilder<StorageItem, StorageItem, QWhere> {
-  QueryBuilder<StorageItem, StorageItem, QAfterWhere> anyId() {
+extension StorageModelQueryWhereSort
+    on QueryBuilder<StorageModel, StorageModel, QWhere> {
+  QueryBuilder<StorageModel, StorageModel, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension StorageItemQueryWhere
-    on QueryBuilder<StorageItem, StorageItem, QWhereClause> {
-  QueryBuilder<StorageItem, StorageItem, QAfterWhereClause> idEqualTo(Id id) {
+extension StorageModelQueryWhere
+    on QueryBuilder<StorageModel, StorageModel, QWhereClause> {
+  QueryBuilder<StorageModel, StorageModel, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -168,7 +169,7 @@ extension StorageItemQueryWhere
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterWhereClause> idNotEqualTo(
+  QueryBuilder<StorageModel, StorageModel, QAfterWhereClause> idNotEqualTo(
       Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
@@ -191,7 +192,8 @@ extension StorageItemQueryWhere
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<StorageModel, StorageModel, QAfterWhereClause> idGreaterThan(
+      Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -200,7 +202,7 @@ extension StorageItemQueryWhere
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<StorageModel, StorageModel, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -209,7 +211,7 @@ extension StorageItemQueryWhere
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterWhereClause> idBetween(
+  QueryBuilder<StorageModel, StorageModel, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -226,9 +228,9 @@ extension StorageItemQueryWhere
   }
 }
 
-extension StorageItemQueryFilter
-    on QueryBuilder<StorageItem, StorageItem, QFilterCondition> {
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeIsNull() {
+extension StorageModelQueryFilter
+    on QueryBuilder<StorageModel, StorageModel, QFilterCondition> {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> codeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'code',
@@ -236,7 +238,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       codeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -245,7 +247,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeEqualTo(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> codeEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -258,7 +260,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeGreaterThan(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      codeGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -273,7 +276,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeLessThan(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> codeLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -288,7 +291,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeBetween(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> codeBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -307,7 +310,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeStartsWith(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      codeStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -320,7 +324,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeEndsWith(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> codeEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -333,7 +337,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeContains(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> codeContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -345,7 +349,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeMatches(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> codeMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -357,7 +361,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> codeIsEmpty() {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      codeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'code',
@@ -366,7 +371,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       codeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -376,7 +381,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> dateIsNull() {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> dateIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'date',
@@ -384,7 +389,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       dateIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -393,7 +398,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> dateEqualTo(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> dateEqualTo(
       DateTime? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -403,7 +408,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> dateGreaterThan(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      dateGreaterThan(
     DateTime? value, {
     bool include = false,
   }) {
@@ -416,7 +422,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> dateLessThan(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> dateLessThan(
     DateTime? value, {
     bool include = false,
   }) {
@@ -429,7 +435,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> dateBetween(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> dateBetween(
     DateTime? lower,
     DateTime? upper, {
     bool includeLower = true,
@@ -446,8 +452,25 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> idEqualTo(
-      Id value) {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> idEqualTo(
+      Id? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -456,8 +479,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> idGreaterThan(
-    Id value, {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> idGreaterThan(
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -469,8 +492,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> idLessThan(
-    Id value, {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> idLessThan(
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -482,9 +505,9 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> idBetween(
-    Id lower,
-    Id upper, {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> idBetween(
+    Id? lower,
+    Id? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -499,7 +522,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       locationIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -508,7 +531,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       locationIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -517,7 +540,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> locationEqualTo(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      locationEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -530,7 +554,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       locationGreaterThan(
     String? value, {
     bool include = false,
@@ -546,7 +570,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       locationLessThan(
     String? value, {
     bool include = false,
@@ -562,7 +586,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> locationBetween(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      locationBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -581,7 +606,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       locationStartsWith(
     String value, {
     bool caseSensitive = true,
@@ -595,7 +620,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       locationEndsWith(
     String value, {
     bool caseSensitive = true,
@@ -609,7 +634,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       locationContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -620,9 +645,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> locationMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      locationMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'location',
@@ -632,7 +656,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       locationIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -642,7 +666,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       locationIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -652,7 +676,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameIsNull() {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> nameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'name',
@@ -660,7 +684,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       nameIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -669,7 +693,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameEqualTo(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> nameEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -682,7 +706,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameGreaterThan(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      nameGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -697,7 +722,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameLessThan(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> nameLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -712,7 +737,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameBetween(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> nameBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -731,7 +756,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameStartsWith(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      nameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -744,7 +770,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameEndsWith(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -757,7 +783,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameContains(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> nameContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -769,7 +795,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameMatches(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition> nameMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -781,7 +807,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'name',
@@ -790,7 +817,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
@@ -800,7 +827,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       quantityIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -809,7 +836,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       quantityIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
@@ -818,8 +845,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> quantityEqualTo(
-      int? value) {
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      quantityEqualTo(int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'quantity',
@@ -828,7 +855,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       quantityGreaterThan(
     int? value, {
     bool include = false,
@@ -842,7 +869,7 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition>
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
       quantityLessThan(
     int? value, {
     bool include = false,
@@ -856,7 +883,8 @@ extension StorageItemQueryFilter
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterFilterCondition> quantityBetween(
+  QueryBuilder<StorageModel, StorageModel, QAfterFilterCondition>
+      quantityBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -874,219 +902,219 @@ extension StorageItemQueryFilter
   }
 }
 
-extension StorageItemQueryObject
-    on QueryBuilder<StorageItem, StorageItem, QFilterCondition> {}
+extension StorageModelQueryObject
+    on QueryBuilder<StorageModel, StorageModel, QFilterCondition> {}
 
-extension StorageItemQueryLinks
-    on QueryBuilder<StorageItem, StorageItem, QFilterCondition> {}
+extension StorageModelQueryLinks
+    on QueryBuilder<StorageModel, StorageModel, QFilterCondition> {}
 
-extension StorageItemQuerySortBy
-    on QueryBuilder<StorageItem, StorageItem, QSortBy> {
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByCode() {
+extension StorageModelQuerySortBy
+    on QueryBuilder<StorageModel, StorageModel, QSortBy> {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'code', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByCodeDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'code', Sort.desc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByDate() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByDateDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByLocation() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByLocation() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'location', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByLocationDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByLocationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'location', Sort.desc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByName() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByNameDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByQuantity() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByQuantity() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'quantity', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> sortByQuantityDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> sortByQuantityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'quantity', Sort.desc);
     });
   }
 }
 
-extension StorageItemQuerySortThenBy
-    on QueryBuilder<StorageItem, StorageItem, QSortThenBy> {
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByCode() {
+extension StorageModelQuerySortThenBy
+    on QueryBuilder<StorageModel, StorageModel, QSortThenBy> {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'code', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByCodeDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByCodeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'code', Sort.desc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByDate() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByDateDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenById() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByLocation() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByLocation() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'location', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByLocationDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByLocationDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'location', Sort.desc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByName() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByNameDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByQuantity() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByQuantity() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'quantity', Sort.asc);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QAfterSortBy> thenByQuantityDesc() {
+  QueryBuilder<StorageModel, StorageModel, QAfterSortBy> thenByQuantityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'quantity', Sort.desc);
     });
   }
 }
 
-extension StorageItemQueryWhereDistinct
-    on QueryBuilder<StorageItem, StorageItem, QDistinct> {
-  QueryBuilder<StorageItem, StorageItem, QDistinct> distinctByCode(
+extension StorageModelQueryWhereDistinct
+    on QueryBuilder<StorageModel, StorageModel, QDistinct> {
+  QueryBuilder<StorageModel, StorageModel, QDistinct> distinctByCode(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'code', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QDistinct> distinctByDate() {
+  QueryBuilder<StorageModel, StorageModel, QDistinct> distinctByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date');
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QDistinct> distinctByLocation(
+  QueryBuilder<StorageModel, StorageModel, QDistinct> distinctByLocation(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'location', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QDistinct> distinctByName(
+  QueryBuilder<StorageModel, StorageModel, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
 
-  QueryBuilder<StorageItem, StorageItem, QDistinct> distinctByQuantity() {
+  QueryBuilder<StorageModel, StorageModel, QDistinct> distinctByQuantity() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'quantity');
     });
   }
 }
 
-extension StorageItemQueryProperty
-    on QueryBuilder<StorageItem, StorageItem, QQueryProperty> {
-  QueryBuilder<StorageItem, int, QQueryOperations> idProperty() {
+extension StorageModelQueryProperty
+    on QueryBuilder<StorageModel, StorageModel, QQueryProperty> {
+  QueryBuilder<StorageModel, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<StorageItem, String?, QQueryOperations> codeProperty() {
+  QueryBuilder<StorageModel, String?, QQueryOperations> codeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'code');
     });
   }
 
-  QueryBuilder<StorageItem, DateTime?, QQueryOperations> dateProperty() {
+  QueryBuilder<StorageModel, DateTime?, QQueryOperations> dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
     });
   }
 
-  QueryBuilder<StorageItem, String?, QQueryOperations> locationProperty() {
+  QueryBuilder<StorageModel, String?, QQueryOperations> locationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'location');
     });
   }
 
-  QueryBuilder<StorageItem, String?, QQueryOperations> nameProperty() {
+  QueryBuilder<StorageModel, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });
   }
 
-  QueryBuilder<StorageItem, int?, QQueryOperations> quantityProperty() {
+  QueryBuilder<StorageModel, int?, QQueryOperations> quantityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'quantity');
     });

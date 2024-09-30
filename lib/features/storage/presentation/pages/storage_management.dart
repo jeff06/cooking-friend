@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/core/errors/failure.dart';
+import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
+import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
+import 'package:cooking_friend/features/storage/business/usecases/get_storage.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
-import 'package:cooking_friend/features/storage/data/models/storage_item.dart';
-import 'package:cooking_friend/features/storage/data/models/storage_item_modification.dart';
-import 'package:cooking_friend/getx/services/isar_service.dart';
+import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
 import 'package:cooking_friend/getx/services/storage_service.dart';
 import 'package:cooking_friend/screens/support/gradient_background.dart';
 import 'package:cooking_friend/screens/support/loading.dart';
 import 'package:cooking_friend/theme/custom_theme.dart';
+import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -16,9 +19,9 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 
 class StorageManagement extends StatefulWidget {
-  final IsarService service;
+  final StorageRepository storageRepository;
 
-  const StorageManagement(this.service, {super.key});
+  const StorageManagement(this.storageRepository, {super.key});
 
   @override
   State<StorageManagement> createState() => _StorageManagementState();
@@ -29,10 +32,11 @@ class _StorageManagementState extends State<StorageManagement> {
   final StorageController storageController = Get.find<StorageController>();
   final TextEditingController _textController = TextEditingController();
   late final StorageService _storageService =
-      StorageService(storageController, widget.service);
+      StorageService(storageController, widget.storageRepository);
   List<StorageItemModification> lstStorageItemModification = [];
 
-  Future<StorageItem?> storageItemToDisplay = Completer<StorageItem?>().future;
+  Future<dartz.Either<Failure, StorageEntity>> storageItemToDisplay =
+      Completer<dartz.Either<Failure, StorageEntity>>().future;
 
   @override
   void initState() {
@@ -41,7 +45,8 @@ class _StorageManagementState extends State<StorageManagement> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
           storageItemToDisplay =
-              widget.service.getSingleStorageItem(storageController.currentId);
+              GetStorage(storageRepository: widget.storageRepository)
+                  .getSingleStorageItem(id: storageController.currentId);
         });
       });
     }
@@ -123,15 +128,25 @@ class _StorageManagementState extends State<StorageManagement> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: FutureBuilder<StorageItem?>(
+              child: FutureBuilder<dartz.Either<Failure, StorageEntity>>(
                 future: storageItemToDisplay,
                 builder: (BuildContext context,
-                    AsyncSnapshot<StorageItem?> snapshot) {
+                    AsyncSnapshot<dartz.Either<Failure, StorageEntity>>
+                        snapshot) {
                   if (snapshot.hasData ||
                       storageController.action ==
                           StorageManagementAction.add.name.obs) {
+                    Failure? failure;
+                    StorageEntity? storage;
+
+                    snapshot.data?.fold((currentFailure) {
+                      failure = currentFailure;
+                    }, (currentStorage) {
+                      storage = currentStorage;
+                    });
+
                     _textController.text =
-                        (snapshot.data != null ? snapshot.data?.code : "")!;
+                        (snapshot.data != null ? storage?.code : "")!;
                     return Obx(
                       () => FormBuilder(
                         key: _formKey,
@@ -139,9 +154,8 @@ class _StorageManagementState extends State<StorageManagement> {
                           children: [
                             const SizedBox(height: 10),
                             FormBuilderTextField(
-                              initialValue: snapshot.data != null
-                                  ? snapshot.data?.name
-                                  : "",
+                              initialValue:
+                                  snapshot.data != null ? storage?.name : "",
                               enabled: storageController.action ==
                                       StorageManagementAction.view.name.obs
                                   ? false
@@ -157,7 +171,7 @@ class _StorageManagementState extends State<StorageManagement> {
                             ),
                             FormBuilderDateTimePicker(
                               name: "form_product_date",
-                              initialValue: snapshot.data?.date,
+                              initialValue: storage?.date,
                               enabled: storageController.action ==
                                       StorageManagementAction.view.name.obs
                                   ? false
@@ -168,7 +182,7 @@ class _StorageManagementState extends State<StorageManagement> {
                             ),
                             FormBuilderTextField(
                               initialValue: snapshot.data != null
-                                  ? snapshot.data?.quantity.toString()
+                                  ? storage?.quantity.toString()
                                   : "",
                               enabled: storageController.action ==
                                       StorageManagementAction.view.name.obs
@@ -185,7 +199,7 @@ class _StorageManagementState extends State<StorageManagement> {
                             ),
                             FormBuilderTextField(
                               initialValue: snapshot.data != null
-                                  ? snapshot.data?.location
+                                  ? storage?.location
                                   : "",
                               enabled: storageController.action ==
                                       StorageManagementAction.view.name.obs
