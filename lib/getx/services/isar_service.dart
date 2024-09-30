@@ -1,10 +1,9 @@
 import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart';
+import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-
-import 'package:cooking_friend/features/storage/data/models/storage_item.dart';
 
 class IsarService {
   late Future<Isar> db;
@@ -24,7 +23,7 @@ class IsarService {
       final dir = await getApplicationDocumentsDirectory();
       return await Isar.open(
         [
-          StorageItemSchema,
+          StorageModelSchema,
           RecipeSchema,
           RecipeIngredientSchema,
           RecipeStepSchema
@@ -40,49 +39,30 @@ class IsarService {
   //#endregion
 
   //#region Storage
-  Future<StorageItem?> getSingleStorageItem(int id) async {
-    final isar = await db;
-    return await isar.storageItems.filter().idEqualTo(id).findFirst();
-  }
 
   Future<Recipe?> getSingleRecipe(int id) async {
     final isar = await db;
     return await isar.recipes.filter().idEqualTo(id).findFirst();
   }
 
-  Future<int> saveNewStorageItem(StorageItem storageItem) async {
+  Future<int> saveNewStorageItem(StorageModel storageItem) async {
     final isar = await db;
-    return isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));
+    return isar.writeTxnSync<int>(() => isar.storageModels.putSync(storageItem));
   }
 
-  Future<int> updateStorageItem(StorageItem storageItem, int currentId) async {
+  Future<int> updateStorageItem(StorageModel storageItem, int currentId) async {
     final isar = await db;
     storageItem.id = currentId;
-    return isar.writeTxnSync<int>(() => isar.storageItems.putSync(storageItem));
+    return isar.writeTxnSync<int>(() => isar.storageModels.putSync(storageItem));
   }
 
   Future<bool> deleteStorageItem(int currentId) async {
     final isar = await db;
     return await isar.writeTxn(
       () async {
-        return await isar.storageItems.delete(currentId);
+        return await isar.storageModels.delete(currentId);
       },
     );
-  }
-
-  Future<List<StorageItem>> getAllStorageItemByFilter(
-      String currentFilter) async {
-    final isar = await db;
-
-    if (currentFilter != "") {
-      return await isar.storageItems
-          .filter()
-          .nameContains(currentFilter)
-          .or()
-          .codeContains(currentFilter)
-          .findAll();
-    }
-    return await isar.storageItems.filter().nameIsNotEmpty().findAll();
   }
   //#endregion
 
