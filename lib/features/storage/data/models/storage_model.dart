@@ -5,12 +5,7 @@ part 'storage_model.g.dart';
 
 @collection
 class StorageModel extends StorageEntity {
-  Id? id;
-  String? name;
-  DateTime? date;
-  String? code;
-  int? quantity;
-  String? location;
+  Id? id = Isar.autoIncrement;
 
   StorageModel(
       super.name, super.date, super.code, super.quantity, super.location, super.id);
