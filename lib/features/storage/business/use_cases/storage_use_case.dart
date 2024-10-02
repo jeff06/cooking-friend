@@ -1,18 +1,103 @@
 import 'package:cooking_friend/constants.dart';
-import 'package:cooking_friend/features/storage/business/repositories/i_storage_repository.dart';
+import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
+import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
-import 'package:cooking_friend/getx/controller/storage_controller.dart';
+import 'package:cooking_friend/features/storage/presentation/provider/storage_controller.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
+import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 
-class StorageService {
+class StorageUseCase {
   final StorageController storageController;
-  final IStorageRepository storageRepository;
+  final IStorageRepositoryImplementation storageRepository;
 
-  StorageService(this.storageController, this.storageRepository);
+  StorageUseCase(this.storageController, this.storageRepository);
 
+  void updateFilterRules(String orderBy, String direction) {
+    storageController.currentDirection =
+        OrderByDirection.values.firstWhere((x) => x.paramName == direction);
+
+    storageController.currentOrderBy =
+        StorageOrderBy.values.firstWhere((x) => x.paramName == orderBy);
+  }
+
+  Future<void> orderBy(List<StorageEntity> lstStorageItem) async {
+    switch (storageController.currentOrderBy) {
+      case StorageOrderBy.id:
+        if (storageController.currentDirection == OrderByDirection.ascending) {
+          lstStorageItem.sort((a, b) => a.id!.compareTo(b.id!));
+        } else {
+          lstStorageItem.sort((a, b) => b.id!.compareTo(a.id!));
+        }
+      case StorageOrderBy.name:
+        if (storageController.currentDirection == OrderByDirection.ascending) {
+          lstStorageItem.sort((a, b) => a.name!.compareTo(b.name!));
+        } else {
+          lstStorageItem.sort((a, b) => b.name!.compareTo(a.name!));
+        }
+    }
+  }
+
+  Future<SpeedDial> availableFloatingAction(BuildContext context, GlobalKey<FormBuilderState> formKey, List<StorageItemModification> lstStorageItemModification) async {
+    List<SpeedDialChild> lst = [];
+    if (storageController.action == StorageManagementAction.edit.name.obs ||
+        storageController.action == StorageManagementAction.add.name.obs) {
+      lst.add(
+        SpeedDialChild(
+          child: const Icon(
+            Icons.save,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.green,
+          onTap: () async {
+            await save(
+                formKey, context, lstStorageItemModification);
+          },
+        ),
+      );
+    }
+
+    if (storageController.action != StorageManagementAction.add.name.obs) {
+      lst.add(
+        SpeedDialChild(
+          child: Icon(
+            storageController.action == StorageManagementAction.view.name.obs
+                ? Icons.edit
+                : Icons.edit_outlined,
+            color: Colors.white,
+          ),
+          backgroundColor: CustomTheme.navbar,
+          onTap: () {
+            edit();
+          },
+        ),
+      );
+    }
+
+    if (storageController.action == StorageManagementAction.edit.name.obs) {
+      lst.add(
+        SpeedDialChild(
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.red,
+          onTap: () async {
+            await delete(context, lstStorageItemModification);
+          },
+        ),
+      );
+    }
+
+    return SpeedDial(
+      animatedIcon: AnimatedIcons.menu_close,
+      children: lst,
+    );
+  }
+  
   //#region Public
   Future<void> clickOnCard(int id, BuildContext context) async {
     storageController.updateSelectedId(id);

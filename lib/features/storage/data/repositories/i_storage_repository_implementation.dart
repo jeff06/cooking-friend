@@ -1,18 +1,17 @@
 import 'package:cooking_friend/core/errors/failure.dart';
-import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:dartz/dartz.dart';
 
-abstract class IStorageRepository {
-  Future<Either<Failure, StorageEntity>> getSingleStorageItem({
+abstract class IStorageRepositoryImplementation {
+  Future<Either<Failure, StorageModel>> getSingleStorageItem({
     required int id,
   });
-  
+
   Future<Either<Failure, bool>> deleteStorageItem({
     required int id,
   });
 
-  Future<Either<Failure, List<StorageEntity>>> getAllStorageItemByFilter({
+  Future<Either<Failure, List<StorageModel>>> getAllStorageItemByFilter({
     required String currentFilter,
   });
 

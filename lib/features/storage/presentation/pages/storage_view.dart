@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
-import 'package:cooking_friend/features/storage/business/repositories/i_storage_repository.dart';
-import 'package:cooking_friend/features/storage/business/usecases/get_storage.dart';
-import 'package:cooking_friend/getx/controller/storage_controller.dart';
-import 'package:cooking_friend/getx/services/storage_service.dart';
+import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
+import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
+import 'package:cooking_friend/features/storage/presentation/provider/storage_controller.dart';
+import 'package:cooking_friend/features/storage/business/use_cases/storage_use_case.dart';
 import 'package:cooking_friend/screens/support/gradient_background.dart';
 import 'package:cooking_friend/screens/support/search_bar_custom.dart';
 import 'package:cooking_friend/screens/support/search_display_card.dart';
@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:dartz/dartz.dart' as dartz;
 
 class StorageView extends StatefulWidget {
-  final IStorageRepository storageRepository;
+  final IStorageRepositoryImplementation storageRepository;
 
   const StorageView(this.storageRepository, {super.key});
 
@@ -26,15 +26,16 @@ class StorageView extends StatefulWidget {
 class _StorageViewState extends State<StorageView> {
   TextEditingController searchBarController = TextEditingController();
   final StorageController storageController = Get.find<StorageController>();
-  late final StorageService storageService =
-      StorageService(storageController, widget.storageRepository);
+  late final StorageUseCase storageUseCase;
+  late final StorageUseCase storageService =
+      StorageUseCase(storageController, widget.storageRepository);
   Future<dartz.Either<Failure, List<StorageEntity>>> storageItemToDisplay =
       Completer<dartz.Either<Failure, List<StorageEntity>>>().future;
 
   Future<void> refreshList() async {
     setState(() {
       storageItemToDisplay =
-          GetStorage(storageRepository: widget.storageRepository)
+          StorageRepository(storageRepository: widget.storageRepository)
               .getAllStorageItemByFilter(filter: searchBarController.text);
     });
   }
@@ -43,33 +44,10 @@ class _StorageViewState extends State<StorageView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      storageUseCase =
+          StorageUseCase(storageController, widget.storageRepository);
       refreshList();
     });
-  }
-
-  void updateFilterRules(String orderBy, String direction) {
-    storageController.currentDirection =
-        OrderByDirection.values.firstWhere((x) => x.paramName == direction);
-
-    storageController.currentOrderBy =
-        StorageOrderBy.values.firstWhere((x) => x.paramName == orderBy);
-  }
-
-  Future<void> orderBy(List<StorageEntity> lstStorageItem) async {
-    switch (storageController.currentOrderBy) {
-      case StorageOrderBy.id:
-        if (storageController.currentDirection == OrderByDirection.ascending) {
-          lstStorageItem.sort((a, b) => a.id!.compareTo(b.id!));
-        } else {
-          lstStorageItem.sort((a, b) => b.id!.compareTo(a.id!));
-        }
-      case StorageOrderBy.name:
-        if (storageController.currentDirection == OrderByDirection.ascending) {
-          lstStorageItem.sort((a, b) => a.name!.compareTo(b.name!));
-        } else {
-          lstStorageItem.sort((a, b) => b.name!.compareTo(a.name!));
-        }
-    }
   }
 
   @override
@@ -92,7 +70,7 @@ class _StorageViewState extends State<StorageView> {
               child: SearchBarCustom(
                 searchBarController,
                 refreshList,
-                updateFilterRules,
+                storageUseCase.updateFilterRules,
                 IconButton(
                   color: Colors.white,
                   onPressed: () async {
@@ -130,7 +108,7 @@ class _StorageViewState extends State<StorageView> {
                         onRefresh: () => refreshList(),
                         child: Obx(
                           () {
-                            orderBy(lstStorages);
+                            storageUseCase.orderBy(lstStorages);
                             return ListView.builder(
                               physics: const AlwaysScrollableScrollPhysics(),
                               shrinkWrap: true,

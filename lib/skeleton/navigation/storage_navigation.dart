@@ -1,10 +1,10 @@
-import 'package:cooking_friend/features/storage/business/repositories/i_storage_repository.dart';
+import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/presentation/pages/storage_management.dart';
 import 'package:cooking_friend/features/storage/presentation/pages/storage_view.dart';
 import 'package:flutter/material.dart';
 
 class StorageNavigation extends StatefulWidget {
-  final IStorageRepository repository;
+  final IStorageRepositoryImplementation repository;
 
   const StorageNavigation(this.repository, {super.key});
 

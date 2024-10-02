@@ -1,13 +1,13 @@
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
-import 'package:cooking_friend/features/storage/business/repositories/i_storage_repository.dart';
+import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:dartz/dartz.dart';
 
-class GetStorage {
-  final IStorageRepository storageRepository;
+class StorageRepository {
+  final IStorageRepositoryImplementation storageRepository;
 
-  GetStorage({required this.storageRepository});
+  StorageRepository({required this.storageRepository});
 
   Future<Either<Failure, bool>> deleteStorageItem({
     required int id,

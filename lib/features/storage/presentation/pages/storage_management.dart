@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
-import 'package:cooking_friend/features/storage/business/repositories/i_storage_repository.dart';
-import 'package:cooking_friend/features/storage/business/usecases/get_storage.dart';
-import 'package:cooking_friend/getx/controller/storage_controller.dart';
+import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
+import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
+import 'package:cooking_friend/features/storage/presentation/provider/storage_controller.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
-import 'package:cooking_friend/getx/services/storage_service.dart';
+import 'package:cooking_friend/features/storage/business/use_cases/storage_use_case.dart';
+import 'package:cooking_friend/features/storage/presentation/widgets/storage_form.dart';
 import 'package:cooking_friend/screens/support/gradient_background.dart';
 import 'package:cooking_friend/screens/support/loading.dart';
 import 'package:cooking_friend/theme/custom_theme.dart';
@@ -19,7 +20,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 
 class StorageManagement extends StatefulWidget {
-  final IStorageRepository storageRepository;
+  final IStorageRepositoryImplementation storageRepository;
 
   const StorageManagement(this.storageRepository, {super.key});
 
@@ -31,8 +32,7 @@ class _StorageManagementState extends State<StorageManagement> {
   final _formKey = GlobalKey<FormBuilderState>();
   final StorageController storageController = Get.find<StorageController>();
   final TextEditingController _textController = TextEditingController();
-  late final StorageService _storageService =
-      StorageService(storageController, widget.storageRepository);
+  late final StorageUseCase storageUseCase;
   List<StorageItemModification> lstStorageItemModification = [];
 
   Future<dartz.Either<Failure, StorageEntity>> storageItemToDisplay =
@@ -43,70 +43,15 @@ class _StorageManagementState extends State<StorageManagement> {
     super.initState();
     if (storageController.action == StorageManagementAction.view.name.obs) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        storageUseCase =
+            StorageUseCase(storageController, widget.storageRepository);
         setState(() {
           storageItemToDisplay =
-              GetStorage(storageRepository: widget.storageRepository)
+              StorageRepository(storageRepository: widget.storageRepository)
                   .getSingleStorageItem(id: storageController.currentId);
         });
       });
     }
-  }
-
-  Future<SpeedDial> availableFloatingAction(BuildContext context) async {
-    List<SpeedDialChild> lst = [];
-    if (storageController.action == StorageManagementAction.edit.name.obs ||
-        storageController.action == StorageManagementAction.add.name.obs) {
-      lst.add(
-        SpeedDialChild(
-          child: const Icon(
-            Icons.save,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.green,
-          onTap: () async {
-            await _storageService.save(
-                _formKey, context, lstStorageItemModification);
-          },
-        ),
-      );
-    }
-
-    if (storageController.action != StorageManagementAction.add.name.obs) {
-      lst.add(
-        SpeedDialChild(
-          child: Icon(
-            storageController.action == StorageManagementAction.view.name.obs
-                ? Icons.edit
-                : Icons.edit_outlined,
-            color: Colors.white,
-          ),
-          backgroundColor: CustomTheme.navbar,
-          onTap: () {
-            _storageService.edit();
-          },
-        ),
-      );
-    }
-
-    if (storageController.action == StorageManagementAction.edit.name.obs) {
-      lst.add(
-        SpeedDialChild(
-          child: const Icon(
-            Icons.delete,
-            color: Colors.white,
-          ),
-          backgroundColor: Colors.red,
-          onTap: () async {
-            await _storageService.delete(context, lstStorageItemModification);
-          },
-        ),
-      );
-    }
-
-    return SpeedDial(
-      animatedIcon: AnimatedIcons.menu_close,
-      children: lst,
-    );
   }
 
   @override
@@ -115,7 +60,8 @@ class _StorageManagementState extends State<StorageManagement> {
       Scaffold(
         floatingActionButton: Obx(
           () => FutureBuilder<SpeedDial>(
-            future: availableFloatingAction(context),
+            future: storageUseCase.availableFloatingAction(
+                context, _formKey, lstStorageItemModification),
             builder: (builder, AsyncSnapshot<SpeedDial> snapshot) {
               if (snapshot.hasData) {
                 return snapshot.data as SpeedDial;
@@ -147,114 +93,8 @@ class _StorageManagementState extends State<StorageManagement> {
 
                     _textController.text =
                         (snapshot.data != null ? storage?.code : "")!;
-                    return Obx(
-                      () => FormBuilder(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 10),
-                            FormBuilderTextField(
-                              initialValue:
-                                  snapshot.data != null ? storage?.name : "",
-                              enabled: storageController.action ==
-                                      StorageManagementAction.view.name.obs
-                                  ? false
-                                  : true,
-                              name: 'form_product_name',
-                              decoration:
-                                  const InputDecoration(labelText: 'Name'),
-                              validator: FormBuilderValidators.compose(
-                                [
-                                  FormBuilderValidators.required(),
-                                ],
-                              ),
-                            ),
-                            FormBuilderDateTimePicker(
-                              name: "form_product_date",
-                              initialValue: storage?.date,
-                              enabled: storageController.action ==
-                                      StorageManagementAction.view.name.obs
-                                  ? false
-                                  : true,
-                              decoration:
-                                  const InputDecoration(labelText: 'Date'),
-                              inputType: InputType.date,
-                            ),
-                            FormBuilderTextField(
-                              initialValue: snapshot.data != null
-                                  ? storage?.quantity.toString()
-                                  : "",
-                              enabled: storageController.action ==
-                                      StorageManagementAction.view.name.obs
-                                  ? false
-                                  : true,
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(),
-                              name: 'form_product_quantity',
-                              decoration:
-                                  const InputDecoration(labelText: 'Quantity'),
-                              onChanged: (newVal) {
-                                storageController.updateBarcode(newVal);
-                              },
-                            ),
-                            FormBuilderTextField(
-                              initialValue: snapshot.data != null
-                                  ? storage?.location
-                                  : "",
-                              enabled: storageController.action ==
-                                      StorageManagementAction.view.name.obs
-                                  ? false
-                                  : true,
-                              name: 'form_product_location',
-                              decoration:
-                                  const InputDecoration(labelText: 'Location'),
-                              onChanged: (newVal) {
-                                storageController.updateBarcode(newVal);
-                              },
-                            ),
-                            //Obx(() => Text(storageController.barcode.string)),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: FormBuilderTextField(
-                                    controller: _textController,
-                                    enabled: storageController.action ==
-                                            StorageManagementAction
-                                                .view.name.obs
-                                        ? false
-                                        : true,
-                                    name: 'form_product_code',
-                                    decoration: const InputDecoration(
-                                        labelText: 'Code'),
-                                    onChanged: (newVal) {
-                                      storageController.updateBarcode(newVal);
-                                    },
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: storageController.action ==
-                                          StorageManagementAction
-                                              .add.name.obs ||
-                                      storageController.action ==
-                                          StorageManagementAction.edit.name.obs,
-                                  child: IconButton(
-                                    onPressed: () async {
-                                      await storageController
-                                          .navigateAndDisplaySelection(
-                                              context, _textController);
-                                    },
-                                    icon: Icon(
-                                      Icons.camera,
-                                      color: CustomTheme.navbar,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                    return StorageForm(_formKey, snapshot.data,
+                        storageController, storage, _textController);
                   } else {
                     return const Loading();
                   }

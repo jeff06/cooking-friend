@@ -1,4 +1,4 @@
-import 'package:cooking_friend/getx/controller/storage_controller.dart';
+import 'package:cooking_friend/features/storage/presentation/provider/storage_controller.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
 import 'package:flutter_test/flutter_test.dart';
 

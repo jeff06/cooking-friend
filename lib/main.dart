@@ -1,7 +1,7 @@
 import 'package:cooking_friend/features/storage/data/datasources/storage_isar_data_source.dart';
 import 'package:cooking_friend/features/storage/data/repositories/storage_repository_implementation.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/getx/controller/storage_controller.dart';
+import 'package:cooking_friend/features/storage/presentation/provider/storage_controller.dart';
 import 'package:cooking_friend/main_wrapper.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/theme/custom_theme.dart';
