@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 abstract class StorageIsarDataSource {
   Future<StorageModel?> getSingleStorageItem(int id);
   Future<List<StorageModel>> getAllStorageItemByFilter(String currentFilter);
+  Future<int> saveNewStorageItem(StorageModel storageItem);
 }
 
 const cachedStorage = 'CACHED_STORAGE';
@@ -51,5 +52,11 @@ class StorageLocalDataSourceImpl implements StorageIsarDataSource {
           .findAll();
     }
     return await isar.storageModels.filter().nameIsNotEmpty().findAll();
+  }
+
+  @override
+  Future<int> saveNewStorageItem(StorageModel storageItem) async {
+    final isar = await db;
+    return isar.writeTxnSync<int>(() => isar.storageModels.putSync(storageItem));
   }
 }

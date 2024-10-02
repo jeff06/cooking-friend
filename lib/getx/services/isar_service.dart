@@ -40,16 +40,6 @@ class IsarService {
 
   //#region Storage
 
-  Future<Recipe?> getSingleRecipe(int id) async {
-    final isar = await db;
-    return await isar.recipes.filter().idEqualTo(id).findFirst();
-  }
-
-  Future<int> saveNewStorageItem(StorageModel storageItem) async {
-    final isar = await db;
-    return isar.writeTxnSync<int>(() => isar.storageModels.putSync(storageItem));
-  }
-
   Future<int> updateStorageItem(StorageModel storageItem, int currentId) async {
     final isar = await db;
     storageItem.id = currentId;
@@ -67,6 +57,11 @@ class IsarService {
   //#endregion
 
   //#region Recipe
+
+  Future<Recipe?> getSingleRecipe(int id) async {
+    final isar = await db;
+    return await isar.recipes.filter().idEqualTo(id).findFirst();
+  }
 
   Future<int> saveNewRecipe(Recipe recipe) async {
     final isar = await db;

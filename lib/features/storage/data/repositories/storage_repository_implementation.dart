@@ -24,6 +24,16 @@ class StorageRepositoryImplementation implements StorageRepository {
   }
 
   @override
+  Future<Either<Failure, int>> saveNewStorageItem({required StorageModel storageItem})async {
+    try {
+      final localStorageItem = await localDataSource.saveNewStorageItem(storageItem);
+      return Right(localStorageItem);
+    } on CacheException {
+      return Left(CacheFailure(errorMessage: 'No local data found'));
+    }
+  }
+
+  @override
   Future<Either<Failure, List<StorageModel>>> getAllStorageItemByFilter({required String currentFilter}) async{
     try {
       final localStorageItem = await localDataSource.getAllStorageItemByFilter(currentFilter);

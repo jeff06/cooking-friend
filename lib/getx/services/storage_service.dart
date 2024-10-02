@@ -69,7 +69,7 @@ class StorageService {
       StorageModel item,
       List<StorageItemModification> lstStorageItemModification,
       GlobalKey<FormBuilderState> formKey) async {
-    /*if (storageController.action == StorageManagementAction.edit.name.obs) {
+    if (storageController.action == StorageManagementAction.edit.name.obs) {
       await storageRepository
           .updateStorageItem(item, storageController.currentId)
           .then((res) {
@@ -79,15 +79,17 @@ class StorageService {
           ..item = item);
       });
     } else {
-      await storageRepository.saveNewStorageItem(item).then((res) {
-        item.id = res;
-        lstStorageItemModification.add(StorageItemModification()
-          ..id = res
-          ..action = StorageManagementAction.add
-          ..item = item);
-        formKey.currentState!.reset();
+      await storageRepository.saveNewStorageItem(storageItem: item).then((res) {
+        res.fold((currentFailure) {}, (currentId) {
+          item.id = currentId;
+          lstStorageItemModification.add(StorageItemModification()
+            ..id = currentId
+            ..action = StorageManagementAction.add
+            ..item = item);
+          formKey.currentState!.reset();
+        });
       });
-    }*/
+    }
   }
 
   Future<void> _save(GlobalKey<FormBuilderState> formKey, BuildContext context,
