@@ -39,13 +39,7 @@ class IsarService {
   //#endregion
 
   //#region Storage
-
-  Future<int> updateStorageItem(StorageModel storageItem, int currentId) async {
-    final isar = await db;
-    storageItem.id = currentId;
-    return isar.writeTxnSync<int>(() => isar.storageModels.putSync(storageItem));
-  }
-
+  
   Future<bool> deleteStorageItem(int currentId) async {
     final isar = await db;
     return await isar.writeTxn(

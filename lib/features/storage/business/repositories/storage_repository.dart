@@ -15,4 +15,7 @@ abstract class StorageRepository {
   Future<Either<Failure, int>> saveNewStorageItem({
     required StorageModel storageItem,
   });
+
+  Future<Either<Failure, int>> updateStorageItem(
+      {required StorageModel storageItem, required int currentId});
 }

@@ -1,16 +1,11 @@
+import 'package:cooking_friend/features/storage/data/datasources/i_storage_isar_data_source.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
-abstract class StorageIsarDataSource {
-  Future<StorageModel?> getSingleStorageItem(int id);
-  Future<List<StorageModel>> getAllStorageItemByFilter(String currentFilter);
-  Future<int> saveNewStorageItem(StorageModel storageItem);
-}
-
 const cachedStorage = 'CACHED_STORAGE';
 
-class StorageLocalDataSourceImpl implements StorageIsarDataSource {
+class StorageLocalDataSourceImpl implements IStorageIsarDataSource {
   late Future<Isar> db;
 
   StorageLocalDataSourceImpl() {
@@ -52,6 +47,13 @@ class StorageLocalDataSourceImpl implements StorageIsarDataSource {
           .findAll();
     }
     return await isar.storageModels.filter().nameIsNotEmpty().findAll();
+  }
+
+  @override
+  Future<int> updateStorageItem(StorageModel storageItem, int currentId) async {
+    final isar = await db;
+    storageItem.id = currentId;
+    return isar.writeTxnSync<int>(() => isar.storageModels.putSync(storageItem));
   }
 
   @override

@@ -18,10 +18,18 @@ class GetStorage {
   Future<Either<Failure, List<StorageEntity>>> getAllStorageItemByFilter({
     required String filter,
   }) async {
-    return await storageRepository.getAllStorageItemByFilter(currentFilter: filter);
+    return await storageRepository.getAllStorageItemByFilter(
+        currentFilter: filter);
   }
 
-  Future<Either<Failure, int>> saveNewStorageItem({required StorageModel storageItem}) async {
+  Future<Either<Failure, int>> saveNewStorageItem(
+      {required StorageModel storageItem}) async {
     return await storageRepository.saveNewStorageItem(storageItem: storageItem);
+  }
+
+  Future<Either<Failure, int>> updateStorageItem(
+      {required StorageModel storageItem, required int currentId}) async {
+    return await storageRepository.updateStorageItem(
+        storageItem: storageItem, currentId: currentId);
   }
 }

@@ -71,12 +71,15 @@ class StorageService {
       GlobalKey<FormBuilderState> formKey) async {
     if (storageController.action == StorageManagementAction.edit.name.obs) {
       await storageRepository
-          .updateStorageItem(item, storageController.currentId)
+          .updateStorageItem(
+              storageItem: item, currentId: storageController.currentId)
           .then((res) {
-        lstStorageItemModification.add(StorageItemModification()
-          ..id = storageController.currentId
-          ..action = StorageManagementAction.edit
-          ..item = item);
+        res.fold((currentFailure) {}, (currentId) {
+          lstStorageItemModification.add(StorageItemModification()
+            ..id = storageController.currentId
+            ..action = StorageManagementAction.edit
+            ..item = item);
+        });
       });
     } else {
       await storageRepository.saveNewStorageItem(storageItem: item).then((res) {
