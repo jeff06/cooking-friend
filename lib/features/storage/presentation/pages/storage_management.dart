@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
-import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
+import 'package:cooking_friend/features/storage/business/repositories/i_storage_repository.dart';
 import 'package:cooking_friend/features/storage/business/usecases/get_storage.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
@@ -19,7 +19,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 
 class StorageManagement extends StatefulWidget {
-  final StorageRepository storageRepository;
+  final IStorageRepository storageRepository;
 
   const StorageManagement(this.storageRepository, {super.key});
 

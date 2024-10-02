@@ -38,18 +38,6 @@ class IsarService {
 
   //#endregion
 
-  //#region Storage
-  
-  Future<bool> deleteStorageItem(int currentId) async {
-    final isar = await db;
-    return await isar.writeTxn(
-      () async {
-        return await isar.storageModels.delete(currentId);
-      },
-    );
-  }
-  //#endregion
-
   //#region Recipe
 
   Future<Recipe?> getSingleRecipe(int id) async {

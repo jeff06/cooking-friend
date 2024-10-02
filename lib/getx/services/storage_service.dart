@@ -1,5 +1,5 @@
 import 'package:cooking_friend/constants.dart';
-import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
+import 'package:cooking_friend/features/storage/business/repositories/i_storage_repository.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class StorageService {
   final StorageController storageController;
-  final StorageRepository storageRepository;
+  final IStorageRepository storageRepository;
 
   StorageService(this.storageController, this.storageRepository);
 
@@ -55,14 +55,16 @@ class StorageService {
   //#region Private
   Future<void> _delete(List<StorageItemModification> lstStorageItemModification,
       BuildContext context) async {
-    /*await storageRepository.deleteStorageItem(storageController.currentId).then(
+    await storageRepository.deleteStorageItem(id: storageController.currentId).then(
       (res) {
-        lstStorageItemModification.add(StorageItemModification()
-          ..id = storageController.currentId
-          ..action = StorageManagementAction.delete
-          ..item = null);
+        res.fold((currentFailure){}, (currentBool){
+          lstStorageItemModification.add(StorageItemModification()
+            ..id = storageController.currentId
+            ..action = StorageManagementAction.delete
+            ..item = null);
+        });
       },
-    );*/
+    );
   }
 
   Future<void> _saveUpdate(

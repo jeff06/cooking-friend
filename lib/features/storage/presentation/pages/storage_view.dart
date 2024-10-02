@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
-import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
+import 'package:cooking_friend/features/storage/business/repositories/i_storage_repository.dart';
 import 'package:cooking_friend/features/storage/business/usecases/get_storage.dart';
 import 'package:cooking_friend/getx/controller/storage_controller.dart';
 import 'package:cooking_friend/getx/services/storage_service.dart';
@@ -15,7 +15,7 @@ import 'package:get/get.dart';
 import 'package:dartz/dartz.dart' as dartz;
 
 class StorageView extends StatefulWidget {
-  final StorageRepository storageRepository;
+  final IStorageRepository storageRepository;
 
   const StorageView(this.storageRepository, {super.key});
 

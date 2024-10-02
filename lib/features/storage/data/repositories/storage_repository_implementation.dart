@@ -1,18 +1,29 @@
 import 'package:cooking_friend/core/errors/cache_exception.dart';
 import 'package:cooking_friend/core/errors/cache_failure.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
-import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
+import 'package:cooking_friend/features/storage/business/repositories/i_storage_repository.dart';
 import 'package:cooking_friend/features/storage/data/datasources/i_storage_isar_data_source.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:dartz/dartz.dart';
 
-class StorageRepositoryImplementation implements StorageRepository {
+class StorageRepositoryImplementation implements IStorageRepository {
   final IStorageIsarDataSource localDataSource;
 
   StorageRepositoryImplementation({
     required this.localDataSource,
   });
 
+  @override
+  Future<Either<Failure, bool>> deleteStorageItem(
+      {required int id}) async {
+    try {
+      final localStorageItem = await localDataSource.deleteStorageItem(id);
+      return Right(localStorageItem);
+    } on CacheException {
+      return Left(CacheFailure(errorMessage: 'No local data found'));
+    }
+  }
+  
   @override
   Future<Either<Failure, StorageModel>> getSingleStorageItem(
       {required int id}) async {
@@ -59,4 +70,5 @@ class StorageRepositoryImplementation implements StorageRepository {
       return Left(CacheFailure(errorMessage: 'No local data found'));
     }
   }
+  
 }

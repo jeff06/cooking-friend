@@ -34,6 +34,16 @@ class StorageLocalDataSourceImpl implements IStorageIsarDataSource {
   }
 
   @override
+  Future<bool> deleteStorageItem(int currentId) async {
+    final isar = await db;
+    return await isar.writeTxn(
+          () async {
+        return await isar.storageModels.delete(currentId);
+      },
+    );
+  }
+
+  @override
   Future<List<StorageModel>> getAllStorageItemByFilter(
       String currentFilter) async {
     final isar = await db;
