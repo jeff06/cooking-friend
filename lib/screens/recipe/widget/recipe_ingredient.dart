@@ -1,5 +1,5 @@
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart'
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart'
     as ri_model;
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:cooking_friend/constants.dart';
 
 class RecipeIngredient extends StatefulWidget {
   final String guid = const Uuid().v4();
-  final ri_model.RecipeIngredientModel? ingredient;
+  final ri_model.RecipeIngredient? ingredient;
 
   RecipeIngredient(this.ingredient, {super.key});
 

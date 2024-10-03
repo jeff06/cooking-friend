@@ -4,14 +4,14 @@ import 'dart:convert';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/features/recipe/data/models/imported_recipe.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
 import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'
     as ri_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart'
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart'
     as ri_model;
 import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart'
     as rs_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart' as rs_model;
+import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart' as rs_model;
 import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
@@ -42,7 +42,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
   final TextEditingController _recipeTitleController = TextEditingController();
   late final RecipeService _recipeService =
       RecipeService(recipeController, widget.service);
-  Future<RecipeModel?> recipeToDisplay = Completer<RecipeModel?>().future;
+  Future<Recipe?> recipeToDisplay = Completer<Recipe?>().future;
   List<RecipeModification> lstRecipeModification = [];
   bool isFavorite = false;
 
@@ -126,7 +126,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
     recipeController.ingredients.removeWhere((x) => true);
 
     for (var v in importedRecipe.ingredients!) {
-      ri_model.RecipeIngredientModel recipeIngredient = ri_model.RecipeIngredientModel();
+      ri_model.RecipeIngredient recipeIngredient = ri_model.RecipeIngredient();
       recipeIngredient.ingredient = v.name;
       recipeController.ingredients
           .add(ri_widget.RecipeIngredient(recipeIngredient));
@@ -136,7 +136,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
     if (steps != null) {
       recipeController.steps.removeWhere((x) => true);
       for (var v in steps) {
-        rs_model.RecipeStepModel recipeStep = rs_model.RecipeStepModel();
+        rs_model.RecipeStep recipeStep = rs_model.RecipeStep();
         recipeStep.step = v.text;
         TextEditingController textEditingController = TextEditingController();
         textEditingController.text = v.text!;
@@ -260,10 +260,10 @@ class _RecipeManagementState extends State<RecipeManagement> {
             ? const Loading()
             : Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: FutureBuilder<RecipeModel?>(
+                child: FutureBuilder<Recipe?>(
                   future: recipeToDisplay,
                   builder:
-                      (BuildContext context, AsyncSnapshot<RecipeModel?> snapshot) {
+                      (BuildContext context, AsyncSnapshot<Recipe?> snapshot) {
                     if (snapshot.hasData ||
                         recipeController.action ==
                             RecipeManagementAction.add.name.obs) {

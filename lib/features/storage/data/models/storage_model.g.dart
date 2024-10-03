@@ -145,9 +145,7 @@ List<IsarLinkBase<dynamic>> _storageModelGetLinks(StorageModel object) {
 }
 
 void _storageModelAttach(
-    IsarCollection<dynamic> col, Id id, StorageModel object) {
-  object.id = id;
-}
+    IsarCollection<dynamic> col, Id id, StorageModel object) {}
 
 extension StorageModelQueryWhereSort
     on QueryBuilder<StorageModel, StorageModel, QWhere> {

@@ -1,9 +1,9 @@
 import 'package:isar/isar.dart';
 
-part 'recipe_ingredient_model.g.dart';
+part 'recipe_ingredient.g.dart';
 
 @collection
-class RecipeIngredientModel {
+class RecipeIngredient {
   Id id = Isar.autoIncrement;
   String? ingredient;
   String? measuringUnit;

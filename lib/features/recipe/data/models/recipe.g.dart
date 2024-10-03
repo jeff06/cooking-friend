@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'recipe_model.dart';
+part of 'recipe.dart';
 
 // **************************************************************************
 // IsarCollectionGenerator
@@ -9,13 +9,13 @@ part of 'recipe_model.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetRecipeModelCollection on Isar {
-  IsarCollection<RecipeModel> get recipeModels => this.collection();
+extension GetRecipeCollection on Isar {
+  IsarCollection<Recipe> get recipes => this.collection();
 }
 
-const RecipeModelSchema = CollectionSchema(
-  name: r'RecipeModel',
-  id: 1871555323955702891,
+const RecipeSchema = CollectionSchema(
+  name: r'Recipe',
+  id: 8054415271972849591,
   properties: {
     r'isFavorite': PropertySchema(
       id: 0,
@@ -28,35 +28,35 @@ const RecipeModelSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _recipeModelEstimateSize,
-  serialize: _recipeModelSerialize,
-  deserialize: _recipeModelDeserialize,
-  deserializeProp: _recipeModelDeserializeProp,
+  estimateSize: _recipeEstimateSize,
+  serialize: _recipeSerialize,
+  deserialize: _recipeDeserialize,
+  deserializeProp: _recipeDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {
     r'steps': LinkSchema(
-      id: 7362452521328284530,
+      id: 6057392964655359920,
       name: r'steps',
-      target: r'RecipeStepModel',
+      target: r'RecipeStep',
       single: false,
     ),
     r'ingredients': LinkSchema(
-      id: -466007516677426435,
+      id: 1239099599733727184,
       name: r'ingredients',
-      target: r'RecipeIngredientModel',
+      target: r'RecipeIngredient',
       single: false,
     )
   },
   embeddedSchemas: {},
-  getId: _recipeModelGetId,
-  getLinks: _recipeModelGetLinks,
-  attach: _recipeModelAttach,
+  getId: _recipeGetId,
+  getLinks: _recipeGetLinks,
+  attach: _recipeAttach,
   version: '3.1.0+1',
 );
 
-int _recipeModelEstimateSize(
-  RecipeModel object,
+int _recipeEstimateSize(
+  Recipe object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -70,8 +70,8 @@ int _recipeModelEstimateSize(
   return bytesCount;
 }
 
-void _recipeModelSerialize(
-  RecipeModel object,
+void _recipeSerialize(
+  Recipe object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -80,20 +80,20 @@ void _recipeModelSerialize(
   writer.writeString(offsets[1], object.name);
 }
 
-RecipeModel _recipeModelDeserialize(
+Recipe _recipeDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = RecipeModel();
+  final object = Recipe();
   object.id = id;
   object.isFavorite = reader.readBoolOrNull(offsets[0]);
   object.name = reader.readStringOrNull(offsets[1]);
   return object;
 }
 
-P _recipeModelDeserializeProp<P>(
+P _recipeDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -109,35 +109,31 @@ P _recipeModelDeserializeProp<P>(
   }
 }
 
-Id _recipeModelGetId(RecipeModel object) {
+Id _recipeGetId(Recipe object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _recipeModelGetLinks(RecipeModel object) {
+List<IsarLinkBase<dynamic>> _recipeGetLinks(Recipe object) {
   return [object.steps, object.ingredients];
 }
 
-void _recipeModelAttach(
-    IsarCollection<dynamic> col, Id id, RecipeModel object) {
+void _recipeAttach(IsarCollection<dynamic> col, Id id, Recipe object) {
   object.id = id;
-  object.steps
-      .attach(col, col.isar.collection<RecipeStepModel>(), r'steps', id);
-  object.ingredients.attach(
-      col, col.isar.collection<RecipeIngredientModel>(), r'ingredients', id);
+  object.steps.attach(col, col.isar.collection<RecipeStep>(), r'steps', id);
+  object.ingredients
+      .attach(col, col.isar.collection<RecipeIngredient>(), r'ingredients', id);
 }
 
-extension RecipeModelQueryWhereSort
-    on QueryBuilder<RecipeModel, RecipeModel, QWhere> {
-  QueryBuilder<RecipeModel, RecipeModel, QAfterWhere> anyId() {
+extension RecipeQueryWhereSort on QueryBuilder<Recipe, Recipe, QWhere> {
+  QueryBuilder<Recipe, Recipe, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension RecipeModelQueryWhere
-    on QueryBuilder<RecipeModel, RecipeModel, QWhereClause> {
-  QueryBuilder<RecipeModel, RecipeModel, QAfterWhereClause> idEqualTo(Id id) {
+extension RecipeQueryWhere on QueryBuilder<Recipe, Recipe, QWhereClause> {
+  QueryBuilder<Recipe, Recipe, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -146,8 +142,7 @@ extension RecipeModelQueryWhere
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterWhereClause> idNotEqualTo(
-      Id id) {
+  QueryBuilder<Recipe, Recipe, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -169,7 +164,7 @@ extension RecipeModelQueryWhere
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<Recipe, Recipe, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -178,7 +173,7 @@ extension RecipeModelQueryWhere
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<Recipe, Recipe, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -187,7 +182,7 @@ extension RecipeModelQueryWhere
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterWhereClause> idBetween(
+  QueryBuilder<Recipe, Recipe, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -204,10 +199,8 @@ extension RecipeModelQueryWhere
   }
 }
 
-extension RecipeModelQueryFilter
-    on QueryBuilder<RecipeModel, RecipeModel, QFilterCondition> {
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> idEqualTo(
-      Id value) {
+extension RecipeQueryFilter on QueryBuilder<Recipe, Recipe, QFilterCondition> {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -216,7 +209,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -229,7 +222,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> idLessThan(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -242,7 +235,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> idBetween(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -259,8 +252,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      isFavoriteIsNull() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> isFavoriteIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'isFavorite',
@@ -268,8 +260,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      isFavoriteIsNotNull() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> isFavoriteIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'isFavorite',
@@ -277,8 +268,8 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      isFavoriteEqualTo(bool? value) {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> isFavoriteEqualTo(
+      bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isFavorite',
@@ -287,7 +278,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameIsNull() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'name',
@@ -295,8 +286,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      nameIsNotNull() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'name',
@@ -304,7 +294,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameEqualTo(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -317,7 +307,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameGreaterThan(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -332,7 +322,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameLessThan(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -347,7 +337,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameBetween(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -366,7 +356,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameStartsWith(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -379,7 +369,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameEndsWith(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -392,8 +382,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameContains(
-      String value,
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameContains(String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -404,7 +393,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameMatches(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -416,7 +405,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'name',
@@ -425,8 +414,7 @@ extension RecipeModelQueryFilter
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      nameIsNotEmpty() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
@@ -436,40 +424,36 @@ extension RecipeModelQueryFilter
   }
 }
 
-extension RecipeModelQueryObject
-    on QueryBuilder<RecipeModel, RecipeModel, QFilterCondition> {}
+extension RecipeQueryObject on QueryBuilder<Recipe, Recipe, QFilterCondition> {}
 
-extension RecipeModelQueryLinks
-    on QueryBuilder<RecipeModel, RecipeModel, QFilterCondition> {
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> steps(
-      FilterQuery<RecipeStepModel> q) {
+extension RecipeQueryLinks on QueryBuilder<Recipe, Recipe, QFilterCondition> {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> steps(
+      FilterQuery<RecipeStep> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'steps');
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      stepsLengthEqualTo(int length) {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> stepsLengthEqualTo(
+      int length) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'steps', length, true, length, true);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> stepsIsEmpty() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> stepsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'steps', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      stepsIsNotEmpty() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> stepsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'steps', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      stepsLengthLessThan(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> stepsLengthLessThan(
     int length, {
     bool include = false,
   }) {
@@ -478,8 +462,7 @@ extension RecipeModelQueryLinks
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      stepsLengthGreaterThan(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> stepsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
@@ -488,8 +471,7 @@ extension RecipeModelQueryLinks
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      stepsLengthBetween(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> stepsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -501,36 +483,33 @@ extension RecipeModelQueryLinks
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition> ingredients(
-      FilterQuery<RecipeIngredientModel> q) {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> ingredients(
+      FilterQuery<RecipeIngredient> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'ingredients');
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      ingredientsLengthEqualTo(int length) {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> ingredientsLengthEqualTo(
+      int length) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'ingredients', length, true, length, true);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      ingredientsIsEmpty() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> ingredientsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'ingredients', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      ingredientsIsNotEmpty() {
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> ingredientsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'ingredients', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      ingredientsLengthLessThan(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> ingredientsLengthLessThan(
     int length, {
     bool include = false,
   }) {
@@ -539,7 +518,7 @@ extension RecipeModelQueryLinks
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition>
       ingredientsLengthGreaterThan(
     int length, {
     bool include = false,
@@ -549,8 +528,7 @@ extension RecipeModelQueryLinks
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterFilterCondition>
-      ingredientsLengthBetween(
+  QueryBuilder<Recipe, Recipe, QAfterFilterCondition> ingredientsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -563,81 +541,78 @@ extension RecipeModelQueryLinks
   }
 }
 
-extension RecipeModelQuerySortBy
-    on QueryBuilder<RecipeModel, RecipeModel, QSortBy> {
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> sortByIsFavorite() {
+extension RecipeQuerySortBy on QueryBuilder<Recipe, Recipe, QSortBy> {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByIsFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavorite', Sort.asc);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> sortByIsFavoriteDesc() {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByIsFavoriteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavorite', Sort.desc);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> sortByName() {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> sortByNameDesc() {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 }
 
-extension RecipeModelQuerySortThenBy
-    on QueryBuilder<RecipeModel, RecipeModel, QSortThenBy> {
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> thenById() {
+extension RecipeQuerySortThenBy on QueryBuilder<Recipe, Recipe, QSortThenBy> {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> thenByIsFavorite() {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByIsFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavorite', Sort.asc);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> thenByIsFavoriteDesc() {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByIsFavoriteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavorite', Sort.desc);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> thenByName() {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QAfterSortBy> thenByNameDesc() {
+  QueryBuilder<Recipe, Recipe, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 }
 
-extension RecipeModelQueryWhereDistinct
-    on QueryBuilder<RecipeModel, RecipeModel, QDistinct> {
-  QueryBuilder<RecipeModel, RecipeModel, QDistinct> distinctByIsFavorite() {
+extension RecipeQueryWhereDistinct on QueryBuilder<Recipe, Recipe, QDistinct> {
+  QueryBuilder<Recipe, Recipe, QDistinct> distinctByIsFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isFavorite');
     });
   }
 
-  QueryBuilder<RecipeModel, RecipeModel, QDistinct> distinctByName(
+  QueryBuilder<Recipe, Recipe, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
@@ -645,21 +620,20 @@ extension RecipeModelQueryWhereDistinct
   }
 }
 
-extension RecipeModelQueryProperty
-    on QueryBuilder<RecipeModel, RecipeModel, QQueryProperty> {
-  QueryBuilder<RecipeModel, int, QQueryOperations> idProperty() {
+extension RecipeQueryProperty on QueryBuilder<Recipe, Recipe, QQueryProperty> {
+  QueryBuilder<Recipe, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<RecipeModel, bool?, QQueryOperations> isFavoriteProperty() {
+  QueryBuilder<Recipe, bool?, QQueryOperations> isFavoriteProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isFavorite');
     });
   }
 
-  QueryBuilder<RecipeModel, String?, QQueryOperations> nameProperty() {
+  QueryBuilder<Recipe, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });

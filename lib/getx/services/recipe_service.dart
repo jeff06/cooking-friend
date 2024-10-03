@@ -1,9 +1,9 @@
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -75,7 +75,7 @@ class RecipeService {
   }
 
   Future<void> _saveAndUpdate(
-      RecipeModel recipe,
+      Recipe recipe,
       List<RecipeModification> lstRecipeModification,
       GlobalKey<FormBuilderState> formKey) async {
     if (recipeController.action == RecipeManagementAction.edit.name.obs) {
@@ -107,13 +107,13 @@ class RecipeService {
       List<RecipeModification> lstRecipeModification, bool isFavorite) async {
     // ne pas saver ce qui ont le meme id
     if (formKey.currentState!.saveAndValidate()) {
-      RecipeModel newRecipe = RecipeModel()
+      Recipe newRecipe = Recipe()
         ..name = formKey.currentState?.value["recipe_title"]
         ..isFavorite = isFavorite;
       for (int i = 0; i < recipeController.steps.length; i++) {
         var currentElement = recipeController.steps[i];
         var content = formKey.currentState?.value["rs_${currentElement.guid}"];
-        RecipeStepModel step = RecipeStepModel()..step = content;
+        RecipeStep step = RecipeStep()..step = content;
         step.order = i;
         if (currentElement.step != null) {
           step.id = currentElement.step!.id;
@@ -124,7 +124,7 @@ class RecipeService {
 
       for (int i = 0; i < recipeController.ingredients.length; i++) {
         var currentElement = recipeController.ingredients[i];
-        RecipeIngredientModel ri = RecipeIngredientModel();
+        RecipeIngredient ri = RecipeIngredient();
         ri.ingredient =
             formKey.currentState?.value["ri_${currentElement.guid}"];
         ri.measuringUnit =
