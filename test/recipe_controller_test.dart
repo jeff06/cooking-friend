@@ -1,4 +1,4 @@
-/*import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
@@ -79,4 +79,4 @@ void main() {
       expect(controller.lstRecipe[0].name, "modified name");
     });
   });
-}*/
+}
