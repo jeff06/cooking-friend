@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
 import 'package:cooking_friend/screens/support/gradient_background.dart';

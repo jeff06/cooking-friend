@@ -3,16 +3,16 @@ import 'dart:convert';
 
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/getx/models/recipe/imported_recipe.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/imported_recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
 import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'
     as ri_widget;
-import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart'
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart'
     as ri_model;
 import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart'
     as rs_widget;
-import 'package:cooking_friend/getx/models/recipe/recipe_step.dart' as rs_model;
-import 'package:cooking_friend/getx/models/recipe/recipe_modification.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart' as rs_model;
+import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
 import 'package:cooking_friend/screens/support/gradient_background.dart';

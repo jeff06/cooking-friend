@@ -1,13 +1,12 @@
-import 'package:cooking_friend/screens/storage/storage_management.dart';
-import 'package:cooking_friend/screens/storage/storage_view.dart';
+import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
+import 'package:cooking_friend/features/storage/presentation/pages/storage_management.dart';
+import 'package:cooking_friend/features/storage/presentation/pages/storage_view.dart';
 import 'package:flutter/material.dart';
 
-import '../getx/services/isar_service.dart';
-
 class StorageNavigation extends StatefulWidget {
-  final IsarService service;
+  final IStorageRepositoryImplementation repository;
 
-  const StorageNavigation(this.service, {super.key});
+  const StorageNavigation(this.repository, {super.key});
 
   @override
   State<StorageNavigation> createState() => _StorageNavigationState();
@@ -23,9 +22,9 @@ class _StorageNavigationState extends State<StorageNavigation> {
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(builder: (BuildContext context) {
           if (settings.name == "/storageAdd" || settings.name == "/storageManagement") {
-            return StorageManagement(widget.service);
+            return StorageManagement(widget.repository);
           }
-          return StorageView(widget.service);
+          return StorageView(widget.repository);
         });
       },
     );

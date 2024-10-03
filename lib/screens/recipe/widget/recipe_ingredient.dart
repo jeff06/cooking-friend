@@ -1,5 +1,5 @@
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart'
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart'
     as ri_model;
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';

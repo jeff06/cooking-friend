@@ -1,5 +1,5 @@
-import 'package:cooking_friend/getx/models/recipe/recipe_ingredient.dart';
-import 'package:cooking_friend/getx/models/recipe/recipe_step.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart';
 import 'package:isar/isar.dart';
 
 part 'recipe.g.dart';

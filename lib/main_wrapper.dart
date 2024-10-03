@@ -1,5 +1,6 @@
+import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
 import 'package:cooking_friend/navigation/recipe_navigation.dart';
-import 'package:cooking_friend/navigation/storage_navigation.dart';
+import 'package:cooking_friend/skeleton/navigation/storage_navigation.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +8,9 @@ import 'package:flutter/services.dart';
 
 class MainWrapper extends StatefulWidget {
   final IsarService service;
+  final IStorageRepositoryImplementation repository;
 
-  const MainWrapper(this.service, {super.key});
+  const MainWrapper(this.service, this.repository, {super.key});
 
   @override
   State<MainWrapper> createState() => _MainWrapperState();
@@ -78,7 +80,7 @@ class _MainWrapperState extends State<MainWrapper> {
           child: IndexedStack(
             index: _selectedIndex,
             children: [
-              StorageNavigation(widget.service),
+              StorageNavigation(widget.repository),
               RecipeNavigation(widget.service),
               //ShoppingListNavigation(widget.service),
             ],
