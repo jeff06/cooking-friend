@@ -107,9 +107,8 @@ class RecipeService {
       List<RecipeModification> lstRecipeModification, bool isFavorite) async {
     // ne pas saver ce qui ont le meme id
     if (formKey.currentState!.saveAndValidate()) {
-      RecipeModel newRecipe = RecipeModel()
-        ..name = formKey.currentState?.value["recipe_title"]
-        ..isFavorite = isFavorite;
+      RecipeModel newRecipe = RecipeModel(null, null, null, formKey.currentState?.value["recipe_title"], isFavorite);
+
       for (int i = 0; i < recipeController.steps.length; i++) {
         var currentElement = recipeController.steps[i];
         var content = formKey.currentState?.value["rs_${currentElement.guid}"];

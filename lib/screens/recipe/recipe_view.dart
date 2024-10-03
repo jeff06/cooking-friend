@@ -54,9 +54,9 @@ class _RecipeViewState extends State<RecipeView> {
     switch (recipeController.currentOrderBy) {
       case RecipeOrderBy.id:
         if (recipeController.currentDirection == OrderByDirection.ascending) {
-          lstRecipe.sort((a, b) => a.id.compareTo(b.id));
+          lstRecipe.sort((a, b) => a.id!.compareTo(b.id!));
         } else {
-          lstRecipe.sort((a, b) => b.id.compareTo(a.id));
+          lstRecipe.sort((a, b) => b.id!.compareTo(a.id!));
         }
       case RecipeOrderBy.name:
         if (recipeController.currentDirection == OrderByDirection.ascending) {
@@ -128,7 +128,7 @@ class _RecipeViewState extends State<RecipeView> {
                             itemBuilder: (BuildContext context, int index) {
                               String name =
                                   recipeController.lstRecipe[index].name!;
-                              int id = recipeController.lstRecipe[index].id;
+                              int id = recipeController.lstRecipe[index].id!;
                               return SearchDisplayCard(
                                 () => recipeService.clickOnCard(id, context),
                                 ListTile(
