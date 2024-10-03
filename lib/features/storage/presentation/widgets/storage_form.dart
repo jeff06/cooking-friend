@@ -1,7 +1,7 @@
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
-import 'package:cooking_friend/features/storage/presentation/provider/storage_controller.dart';
+import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 class StorageForm extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
   final dartz.Either<Failure, StorageEntity>? data;
-  final StorageController storageController;
+  final StorageGetx storageController;
   final StorageEntity? storage;
   final TextEditingController textController;
   

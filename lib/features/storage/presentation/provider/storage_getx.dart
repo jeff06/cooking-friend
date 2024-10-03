@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
 
-class StorageController extends GetxController {
+class StorageGetx extends GetxController {
   var barcode = "".obs;
   int currentId = -1;
   var action = StorageManagementAction.none.name.obs;

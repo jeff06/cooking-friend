@@ -2,7 +2,7 @@ import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
 import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
-import 'package:cooking_friend/features/storage/presentation/provider/storage_controller.dart';
+import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
 import 'package:cooking_friend/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 
 class StorageUseCase {
-  final StorageController storageController;
+  final StorageGetx storageController;
   final IStorageRepositoryImplementation storageRepository;
 
   StorageUseCase(this.storageController, this.storageRepository);
