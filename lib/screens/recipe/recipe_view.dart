@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
 import 'package:cooking_friend/screens/support/gradient_background.dart';
@@ -23,7 +23,7 @@ class RecipeView extends StatefulWidget {
 class _RecipeViewState extends State<RecipeView> {
   final TextEditingController searchBarController = TextEditingController();
   final RecipeController recipeController = Get.find<RecipeController>();
-  Future<List<Recipe>> recipeToDisplay = Completer<List<Recipe>>().future;
+  Future<List<RecipeModel>> recipeToDisplay = Completer<List<RecipeModel>>().future;
   late final RecipeService recipeService =
       RecipeService(recipeController, widget.service);
 
@@ -50,7 +50,7 @@ class _RecipeViewState extends State<RecipeView> {
         RecipeOrderBy.values.firstWhere((x) => x.paramName == orderBy);
   }
 
-  Future<void> orderBy(List<Recipe> lstRecipe) async {
+  Future<void> orderBy(List<RecipeModel> lstRecipe) async {
     switch (recipeController.currentOrderBy) {
       case RecipeOrderBy.id:
         if (recipeController.currentDirection == OrderByDirection.ascending) {
@@ -111,7 +111,7 @@ class _RecipeViewState extends State<RecipeView> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(tenP, 0, tenP, 10),
-                child: FutureBuilder<List<Recipe>>(
+                child: FutureBuilder<List<RecipeModel>>(
                   future: recipeToDisplay,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {

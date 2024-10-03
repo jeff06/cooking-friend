@@ -1,6 +1,6 @@
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -25,7 +25,7 @@ void main() {
       RecipeModification item = RecipeModification();
       item.id = 0;
       item.action = RecipeManagementAction.add;
-      item.item = Recipe();
+      item.item = RecipeModel();
       lst.add(item);
       controller.updateLstRecipeModification(lst);
 
@@ -40,13 +40,13 @@ void main() {
       //arrange
       RecipeController controller = RecipeController();
       List<RecipeModification> lst = [];
-      Recipe recipeToRemove = Recipe();
+      RecipeModel recipeToRemove = RecipeModel();
       recipeToRemove.id = 0;
       controller.lstRecipe.add(recipeToRemove);
       RecipeModification item = RecipeModification();
       item.id = 0;
       item.action = RecipeManagementAction.delete;
-      item.item = Recipe();
+      item.item = RecipeModel();
       lst.add(item);
       controller.updateLstRecipeModification(lst);
 
@@ -61,14 +61,14 @@ void main() {
       //arrange
       RecipeController controller = RecipeController();
       List<RecipeModification> lst = [];
-      Recipe recipeToEdit = Recipe();
+      RecipeModel recipeToEdit = RecipeModel();
       recipeToEdit.id = 0;
       recipeToEdit.name = "recipe name";
       controller.lstRecipe.add(recipeToEdit);
       RecipeModification item = RecipeModification();
       item.id = 0;
       item.action = RecipeManagementAction.edit;
-      item.item = Recipe()..name = "modified name";
+      item.item = RecipeModel()..name = "modified name";
       lst.add(item);
       controller.updateLstRecipeModification(lst);
 

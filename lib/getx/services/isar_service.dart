@@ -1,6 +1,6 @@
-import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -24,9 +24,9 @@ class IsarService {
       return await Isar.open(
         [
           StorageModelSchema,
-          RecipeSchema,
-          RecipeIngredientSchema,
-          RecipeStepSchema
+          RecipeModelSchema,
+          RecipeIngredientModelSchema,
+          RecipeStepModelSchema
         ],
         inspector: true,
         directory: dir.path,
@@ -40,19 +40,19 @@ class IsarService {
 
   //#region Recipe
 
-  Future<Recipe?> getSingleRecipe(int id) async {
+  Future<RecipeModel?> getSingleRecipe(int id) async {
     final isar = await db;
-    return await isar.recipes.filter().idEqualTo(id).findFirst();
+    return await isar.recipeModels.filter().idEqualTo(id).findFirst();
   }
 
-  Future<int> saveNewRecipe(Recipe recipe) async {
+  Future<int> saveNewRecipe(RecipeModel recipe) async {
     final isar = await db;
     recipe.steps.addAll(recipe.lstSteps);
     recipe.ingredients.addAll(recipe.lstIngredients);
-    return isar.writeTxnSync<int>(() => isar.recipes.putSync(recipe));
+    return isar.writeTxnSync<int>(() => isar.recipeModels.putSync(recipe));
   }
 
-  Future<int> updateRecipe(Recipe recipe, int currentId, List<int> ingredientsToDelete, List<int> stepsToDelete) async {
+  Future<int> updateRecipe(RecipeModel recipe, int currentId, List<int> ingredientsToDelete, List<int> stepsToDelete) async {
     final isar = await db;
 
     recipe.id = currentId;
@@ -60,12 +60,12 @@ class IsarService {
     recipe.ingredients.addAll(recipe.lstIngredients);
 
     return isar.writeTxnSync<int>(() {
-      int id = isar.recipes.putSync(recipe);
-      isar.recipeIngredients.putAllSync(recipe.lstIngredients);
-      isar.recipeSteps.putAllSync(recipe.lstSteps);
+      int id = isar.recipeModels.putSync(recipe);
+      isar.recipeIngredientModels.putAllSync(recipe.lstIngredients);
+      isar.recipeStepModels.putAllSync(recipe.lstSteps);
 
-      isar.recipeIngredients.deleteAllSync(ingredientsToDelete);
-      isar.recipeSteps.deleteAllSync(stepsToDelete);
+      isar.recipeIngredientModels.deleteAllSync(ingredientsToDelete);
+      isar.recipeStepModels.deleteAllSync(stepsToDelete);
 
       recipe.ingredients.saveSync();
       recipe.steps.saveSync();
@@ -77,18 +77,18 @@ class IsarService {
     final isar = await db;
     return await isar.writeTxn(
       () async {
-        return await isar.recipes.delete(currentId);
+        return await isar.recipeModels.delete(currentId);
       },
     );
   }
 
-  Future<List<Recipe>> getAllRecipeByFilter(String currentFilter) async {
+  Future<List<RecipeModel>> getAllRecipeByFilter(String currentFilter) async {
     final isar = await db;
 
     if (currentFilter != "") {
-      return await isar.recipes.filter().nameContains(currentFilter).findAll();
+      return await isar.recipeModels.filter().nameContains(currentFilter).findAll();
     }
-    return await isar.recipes.filter().nameIsNotEmpty().findAll();
+    return await isar.recipeModels.filter().nameIsNotEmpty().findAll();
   }
 
   //#endregion

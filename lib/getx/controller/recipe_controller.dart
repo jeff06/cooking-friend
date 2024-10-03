@@ -1,12 +1,12 @@
 import 'package:cooking_friend/constants.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
 import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart'
     as rs_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart' as rs_model;
+import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart' as rs_model;
 import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'
     as ri_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart'
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart'
     as ri_model;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,7 +19,7 @@ class RecipeController extends GetxController {
   int currentId = -1;
   var currentFavorite = false.obs;
   var action = RecipeManagementAction.none.name.obs;
-  var lstRecipe = <Recipe>[].obs;
+  var lstRecipe = <RecipeModel>[].obs;
   var lstRecipeModification = <RecipeModification>[].obs;
   List<int> ingredientsToRemove = [];
   List<int> stepsToRemove = [];
@@ -38,11 +38,11 @@ class RecipeController extends GetxController {
     currentFavorite = false.obs;
   }
 
-  void updateLstRecipeDisplayed(List<Recipe> newLstStorageItem) {
+  void updateLstRecipeDisplayed(List<RecipeModel> newLstStorageItem) {
     lstRecipe.value = newLstStorageItem;
   }
 
-  void updateLstRecipeStepsDisplayed(List<rs_model.RecipeStep> newRecipeSteps) {
+  void updateLstRecipeStepsDisplayed(List<rs_model.RecipeStepModel> newRecipeSteps) {
     newRecipeSteps.sort((a, b) => a.order!.compareTo(b.order!));
     if (action != RecipeManagementAction.add.name.obs) {
       steps = <rs_widget.RecipeStep>[].obs;
@@ -59,7 +59,7 @@ class RecipeController extends GetxController {
   }
 
   void updateLstRecipeIngredientsDisplayed(
-      List<ri_model.RecipeIngredient> newRecipeIngredients) {
+      List<ri_model.RecipeIngredientModel> newRecipeIngredients) {
     newRecipeIngredients.sort((a, b) => a.order!.compareTo(b.order!));
     if (action != RecipeManagementAction.add.name.obs) {
       ingredients = <ri_widget.RecipeIngredient>[].obs;

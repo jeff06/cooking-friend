@@ -1,8 +1,8 @@
 import 'package:cooking_friend/constants.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 
 class RecipeModification {
   int? id;
   RecipeManagementAction? action;
-  Recipe? item;
+  RecipeModel? item;
 }
