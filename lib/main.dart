@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final service = IsarService();
 
   StorageRepositoryImplementation repository = StorageRepositoryImplementation(
-      localDataSource: StorageLocalDataSourceImpl(),
+    localDataSource: StorageLocalDataSourceImpl(),
   );
 
   @override

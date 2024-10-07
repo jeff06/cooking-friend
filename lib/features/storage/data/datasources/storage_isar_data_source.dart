@@ -4,47 +4,57 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class StorageLocalDataSourceImpl implements IStorageIsarDataSource {
-  late Future<Database> db;
+  static Database? _database;
 
-  StorageLocalDataSourceImpl() {
-    db = openDB();
+  StorageLocalDataSourceImpl();
+
+  static final StorageLocalDataSourceImpl instance =
+      StorageLocalDataSourceImpl._init();
+
+  StorageLocalDataSourceImpl._init();
+
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+
+    _database = await _initDB('cooking-friend.db');
+    return _database!;
   }
 
-  Future<Database> openDB() async {
+  Future<Database> _initDB(String filePath) async {
     databaseFactory.setDatabasesPath('/storage/self/primary/Download');
-    var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'cooking-friend.db');
-    // open the database
-    return await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      // When creating the db, create the table
-      await db.execute(
-          'CREATE TABLE storage(id INTEGER PRIMARY KEY, name TEXT, date TEXT, code TEXT, quantity INT, location TEXT) ');
-    });
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filePath);
+
+    return await openDatabase(path, version: 1, onCreate: _createDB);
+  }
+
+  Future _createDB(Database db, int version) async {
+    await db.execute(
+        'CREATE TABLE storage(id INTEGER PRIMARY KEY, name TEXT, date TEXT, code TEXT, quantity INT, location TEXT) ');
   }
 
   @override
   Future<StorageModel?> getSingleStorageItem(int id) async {
-    final sqflite = await db;
+    final db = await instance.database;
     final List<Map<String, Object?>> json =
-        await sqflite.query('storage', where: 'id = ?', whereArgs: [id]);
+        await db.query('storage', where: 'id = ?', whereArgs: [id]);
     return StorageModel.fromJson(json.first);
   }
 
   @override
   Future<bool> deleteStorageItem(int currentId) async {
-    final sqflite = await db;
-    int count = await sqflite
-        .delete('storage', where: 'id = ?', whereArgs: [currentId]);
+    final db = await instance.database;
+    int count =
+        await db.delete('storage', where: 'id = ?', whereArgs: [currentId]);
     return count > 0;
   }
 
   @override
   Future<List<StorageModel>> getAllStorageItemByFilter(
       String currentFilter) async {
-    final sqflite = await db;
+    final db = await instance.database;
 
-    final List<Map<String, Object?>> json = await sqflite.query('storage',
+    final List<Map<String, Object?>> json = await db.query('storage',
         where: 'name like ? or code like ?',
         whereArgs: ['%$currentFilter%', '%$currentFilter%']);
 
@@ -53,17 +63,16 @@ class StorageLocalDataSourceImpl implements IStorageIsarDataSource {
 
   @override
   Future<int> updateStorageItem(StorageModel storageItem, int currentId) async {
-    final sqflite = await db;
+    final db = await instance.database;
 
-    return await sqflite.update('storage', storageItem.toJson(),
+    return await db.update('storage', storageItem.toJson(),
         where: 'id = ?', whereArgs: [currentId]);
-    
   }
 
   @override
   Future<int> saveNewStorageItem(StorageModel storageItem) async {
-    final sqflite = await db;
-    
-    return await sqflite.insert('storage', storageItem.toJson());
+    final db = await instance.database;
+
+    return await db.insert('storage', storageItem.toJson());
   }
 }
