@@ -4,15 +4,15 @@ import 'dart:convert';
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/features/recipe/data/models/imported_recipe.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'
     as ri_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart'
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart'
     as ri_model;
 import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart'
     as rs_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart' as rs_model;
-import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart' as rs_model;
+import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:cooking_friend/getx/services/recipe_service.dart';
 import 'package:cooking_friend/screens/support/gradient_background.dart';
@@ -126,7 +126,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
     recipeController.ingredients.removeWhere((x) => true);
 
     for (var v in importedRecipe.ingredients!) {
-      ri_model.RecipeIngredient recipeIngredient = ri_model.RecipeIngredient();
+      ri_model.RecipeIngredientModel recipeIngredient = ri_model.RecipeIngredientModel();
       recipeIngredient.ingredient = v.name;
       recipeController.ingredients
           .add(ri_widget.RecipeIngredient(recipeIngredient));

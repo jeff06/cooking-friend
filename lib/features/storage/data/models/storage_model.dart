@@ -1,7 +1,5 @@
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
-import 'package:isar/isar.dart';
 
-@collection
 class StorageModel extends StorageEntity {
   StorageModel(super.name, super.date, super.code, super.quantity,
       super.location, super.id);

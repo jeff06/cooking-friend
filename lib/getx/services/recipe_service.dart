@@ -1,14 +1,13 @@
 import 'package:cooking_friend/constants.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart';
+import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
 
 class RecipeService {
   final RecipeController recipeController;
@@ -124,7 +123,7 @@ class RecipeService {
 
       for (int i = 0; i < recipeController.ingredients.length; i++) {
         var currentElement = recipeController.ingredients[i];
-        RecipeIngredient ri = RecipeIngredient();
+        RecipeIngredientModel ri = RecipeIngredientModel();
         ri.ingredient =
             formKey.currentState?.value["ri_${currentElement.guid}"];
         ri.measuringUnit =

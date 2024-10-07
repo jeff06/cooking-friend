@@ -1,16 +1,15 @@
 import 'package:cooking_friend/constants.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_modification.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
+import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
 import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart'
     as rs_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart' as rs_model;
+import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart' as rs_model;
 import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'
     as ri_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart'
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart'
     as ri_model;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
 
 class RecipeController extends GetxController {
   var steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
@@ -59,7 +58,7 @@ class RecipeController extends GetxController {
   }
 
   void updateLstRecipeIngredientsDisplayed(
-      List<ri_model.RecipeIngredient> newRecipeIngredients) {
+      List<ri_model.RecipeIngredientModel> newRecipeIngredients) {
     newRecipeIngredients.sort((a, b) => a.order!.compareTo(b.order!));
     if (action != RecipeManagementAction.add.name.obs) {
       ingredients = <ri_widget.RecipeIngredient>[].obs;
