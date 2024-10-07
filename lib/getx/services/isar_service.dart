@@ -1,9 +1,8 @@
 import 'package:cooking_friend/features/recipe/data/models/recipe.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_step.dart';
-import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class IsarService {
   late Future<Isar> db;
@@ -20,16 +19,11 @@ class IsarService {
 
   Future<Isar> openDB() async {
     if (Isar.instanceNames.isEmpty) {
-      final dir = await getApplicationDocumentsDirectory();
+      final dir = await getDatabasesPath();
       return await Isar.open(
-        [
-          StorageModelSchema,
-          RecipeSchema,
-          RecipeIngredientSchema,
-          RecipeStepSchema
-        ],
+        [RecipeSchema, RecipeIngredientSchema, RecipeStepSchema],
         inspector: true,
-        directory: dir.path,
+        directory: dir,
       );
     }
 
@@ -52,7 +46,8 @@ class IsarService {
     return isar.writeTxnSync<int>(() => isar.recipes.putSync(recipe));
   }
 
-  Future<int> updateRecipe(Recipe recipe, int currentId, List<int> ingredientsToDelete, List<int> stepsToDelete) async {
+  Future<int> updateRecipe(Recipe recipe, int currentId,
+      List<int> ingredientsToDelete, List<int> stepsToDelete) async {
     final isar = await db;
 
     recipe.id = currentId;
@@ -91,5 +86,5 @@ class IsarService {
     return await isar.recipes.filter().nameIsNotEmpty().findAll();
   }
 
-  //#endregion
+//#endregion
 }

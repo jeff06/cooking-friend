@@ -1,7 +1,7 @@
 class StorageEntity {
   final int? id;
   final String? name;
-  final DateTime? date;
+  final String? date;
   final String? code;
   final int? quantity;
   final String? location;

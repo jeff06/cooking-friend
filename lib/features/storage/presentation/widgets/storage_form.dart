@@ -15,11 +15,8 @@ class StorageForm extends StatefulWidget {
   final StorageGetx storageController;
   final StorageEntity? storage;
   final TextEditingController textController;
-  
-  const StorageForm(
-      this.formKey,
-      this.data,
-      this.storageController,
+
+  const StorageForm(this.formKey, this.data, this.storageController,
       this.storage, this.textController,
       {super.key});
 
@@ -52,7 +49,9 @@ class _StorageFormState extends State<StorageForm> {
             ),
             FormBuilderDateTimePicker(
               name: "form_product_date",
-              initialValue: widget.storage?.date,
+              initialValue: widget.storage?.date != null
+                  ? DateTime.parse(widget.storage!.date!)
+                  : null,
               enabled: widget.storageController.action ==
                       StorageManagementAction.view.name.obs
                   ? false
@@ -61,8 +60,9 @@ class _StorageFormState extends State<StorageForm> {
               inputType: InputType.date,
             ),
             FormBuilderTextField(
-              initialValue:
-              widget.data != null ? widget.storage?.quantity.toString() : "",
+              initialValue: widget.data != null
+                  ? widget.storage?.quantity.toString()
+                  : "",
               enabled: widget.storageController.action ==
                       StorageManagementAction.view.name.obs
                   ? false
@@ -110,8 +110,9 @@ class _StorageFormState extends State<StorageForm> {
                           StorageManagementAction.edit.name.obs,
                   child: IconButton(
                     onPressed: () async {
-                      await widget.storageController.navigateAndDisplaySelection(
-                          context, widget.textController);
+                      await widget.storageController
+                          .navigateAndDisplaySelection(
+                              context, widget.textController);
                     },
                     icon: Icon(
                       Icons.camera,

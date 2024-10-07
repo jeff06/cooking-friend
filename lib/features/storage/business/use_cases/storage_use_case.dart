@@ -41,7 +41,10 @@ class StorageUseCase {
     }
   }
 
-  Future<SpeedDial> availableFloatingAction(BuildContext context, GlobalKey<FormBuilderState> formKey, List<StorageItemModification> lstStorageItemModification) async {
+  Future<SpeedDial> availableFloatingAction(
+      BuildContext context,
+      GlobalKey<FormBuilderState> formKey,
+      List<StorageItemModification> lstStorageItemModification) async {
     List<SpeedDialChild> lst = [];
     if (storageController.action == StorageManagementAction.edit.name.obs ||
         storageController.action == StorageManagementAction.add.name.obs) {
@@ -53,8 +56,7 @@ class StorageUseCase {
           ),
           backgroundColor: Colors.green,
           onTap: () async {
-            await save(
-                formKey, context, lstStorageItemModification);
+            await save(formKey, context, lstStorageItemModification);
           },
         ),
       );
@@ -97,7 +99,7 @@ class StorageUseCase {
       children: lst,
     );
   }
-  
+
   //#region Public
   Future<void> clickOnCard(int id, BuildContext context) async {
     storageController.updateSelectedId(id);
@@ -140,9 +142,11 @@ class StorageUseCase {
   //#region Private
   Future<void> _delete(List<StorageItemModification> lstStorageItemModification,
       BuildContext context) async {
-    await storageRepository.deleteStorageItem(id: storageController.currentId).then(
+    await storageRepository
+        .deleteStorageItem(id: storageController.currentId)
+        .then(
       (res) {
-        res.fold((currentFailure){}, (currentBool){
+        res.fold((currentFailure) {}, (currentBool) {
           lstStorageItemModification.add(StorageItemModification()
             ..id = storageController.currentId
             ..action = StorageManagementAction.delete
@@ -171,11 +175,12 @@ class StorageUseCase {
     } else {
       await storageRepository.saveNewStorageItem(storageItem: item).then((res) {
         res.fold((currentFailure) {}, (currentId) {
-          item.id = currentId;
+          StorageModel savedItem = StorageModel(item.name, item.date, item.code,
+              item.quantity, item.location, currentId);
           lstStorageItemModification.add(StorageItemModification()
             ..id = currentId
             ..action = StorageManagementAction.add
-            ..item = item);
+            ..item = savedItem);
           formKey.currentState!.reset();
         });
       });
@@ -188,7 +193,7 @@ class StorageUseCase {
     if (formKey.currentState!.saveAndValidate()) {
       StorageModel item = StorageModel(
           formKey.currentState?.value["form_product_name"],
-          formKey.currentState?.value["form_product_date"],
+          formKey.currentState?.value["form_product_date"].toString(),
           formKey.currentState?.value["form_product_code"],
           int.parse(formKey.currentState?.value["form_product_quantity"] == ""
               ? "0"

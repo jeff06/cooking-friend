@@ -79,7 +79,7 @@ class _StorageManagementState extends State<StorageManagement> {
                   if (snapshot.hasData ||
                       storageController.action ==
                           StorageManagementAction.add.name.obs) {
-                    var widgetToDisplay = snapshot.data!.fold<Widget>(
+                    var widgetToDisplay = snapshot.data?.fold<Widget>(
                       (currentFailure) {
                         return Container();
                       },
@@ -90,7 +90,7 @@ class _StorageManagementState extends State<StorageManagement> {
                             storageController, currentStorage, _textController);
                       },
                     );
-                    return widgetToDisplay;
+                    return widgetToDisplay ?? StorageForm(_formKey, null, storageController, null, _textController);
                   } else {
                     return const Loading();
                   }
