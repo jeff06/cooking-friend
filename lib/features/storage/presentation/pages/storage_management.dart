@@ -9,7 +9,7 @@ import 'package:cooking_friend/features/storage/presentation/provider/storage_ge
 import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
 import 'package:cooking_friend/features/storage/business/use_cases/storage_use_case.dart';
 import 'package:cooking_friend/features/storage/presentation/widgets/storage_form.dart';
-import 'package:cooking_friend/global_widget/gradient_background.dart';
+import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
 import 'package:cooking_friend/global_widget/loading.dart';
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';

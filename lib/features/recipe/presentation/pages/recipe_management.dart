@@ -9,7 +9,7 @@ import 'package:cooking_friend/features/recipe/data/repositories/i_recipe_reposi
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
 import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_form.dart';
-import 'package:cooking_friend/global_widget/gradient_background.dart';
+import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
 import 'package:cooking_friend/global_widget/loading.dart';
 import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';

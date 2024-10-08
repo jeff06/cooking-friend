@@ -57,7 +57,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final StorageGetx storageController = Get.put(StorageGetx());
   final RecipeGetx recipeController = Get.put(RecipeGetx());
-  
+
   StorageRepositoryImplementation storageRepository =
       StorageRepositoryImplementation(
     localDataSource: StorageSqfliteDataSourceImpl(),
@@ -65,7 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   RecipeRepositoryImplementation recipeRepository =
       RecipeRepositoryImplementation(
-          localDataSource: RecipeSqfliteDataSourceImpl());
+    localDataSource: RecipeSqfliteDataSourceImpl(),
+  );
 
   @override
   Widget build(BuildContext context) {

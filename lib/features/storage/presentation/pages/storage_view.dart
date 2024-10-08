@@ -7,7 +7,7 @@ import 'package:cooking_friend/features/storage/business/repositories/storage_re
 import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
 import 'package:cooking_friend/features/storage/business/use_cases/storage_use_case.dart';
-import 'package:cooking_friend/global_widget/gradient_background.dart';
+import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
 import 'package:cooking_friend/global_widget/search_bar_custom.dart';
 import 'package:cooking_friend/global_widget/search_display_card.dart';
 import 'package:flutter/material.dart';

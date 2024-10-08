@@ -8,7 +8,7 @@ import 'package:cooking_friend/features/recipe/business/usecases/recipe_use_case
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:cooking_friend/features/recipe/data/repositories/i_recipe_repository_implementation.dart';
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
-import 'package:cooking_friend/global_widget/gradient_background.dart';
+import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
 import 'package:cooking_friend/global_widget/search_bar_custom.dart';
 import 'package:cooking_friend/global_widget/search_display_card.dart';
 import 'package:flutter/material.dart';
