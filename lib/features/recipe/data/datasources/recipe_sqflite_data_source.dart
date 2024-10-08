@@ -38,7 +38,7 @@ class RecipeSqfliteDataSourceImpl implements IRecipeSqfliteDataSource {
   Future<List<RecipeModel>> getAllRecipeByFilter(String currentFilter) async {
     final db = await SqfliteConnection.instance.database;
     final List<Map<String, Object?>> json = await db
-        .query('recipe', where: 'name like ?', whereArgs: ['%$currentFilter%']);
+        .query('recipe', where: 'title like ?', whereArgs: ['%$currentFilter%']);
     return json.map((x) => RecipeModel.fromJson(x)).toList();
   }
 }

@@ -106,7 +106,7 @@ class RecipeUseCase {
       bool isFavorite) async {
     // ne pas saver ce qui ont le meme id
     if (formKey.currentState!.saveAndValidate()) {
-      RecipeEntity newRecipe = RecipeEntity(null, formKey.currentState?.value["recipe_title"], isFavorite);
+      RecipeEntity newRecipe = RecipeEntity(null, formKey.currentState?.value["recipe_title"], isFavorite ? 1 : 0);
       /*for (int i = 0; i < recipeGetx.steps.length; i++) {
         var currentElement = recipeGetx.steps[i];
         var content = formKey.currentState?.value["rs_${currentElement.guid}"];

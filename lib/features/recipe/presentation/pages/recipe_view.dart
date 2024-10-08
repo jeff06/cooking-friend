@@ -29,7 +29,7 @@ class _RecipeViewState extends State<RecipeView> {
   Future<dartz.Either<Failure, List<RecipeEntity>>> recipeToDisplay =
       Completer<dartz.Either<Failure, List<RecipeEntity>>>().future;
   late final RecipeUseCase recipeService =
-  RecipeUseCase(recipeGetx, widget.recipeRepository);
+      RecipeUseCase(recipeGetx, widget.recipeRepository);
 
   @override
   void initState() {
@@ -65,21 +65,21 @@ class _RecipeViewState extends State<RecipeView> {
         }
       case RecipeOrderBy.name:
         if (recipeGetx.currentDirection == OrderByDirection.ascending) {
-          lstRecipe.sort((a, b) => a.name!.compareTo(b.name!));
+          lstRecipe.sort((a, b) => a.title!.compareTo(b.title!));
         } else {
-          lstRecipe.sort((a, b) => b.name!.compareTo(a.name!));
+          lstRecipe.sort((a, b) => b.title!.compareTo(a.title!));
         }
       case RecipeOrderBy.favorite:
         if (recipeGetx.currentDirection == OrderByDirection.ascending) {
           lstRecipe.sort(
-                (a, b) {
-              return b.isFavorite != null && b.isFavorite! ? 1 : 0;
+            (a, b) {
+              return b.isFavorite != null && b.isFavorite! == 1 ? 1 : 0;
             },
           );
         } else {
           lstRecipe.sort(
-                (a, b) {
-              return a.isFavorite != null && a.isFavorite! ? 1 : 0;
+            (a, b) {
+              return a.isFavorite != null && a.isFavorite! == 1 ? 1 : 0;
             },
           );
         }
@@ -88,10 +88,7 @@ class _RecipeViewState extends State<RecipeView> {
 
   @override
   Widget build(BuildContext context) {
-    num screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    num screenWidth = MediaQuery.of(context).size.width;
     double tenP = (screenWidth * 0.10).floorToDouble();
     return GradientBackground(
       Scaffold(
@@ -123,9 +120,8 @@ class _RecipeViewState extends State<RecipeView> {
                   future: recipeToDisplay,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      var widgetToDisplay =
-                      snapshot.data?.fold((failure) {
-                        return Container();
+                      var widgetToDisplay = snapshot.data!.fold((failure) {
+                        return const Text("FAILED");
                       }, (recipeEntities) {
                         recipeGetx.updateLstRecipeDisplayed(
                             recipeEntities.map((x) => x.toModel()).toList());
@@ -139,11 +135,11 @@ class _RecipeViewState extends State<RecipeView> {
                               padding: const EdgeInsets.all(8),
                               itemCount: recipeGetx.lstRecipe.length,
                               itemBuilder: (BuildContext context, int index) {
-                                String name = recipeGetx.lstRecipe[index].name!;
+                                String name =
+                                    recipeGetx.lstRecipe[index].title!;
                                 int id = recipeGetx.lstRecipe[index].id!;
                                 return SearchDisplayCard(
-                                      () =>
-                                      recipeService.clickOnCard(id, context),
+                                  () => recipeService.clickOnCard(id, context),
                                   ListTile(
                                     leading: const Icon(Icons.album),
                                     title: Text(name),
@@ -154,7 +150,7 @@ class _RecipeViewState extends State<RecipeView> {
                           }),
                         );
                       });
-                      return widgetToDisplay ?? Container();
+                      return widgetToDisplay;
                     }
                     return Container();
                   },

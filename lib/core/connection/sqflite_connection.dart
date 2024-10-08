@@ -1,13 +1,12 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class SqfliteConnection{
+class SqfliteConnection {
   static Database? _database;
 
   SqfliteConnection();
 
-  static final SqfliteConnection instance =
-  SqfliteConnection._init();
+  static final SqfliteConnection instance = SqfliteConnection._init();
 
   SqfliteConnection._init();
 
@@ -28,6 +27,9 @@ class SqfliteConnection{
 
   Future _createDB(Database db, int version) async {
     await db.execute(
-        'CREATE TABLE storage(id INTEGER PRIMARY KEY, name TEXT, date TEXT, code TEXT, quantity INT, location TEXT) ');
+        'CREATE TABLE storage(id INTEGER PRIMARY KEY, name TEXT, date TEXT, code TEXT, quantity INT, location TEXT)');
+
+    await db.execute(
+        'CREATE TABLE recipe(id INTEGER PRIMARY KEY, title TEXT, isFavorite int)');
   }
 }
