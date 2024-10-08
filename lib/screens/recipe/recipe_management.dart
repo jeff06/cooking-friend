@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cooking_friend/constants.dart';
-import 'package:cooking_friend/getx/controller/recipe_controller.dart';
+import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
 import 'package:cooking_friend/features/recipe/data/models/imported_recipe.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'

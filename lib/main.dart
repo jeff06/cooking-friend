@@ -1,6 +1,6 @@
 import 'package:cooking_friend/features/storage/data/datasources/storage_sqflite_data_source.dart';
 import 'package:cooking_friend/features/storage/data/repositories/storage_repository_implementation.dart';
-import 'package:cooking_friend/getx/controller/recipe_controller.dart';
+import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
 import 'package:cooking_friend/main_wrapper.dart';
 import 'package:cooking_friend/getx/services/isar_service.dart';

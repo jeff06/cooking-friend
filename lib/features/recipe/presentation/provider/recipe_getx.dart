@@ -11,15 +11,15 @@ import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_mod
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RecipeController extends GetxController {
+class RecipeGetx extends GetxController {
   var steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
   var ingredients =
       <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
   int currentId = -1;
   var currentFavorite = false.obs;
   var action = RecipeManagementAction.none.name.obs;
-  var lstRecipe = <Recipe>[].obs;
-  var lstRecipeModification = <RecipeModification>[].obs;
+  var lstRecipe = <RecipeModel>[].obs;
+  var lstRecipeModification = <RecipeModificationEntity>[].obs;
   List<int> ingredientsToRemove = [];
   List<int> stepsToRemove = [];
   RecipeOrderBy currentOrderBy = RecipeOrderBy.name;
@@ -31,13 +31,13 @@ class RecipeController extends GetxController {
         <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
     currentId = -1;
     //action = RecipeManagementAction.none.name.obs;
-    lstRecipeModification = <RecipeModification>[].obs;
+    lstRecipeModification = <RecipeModificationEntity>[].obs;
     ingredientsToRemove = [];
     stepsToRemove = [];
     currentFavorite = false.obs;
   }
 
-  void updateLstRecipeDisplayed(List<Recipe> newLstStorageItem) {
+  void updateLstRecipeDisplayed(List<RecipeModel> newLstStorageItem) {
     lstRecipe.value = newLstStorageItem;
   }
 
@@ -115,14 +115,14 @@ class RecipeController extends GetxController {
     ingredients.insert(indexToInsert + 1, ri_widget.RecipeIngredient(null));
   }
 
-  void removeIngredient(String guid, [Id? id]) {
+  void removeIngredient(String guid, [int? id]) {
     ingredients.removeWhere((x) => x.guid == guid);
     if (id != null) {
       ingredientsToRemove.add(id);
     }
   }
 
-  void updateLstRecipeModification(List<RecipeModification> lst) {
+  void updateLstRecipeModification(List<RecipeModificationEntity> lst) {
     lstRecipeModification.value = lst;
   }
 }
