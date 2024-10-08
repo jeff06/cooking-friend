@@ -42,8 +42,8 @@ class _RecipeManagementState extends State<RecipeManagement> {
   final TextEditingController _recipeTitleController = TextEditingController();
   late final RecipeService _recipeService =
       RecipeService(recipeController, widget.service);
-  Future<Recipe?> recipeToDisplay = Completer<Recipe?>().future;
-  List<RecipeModification> lstRecipeModification = [];
+  Future<RecipeModel?> recipeToDisplay = Completer<RecipeModel?>().future;
+  List<RecipeModificationEntity> lstRecipeModification = [];
   bool isFavorite = false;
 
   @override
@@ -260,10 +260,10 @@ class _RecipeManagementState extends State<RecipeManagement> {
             ? const Loading()
             : Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: FutureBuilder<Recipe?>(
+                child: FutureBuilder<RecipeModel?>(
                   future: recipeToDisplay,
                   builder:
-                      (BuildContext context, AsyncSnapshot<Recipe?> snapshot) {
+                      (BuildContext context, AsyncSnapshot<RecipeModel?> snapshot) {
                     if (snapshot.hasData ||
                         recipeController.action ==
                             RecipeManagementAction.add.name.obs) {

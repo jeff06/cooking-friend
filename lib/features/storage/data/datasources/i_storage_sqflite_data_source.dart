@@ -1,6 +1,6 @@
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 
-abstract class IStorageIsarDataSource {
+abstract class IStorageSqfliteDataSource {
   Future<StorageModel?> getSingleStorageItem(int id);
   Future<List<StorageModel>> getAllStorageItemByFilter(String currentFilter);
   Future<int> saveNewStorageItem(StorageModel storageItem);

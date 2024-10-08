@@ -1,17 +1,17 @@
-import 'package:cooking_friend/features/storage/data/datasources/i_storage_isar_data_source.dart';
+import 'package:cooking_friend/features/storage/data/datasources/i_storage_sqflite_data_source.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class StorageLocalDataSourceImpl implements IStorageIsarDataSource {
+class StorageSqfliteDataSourceImpl implements IStorageSqfliteDataSource {
   static Database? _database;
 
-  StorageLocalDataSourceImpl();
+  StorageSqfliteDataSourceImpl();
 
-  static final StorageLocalDataSourceImpl instance =
-      StorageLocalDataSourceImpl._init();
+  static final StorageSqfliteDataSourceImpl instance =
+      StorageSqfliteDataSourceImpl._init();
 
-  StorageLocalDataSourceImpl._init();
+  StorageSqfliteDataSourceImpl._init();
 
   Future<Database> get database async {
     if (_database != null) return _database!;

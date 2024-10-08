@@ -1,4 +1,4 @@
-import 'package:cooking_friend/features/storage/data/datasources/storage_isar_data_source.dart';
+import 'package:cooking_friend/features/storage/data/datasources/storage_sqflite_data_source.dart';
 import 'package:cooking_friend/features/storage/data/repositories/storage_repository_implementation.dart';
 import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final service = IsarService();
 
   StorageRepositoryImplementation repository = StorageRepositoryImplementation(
-    localDataSource: StorageLocalDataSourceImpl(),
+    localDataSource: StorageSqfliteDataSourceImpl(),
   );
 
   @override

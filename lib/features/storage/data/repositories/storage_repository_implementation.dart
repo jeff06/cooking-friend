@@ -2,12 +2,12 @@ import 'package:cooking_friend/core/errors/cache_exception.dart';
 import 'package:cooking_friend/core/errors/cache_failure.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
-import 'package:cooking_friend/features/storage/data/datasources/i_storage_isar_data_source.dart';
+import 'package:cooking_friend/features/storage/data/datasources/i_storage_sqflite_data_source.dart';
 import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:dartz/dartz.dart';
 
 class StorageRepositoryImplementation implements IStorageRepositoryImplementation {
-  final IStorageIsarDataSource localDataSource;
+  final IStorageSqfliteDataSource localDataSource;
 
   StorageRepositoryImplementation({
     required this.localDataSource,
