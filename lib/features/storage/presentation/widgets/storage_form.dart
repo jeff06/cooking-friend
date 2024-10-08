@@ -1,8 +1,8 @@
-import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
-import 'package:cooking_friend/theme/custom_theme.dart';
+import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';

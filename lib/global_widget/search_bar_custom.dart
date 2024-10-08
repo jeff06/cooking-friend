@@ -1,5 +1,5 @@
-import 'package:cooking_friend/constants.dart';
-import 'package:cooking_friend/theme/custom_theme.dart';
+import 'package:cooking_friend/skeleton/constants.dart';
+import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 

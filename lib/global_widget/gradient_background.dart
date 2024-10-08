@@ -1,4 +1,4 @@
-import 'package:cooking_friend/theme/custom_theme.dart';
+import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 
 class GradientBackground extends StatefulWidget {

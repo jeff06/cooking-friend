@@ -1,7 +1,7 @@
-import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart' as rs_model;
-import 'package:cooking_friend/theme/custom_theme.dart';
+import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
@@ -19,7 +19,7 @@ class RecipeStep extends StatefulWidget {
 }
 
 class _RecipeStepState extends State<RecipeStep> {
-  final RecipeController controller = Get.find<RecipeController>();
+  final RecipeGetx controller = Get.find<RecipeGetx>();
 
   @override
   Widget build(BuildContext context) {

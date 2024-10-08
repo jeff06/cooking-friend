@@ -1,12 +1,12 @@
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart'
     as ri_model;
-import 'package:cooking_friend/theme/custom_theme.dart';
+import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
-import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/skeleton/constants.dart';
 
 class RecipeIngredient extends StatefulWidget {
   final String guid = const Uuid().v4();
@@ -19,7 +19,7 @@ class RecipeIngredient extends StatefulWidget {
 }
 
 class _RecipeIngredientState extends State<RecipeIngredient> {
-  final RecipeController controller = Get.find<RecipeController>();
+  final RecipeGetx controller = Get.find<RecipeGetx>();
 
   @override
   Widget build(BuildContext context) {

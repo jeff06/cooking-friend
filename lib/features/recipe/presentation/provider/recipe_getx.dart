@@ -1,10 +1,10 @@
-import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
-import 'package:cooking_friend/screens/recipe/widget/recipe_step.dart'
+import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_step.dart'
     as rs_widget;
 import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart' as rs_model;
-import 'package:cooking_friend/screens/recipe/widget/recipe_ingredient.dart'
+import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_ingredient.dart'
     as ri_widget;
 import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart'
     as ri_model;

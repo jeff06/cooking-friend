@@ -1,4 +1,4 @@
-import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';

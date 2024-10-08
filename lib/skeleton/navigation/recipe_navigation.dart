@@ -1,13 +1,12 @@
-import 'package:cooking_friend/screens/recipe/recipe_management.dart';
-import 'package:cooking_friend/screens/recipe/recipe_view.dart';
+import 'package:cooking_friend/features/recipe/data/repositories/i_recipe_repository_implementation.dart';
+import 'package:cooking_friend/features/recipe/presentation/pages/recipe_management.dart';
+import 'package:cooking_friend/features/recipe/presentation/pages/recipe_view.dart';
 import 'package:flutter/material.dart';
 
-import '../getx/services/isar_service.dart';
-
 class RecipeNavigation extends StatefulWidget {
-  final IsarService service;
+  final IRecipeRepositoryImplementation repository;
 
-  const RecipeNavigation(this.service, {super.key});
+  const RecipeNavigation(this.repository, {super.key});
 
   @override
   State<RecipeNavigation> createState() => _RecipeNavigationState();
@@ -23,9 +22,9 @@ class _RecipeNavigationState extends State<RecipeNavigation> {
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(builder: (BuildContext context) {
           if (settings.name == "/recipeAdd" || settings.name == "/recipeManagement") {
-            return RecipeManagement(widget.service);
+            return RecipeManagement(widget.repository);
           }
-          return RecipeView(widget.service);
+          return RecipeView(widget.repository);
         });
       },
     );
