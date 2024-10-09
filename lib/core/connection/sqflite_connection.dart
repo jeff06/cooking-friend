@@ -31,5 +31,11 @@ class SqfliteConnection {
 
     await db.execute(
         'CREATE TABLE recipe(id INTEGER PRIMARY KEY, title TEXT, isFavorite int)');
+
+    await db.execute(
+        'CREATE TABLE recipe_ingredient(id INTEGER PRIMARY KEY, ingredient TEXT, measuringUnit TEXT, quantity NUMERIC, order INT)');
+
+    await db.execute(
+        'CREATE TABLE recipe_step(id INTEGER PRIMARY KEY, step TEXT, order INT)');
   }
 }

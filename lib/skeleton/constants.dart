@@ -96,3 +96,54 @@ const List<DropdownMenuItem> measurementUnits = [
     child: Text("Unit"),
   ),
 ];
+
+enum SqfliteRecipeStep {
+  tableName("recipe_step"),
+  id("id"),
+  step("step"),
+  order("order");
+
+  final String paramName;
+
+  const SqfliteRecipeStep(this.paramName);
+}
+
+enum SqfliteRecipeIngredient {
+  tableName("recipe_ingredient"),
+  id("id"),
+  ingredient("ingredient"),
+  measuringUnit("measuringUnit"),
+  quantity("quantity"),
+  order("order");
+
+  final String paramName;
+
+  const SqfliteRecipeIngredient(this.paramName);
+}
+
+enum SqfliteRecipeTable {
+  tableName("recipe"),
+  id("id"),
+  title("title"),
+  idFavorite("isFavorite");
+
+  final String paramName;
+
+  const SqfliteRecipeTable(this.paramName);
+}
+
+enum SqfliteStorageTable {
+  tableName("storage"),
+  id("id"),
+  name("name"),
+  date("date"),
+  code("code"),
+  location("location"),
+  quantity("quantity");
+
+  // can add more properties or getters/methods if needed
+  final String paramName;
+
+  // can use named parameters if you want
+  const SqfliteStorageTable(this.paramName);
+}
