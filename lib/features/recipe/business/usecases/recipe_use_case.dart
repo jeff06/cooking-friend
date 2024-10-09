@@ -1,3 +1,5 @@
+import 'package:cooking_friend/features/recipe/business/entities/recipe_ingredient_entity.dart';
+import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_entity.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
@@ -16,6 +18,7 @@ class RecipeUseCase {
   Future<void> updateList(String path, BuildContext context) async {
     await Navigator.pushNamed(context, path);
     recipeGetx.modifyLstStorageItemDisplayed();
+    //L'erreur vient peut-être de resetController()
     recipeGetx.resetController();
   }
 
@@ -106,34 +109,39 @@ class RecipeUseCase {
       bool isFavorite) async {
     // ne pas saver ce qui ont le meme id
     if (formKey.currentState!.saveAndValidate()) {
-      RecipeEntity newRecipe = RecipeEntity(null, formKey.currentState?.value["recipe_title"], isFavorite ? 1 : 0);
-      /*for (int i = 0; i < recipeGetx.steps.length; i++) {
+      List<RecipeStepEntity> steps = [];
+      List<RecipeIngredientEntity> ingredients = [];
+      for (int i = 0; i < recipeGetx.steps.length; i++) {
         var currentElement = recipeGetx.steps[i];
         var content = formKey.currentState?.value["rs_${currentElement.guid}"];
-        RecipeStepEntity step = RecipeStepEntity()..step = content;
-        step.order = i;
+        RecipeStepEntity step = RecipeStepEntity(null, null, content, i);
         if (currentElement.step != null) {
-          step.id = currentElement.step!.id;
+          step.idStep = currentElement.step!.idStep;
         }
 
-        newRecipe.lstSteps.add(step);
-      }*/
+        steps.add(step);
+      }
 
-      /*for (int i = 0; i < recipeGetx.ingredients.length; i++) {
+      for (int i = 0; i < recipeGetx.ingredients.length; i++) {
         var currentElement = recipeGetx.ingredients[i];
-        RecipeIngredientEntity ri = RecipeIngredientEntity();
-        ri.ingredient =
-            formKey.currentState?.value["ri_${currentElement.guid}"];
-        ri.measuringUnit =
-            formKey.currentState?.value["riu_${currentElement.guid}"];
-        ri.quantity = double.parse(
-            formKey.currentState?.value["riq_${currentElement.guid}"]);
-        if (currentElement.ingredient != null) {
-          ri.id = currentElement.ingredient!.id;
-        }
-        ri.order = i;
-        newRecipe.lstIngredients.add(ri);
-      }*/
+        RecipeIngredientEntity ri = RecipeIngredientEntity(
+            null,
+            null,
+            formKey.currentState?.value["ri_${currentElement.guid}"],
+            formKey.currentState?.value["riu_${currentElement.guid}"],
+            double.parse(
+                formKey.currentState?.value["riq_${currentElement.guid}"]),
+            i);
+
+        ingredients.add(ri);
+      }
+      
+      RecipeEntity newRecipe = RecipeEntity(
+          null,
+          formKey.currentState?.value["recipe_title"],
+          isFavorite ? 1 : 0,
+          steps,
+          ingredients);
 
       await _saveAndUpdate(newRecipe, lstRecipeModification, formKey)
           .then((res) {

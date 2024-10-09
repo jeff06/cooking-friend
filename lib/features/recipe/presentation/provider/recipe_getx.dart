@@ -1,13 +1,12 @@
+import 'package:cooking_friend/features/recipe/business/entities/recipe_ingredient_entity.dart';
+import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
 import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_step.dart'
     as rs_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart' as rs_model;
 import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_ingredient.dart'
     as ri_widget;
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart'
-    as ri_model;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -41,8 +40,8 @@ class RecipeGetx extends GetxController {
     lstRecipe.value = newLstStorageItem;
   }
 
-  void updateLstRecipeStepsDisplayed(List<rs_model.RecipeStep> newRecipeSteps) {
-    newRecipeSteps.sort((a, b) => a.order!.compareTo(b.order!));
+  void updateLstRecipeStepsDisplayed(List<RecipeStepEntity> newRecipeSteps) {
+    newRecipeSteps.sort((a, b) => a.ordering!.compareTo(b.ordering!));
     if (action != RecipeManagementAction.add.name.obs) {
       steps = <rs_widget.RecipeStep>[].obs;
     }
@@ -58,8 +57,8 @@ class RecipeGetx extends GetxController {
   }
 
   void updateLstRecipeIngredientsDisplayed(
-      List<ri_model.RecipeIngredientModel> newRecipeIngredients) {
-    newRecipeIngredients.sort((a, b) => a.order!.compareTo(b.order!));
+      List<RecipeIngredientEntity> newRecipeIngredients) {
+    newRecipeIngredients.sort((a, b) => a.ordering!.compareTo(b.ordering!));
     if (action != RecipeManagementAction.add.name.obs) {
       ingredients = <ri_widget.RecipeIngredient>[].obs;
     }
@@ -77,12 +76,12 @@ class RecipeGetx extends GetxController {
         case RecipeManagementAction.view:
           break;
         case RecipeManagementAction.edit:
-          lstRecipe[lstRecipe.indexWhere((x) => x.id == v.id)] = v.item!;
+          lstRecipe[lstRecipe.indexWhere((x) => x.idRecipe == v.id)] = v.item!;
           break;
         case RecipeManagementAction.none:
           break;
         case RecipeManagementAction.delete:
-          lstRecipe.removeWhere((x) => x.id == v.id);
+          lstRecipe.removeWhere((x) => x.idRecipe == v.id);
           break;
         case null:
           break;

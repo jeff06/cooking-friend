@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -22,20 +24,25 @@ class SqfliteConnection {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path,
+        version: 1, onCreate: _createDB, onConfigure: _configureDB);
   }
 
   Future _createDB(Database db, int version) async {
     await db.execute(
-        'CREATE TABLE storage(id INTEGER PRIMARY KEY, name TEXT, date TEXT, code TEXT, quantity INT, location TEXT)');
+        'CREATE TABLE storage(idStorage INTEGER PRIMARY KEY, name TEXT, date TEXT, code TEXT, quantity INT, location TEXT)');
 
     await db.execute(
-        'CREATE TABLE recipe(id INTEGER PRIMARY KEY, title TEXT, isFavorite int)');
+        'CREATE TABLE recipe(idRecipe INTEGER PRIMARY KEY, title TEXT, isFavorite int)');
 
     await db.execute(
-        'CREATE TABLE recipe_ingredient(id INTEGER PRIMARY KEY, ingredient TEXT, measuringUnit TEXT, quantity NUMERIC, order INT)');
+        'CREATE TABLE recipe_ingredient(idIngredient INTEGER PRIMARY KEY, idRecipe INT, ingredient TEXT, measuringUnit TEXT, quantity NUMERIC, ordering INT, FOREIGN KEY(idRecipe) REFERENCES recipe(idRecipe))');
 
     await db.execute(
-        'CREATE TABLE recipe_step(id INTEGER PRIMARY KEY, step TEXT, order INT)');
+        'CREATE TABLE recipe_step(idStep INTEGER PRIMARY KEY, idRecipe INT, step TEXT, ordering INT, FOREIGN KEY(idRecipe) REFERENCES recipe(idRecipe))');
+  }
+
+  Future _configureDB(Database db) async {
+    await db.execute('PRAGMA foreign_keys = ON');
   }
 }

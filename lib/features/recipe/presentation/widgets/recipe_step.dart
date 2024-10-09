@@ -1,6 +1,6 @@
+import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart' as rs_model;
 import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -10,7 +10,7 @@ import 'package:uuid/uuid.dart';
 class RecipeStep extends StatefulWidget {
   final String guid = const Uuid().v4();
   final TextEditingController? tec;
-  final rs_model.RecipeStep? step;
+  final RecipeStepEntity? step;
 
   RecipeStep(this.tec, this.step, {super.key});
 
@@ -36,7 +36,7 @@ class _RecipeStepState extends State<RecipeStep> {
                 color: CustomTheme.accent,
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  controller.removeStep(widget.guid, widget.step?.id);
+                  controller.removeStep(widget.guid, widget.step?.idStep);
                 },
               ),
             ),

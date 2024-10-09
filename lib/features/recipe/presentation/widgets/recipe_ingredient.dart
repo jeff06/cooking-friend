@@ -1,6 +1,5 @@
+import 'package:cooking_friend/features/recipe/business/entities/recipe_ingredient_entity.dart';
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart'
-    as ri_model;
 import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -10,7 +9,7 @@ import 'package:cooking_friend/skeleton/constants.dart';
 
 class RecipeIngredient extends StatefulWidget {
   final String guid = const Uuid().v4();
-  final ri_model.RecipeIngredientModel? ingredient;
+  final RecipeIngredientEntity? ingredient;
 
   RecipeIngredient(this.ingredient, {super.key});
 
@@ -37,7 +36,7 @@ class _RecipeIngredientState extends State<RecipeIngredient> {
                 icon: const Icon(Icons.delete),
                 onPressed: () {
                   controller.removeIngredient(
-                      widget.guid, widget.ingredient?.id);
+                      widget.guid, widget.ingredient?.idIngredient);
                 },
               ),
             ),

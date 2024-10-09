@@ -1,7 +1,14 @@
-class RecipeStepEntity {
-  final int id;
-  final String? step;
-  final int? order;
+import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart';
 
-  RecipeStepEntity(this.id, this.step, this.order);
+class RecipeStepEntity {
+  int? idStep;
+  int? idRecipe;
+  String? step;
+  int? ordering;
+
+  RecipeStepEntity(this.idStep, this.idRecipe, this.step, this.ordering);
+
+  RecipeStepModel toModel() {
+    return RecipeStepModel(idStep, idRecipe, step, ordering);
+  }
 }

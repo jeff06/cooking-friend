@@ -51,7 +51,8 @@ class RecipeRepositoryImplementation
   Future<Either<Failure, int>> saveNewRecipe(
       {required RecipeModel recipe}) async {
     try {
-      final localStorageItem = await localDataSource.saveNewRecipe(recipe);
+      final localStorageItem =
+          await localDataSource.saveNewRecipe(recipe);
       return Right(localStorageItem);
     } on CacheException {
       return Left(CacheFailure(errorMessage: 'No local data found'));

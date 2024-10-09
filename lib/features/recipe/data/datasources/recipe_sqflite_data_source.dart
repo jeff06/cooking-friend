@@ -1,6 +1,8 @@
 import 'package:cooking_friend/core/connection/sqflite_connection.dart';
 import 'package:cooking_friend/features/recipe/data/datasources/i_recipe_sqflite_data_source.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_ingredient_model.dart';
 import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
+import 'package:cooking_friend/features/recipe/data/models/recipe_step_model.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 
 class RecipeSqfliteDataSourceImpl implements IRecipeSqfliteDataSource {
@@ -15,14 +17,70 @@ class RecipeSqfliteDataSourceImpl implements IRecipeSqfliteDataSource {
         SqfliteRecipeTable.tableName.paramName,
         where: '${SqfliteRecipeTable.id.paramName} = ?',
         whereArgs: [id]);
-    return RecipeModel.fromJson(json.first);
+    RecipeModel recipe = RecipeModel.fromJson(json.first);
+    recipe.steps = await getAllStepsForRecipeId(id);
+    recipe.ingredients = await getAllIngredientsForRecipeId(id);
+    return recipe;
+  }
+
+  Future<List<RecipeIngredientModel>> getAllIngredientsForRecipeId(
+      int id) async {
+    final db = await SqfliteConnection.instance.database;
+    List<RecipeIngredientModel> ingredients = [];
+    final List<Map<String, Object?>> json = await db.query(
+      SqfliteRecipeIngredientTable.tableName.paramName,
+      where: '${SqfliteRecipeIngredientTable.idRecipe.paramName} = ?',
+      whereArgs: [id],
+    );
+
+    for (var x in json) {
+      ingredients.add(RecipeIngredientModel.fromJson(x));
+    }
+
+    return ingredients;
+  }
+
+  Future<List<RecipeStepModel>> getAllStepsForRecipeId(int id) async {
+    final db = await SqfliteConnection.instance.database;
+    List<RecipeStepModel> steps = [];
+    final List<Map<String, Object?>> json = await db.query(
+      SqfliteRecipeStepTable.tableName.paramName,
+      where: '${SqfliteRecipeStepTable.idRecipe.paramName} = ?',
+      whereArgs: [id],
+    );
+
+    for (var x in json) {
+      steps.add(RecipeStepModel.fromJson(x));
+    }
+
+    return steps;
   }
 
   @override
-  Future<int> saveNewRecipe(RecipeModel recipe) async {
+  Future<int> saveNewRecipe(
+      RecipeModel recipe) async {
     final db = await SqfliteConnection.instance.database;
-    return await db.insert(
+    int idRecipe = await db.insert(
         SqfliteRecipeTable.tableName.paramName, recipe.toJson());
+    await saveNewRecipeSteps(recipe.steps!.map((x) => x.toModel()).toList(), idRecipe); 
+    await saveNewRecipeIngredients(recipe.ingredients!.map((x) => x.toModel()).toList(), idRecipe);
+    return idRecipe;
+  }
+
+  Future saveNewRecipeSteps(List<RecipeStepModel> steps, int idRecipe) async {
+    final db = await SqfliteConnection.instance.database;
+    for (var v in steps) {
+      v.idRecipe = idRecipe;
+      await db.insert(SqfliteRecipeStepTable.tableName.paramName, v.toJson());
+    }
+  }
+  
+  Future saveNewRecipeIngredients(List<RecipeIngredientModel> ingredients, int idRecipe) async{
+    final db = await SqfliteConnection.instance.database;
+    for (var v in ingredients) {
+      v.idRecipe = idRecipe;
+      await db.insert(SqfliteRecipeIngredientTable.tableName.paramName, v.toJson());
+    }
   }
 
   @override

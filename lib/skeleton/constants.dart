@@ -97,20 +97,22 @@ const List<DropdownMenuItem> measurementUnits = [
   ),
 ];
 
-enum SqfliteRecipeStep {
+enum SqfliteRecipeStepTable {
   tableName("recipe_step"),
-  id("id"),
+  id("idStep"),
+  idRecipe("idRecipe"),
   step("step"),
   order("order");
 
   final String paramName;
 
-  const SqfliteRecipeStep(this.paramName);
+  const SqfliteRecipeStepTable(this.paramName);
 }
 
-enum SqfliteRecipeIngredient {
+enum SqfliteRecipeIngredientTable {
   tableName("recipe_ingredient"),
-  id("id"),
+  id("idIngredient"),
+  idRecipe("idRecipe"),
   ingredient("ingredient"),
   measuringUnit("measuringUnit"),
   quantity("quantity"),
@@ -118,12 +120,12 @@ enum SqfliteRecipeIngredient {
 
   final String paramName;
 
-  const SqfliteRecipeIngredient(this.paramName);
+  const SqfliteRecipeIngredientTable(this.paramName);
 }
 
 enum SqfliteRecipeTable {
   tableName("recipe"),
-  id("id"),
+  id("idRecipe"),
   title("title"),
   idFavorite("isFavorite");
 
@@ -134,7 +136,7 @@ enum SqfliteRecipeTable {
 
 enum SqfliteStorageTable {
   tableName("storage"),
-  id("id"),
+  id("idStorage"),
   name("name"),
   date("date"),
   code("code"),

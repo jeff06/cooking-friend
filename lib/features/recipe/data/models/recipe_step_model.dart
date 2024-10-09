@@ -1,21 +1,23 @@
 import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
 
-class RecipeStep extends RecipeStepEntity {
-  RecipeStep(super.id, super.step, super.order);
+class RecipeStepModel extends RecipeStepEntity {
+  RecipeStepModel(super.idStep, super.idRecipe, super.step, super.ordering);
 
-  factory RecipeStep.fromJson(Map<String, Object?> json) {
-    return RecipeStep(
-      int.parse(json['id'].toString()),
+  factory RecipeStepModel.fromJson(Map<String, Object?> json) {
+    return RecipeStepModel(
+      int.parse(json['idStep'].toString()),
+      int.parse(json['idRecipe'].toString()),
       json['step'].toString(),
-      int.parse(json['order'].toString()),
+      int.parse(json['ordering'].toString()),
     );
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    data['idStep'] = idStep;
+    data['idRecipe'] = idRecipe;
     data['step'] = step;
-    data['order'] = order;
+    data['ordering'] = ordering;
 
     return data;
   }

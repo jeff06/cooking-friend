@@ -276,13 +276,14 @@ class _RecipeManagementState extends State<RecipeManagement> {
                             _recipeTitleController.text =
                                 (snapshot.data != null ? recipe.title : "")!;
 
-                            /*recipeGetx.updateLstRecipeStepsDisplayed(
-                            snapshot.data!.steps.toList());
+                            recipeGetx
+                                .updateLstRecipeStepsDisplayed(recipe.steps!);
 
-                        recipeGetx.updateLstRecipeIngredientsDisplayed(
-                            snapshot.data!.ingredients.toList());*/
+                            recipeGetx.updateLstRecipeIngredientsDisplayed(
+                                recipe.ingredients!);
 
-                            recipeGetx.updateFavorite(recipe.isFavorite == 1 ? true : false);
+                            recipeGetx.updateFavorite(
+                                recipe.isFavorite == 1 ? true : false);
                           }
 
                           return RecipeForm(
