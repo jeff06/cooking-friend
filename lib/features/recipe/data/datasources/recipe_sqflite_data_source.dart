@@ -57,13 +57,14 @@ class RecipeSqfliteDataSourceImpl implements IRecipeSqfliteDataSource {
   }
 
   @override
-  Future<int> saveNewRecipe(
-      RecipeModel recipe) async {
+  Future<int> saveNewRecipe(RecipeModel recipe) async {
     final db = await SqfliteConnection.instance.database;
     int idRecipe = await db.insert(
         SqfliteRecipeTable.tableName.paramName, recipe.toJson());
-    await saveNewRecipeSteps(recipe.steps!.map((x) => x.toModel()).toList(), idRecipe); 
-    await saveNewRecipeIngredients(recipe.ingredients!.map((x) => x.toModel()).toList(), idRecipe);
+    await saveNewRecipeSteps(
+        recipe.steps!.map((x) => x.toModel()).toList(), idRecipe);
+    await saveNewRecipeIngredients(
+        recipe.ingredients!.map((x) => x.toModel()).toList(), idRecipe);
     return idRecipe;
   }
 
@@ -74,19 +75,34 @@ class RecipeSqfliteDataSourceImpl implements IRecipeSqfliteDataSource {
       await db.insert(SqfliteRecipeStepTable.tableName.paramName, v.toJson());
     }
   }
-  
-  Future saveNewRecipeIngredients(List<RecipeIngredientModel> ingredients, int idRecipe) async{
+
+  Future saveNewRecipeIngredients(
+      List<RecipeIngredientModel> ingredients, int idRecipe) async {
     final db = await SqfliteConnection.instance.database;
     for (var v in ingredients) {
       v.idRecipe = idRecipe;
-      await db.insert(SqfliteRecipeIngredientTable.tableName.paramName, v.toJson());
+      await db.insert(
+          SqfliteRecipeIngredientTable.tableName.paramName, v.toJson());
     }
   }
 
   @override
-  Future<int> updateRecipe(RecipeModel recipe) {
-    // TODO: implement updateRecipe
-    throw UnimplementedError();
+  Future<int> updateRecipe(RecipeModel recipe) async {
+    final db = await SqfliteConnection.instance.database;
+    int id = await db.update(
+        SqfliteRecipeTable.tableName.paramName, recipe.toJson());
+
+    for (var v in recipe.steps!) {
+      await db.update(
+          SqfliteRecipeStepTable.tableName.paramName, v.toModel().toJson());
+    }
+
+    for (var v in recipe.ingredients!) {
+      await db.update(SqfliteRecipeIngredientTable.tableName.paramName,
+          v.toModel().toJson());
+    }
+
+    return id;
   }
 
   @override

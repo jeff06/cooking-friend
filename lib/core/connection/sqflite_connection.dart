@@ -36,10 +36,10 @@ class SqfliteConnection {
         'CREATE TABLE recipe(idRecipe INTEGER PRIMARY KEY, title TEXT, isFavorite int)');
 
     await db.execute(
-        'CREATE TABLE recipe_ingredient(idIngredient INTEGER PRIMARY KEY, idRecipe INT, ingredient TEXT, measuringUnit TEXT, quantity NUMERIC, ordering INT, FOREIGN KEY(idRecipe) REFERENCES recipe(idRecipe))');
+        'CREATE TABLE recipe_ingredient(idIngredient INTEGER PRIMARY KEY, idRecipe INT, ingredient TEXT, measuringUnit TEXT, quantity NUMERIC, ordering INT, FOREIGN KEY(idRecipe) REFERENCES recipe(idRecipe) ON DELETE CASCADE)');
 
     await db.execute(
-        'CREATE TABLE recipe_step(idStep INTEGER PRIMARY KEY, idRecipe INT, step TEXT, ordering INT, FOREIGN KEY(idRecipe) REFERENCES recipe(idRecipe))');
+        'CREATE TABLE recipe_step(idStep INTEGER PRIMARY KEY, idRecipe INT, step TEXT, ordering INT, FOREIGN KEY(idRecipe) REFERENCES recipe(idRecipe) ON DELETE CASCADE)');
   }
 
   Future _configureDB(Database db) async {

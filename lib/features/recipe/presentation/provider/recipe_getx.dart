@@ -14,7 +14,7 @@ class RecipeGetx extends GetxController {
   var steps = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
   var ingredients =
       <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
-  int currentId = -1;
+  int? currentId;
   var currentFavorite = false.obs;
   var action = RecipeManagementAction.none.name.obs;
   var lstRecipe = <RecipeModel>[].obs;

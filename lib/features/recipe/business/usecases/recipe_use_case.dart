@@ -62,7 +62,7 @@ class RecipeUseCase {
   Future<void> _delete(
       List<RecipeModificationEntity> lstStorageItemModification,
       BuildContext context) async {
-    await recipeRepository.deleteRecipe(id: recipeGetx.currentId).then(
+    await recipeRepository.deleteRecipe(id: recipeGetx.currentId!).then(
       (res) {
         lstStorageItemModification.add(RecipeModificationEntity()
           ..id = recipeGetx.currentId
@@ -114,10 +114,8 @@ class RecipeUseCase {
       for (int i = 0; i < recipeGetx.steps.length; i++) {
         var currentElement = recipeGetx.steps[i];
         var content = formKey.currentState?.value["rs_${currentElement.guid}"];
-        RecipeStepEntity step = RecipeStepEntity(null, null, content, i);
-        if (currentElement.step != null) {
-          step.idStep = currentElement.step!.idStep;
-        }
+        RecipeStepEntity step =
+            RecipeStepEntity(currentElement.step?.idStep, recipeGetx.currentId, content, i);
 
         steps.add(step);
       }
@@ -125,8 +123,8 @@ class RecipeUseCase {
       for (int i = 0; i < recipeGetx.ingredients.length; i++) {
         var currentElement = recipeGetx.ingredients[i];
         RecipeIngredientEntity ri = RecipeIngredientEntity(
-            null,
-            null,
+            currentElement.ingredient?.idIngredient,
+            recipeGetx.currentId,
             formKey.currentState?.value["ri_${currentElement.guid}"],
             formKey.currentState?.value["riu_${currentElement.guid}"],
             double.parse(
@@ -135,9 +133,9 @@ class RecipeUseCase {
 
         ingredients.add(ri);
       }
-      
+
       RecipeEntity newRecipe = RecipeEntity(
-          null,
+          recipeGetx.currentId,
           formKey.currentState?.value["recipe_title"],
           isFavorite ? 1 : 0,
           steps,

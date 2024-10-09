@@ -48,7 +48,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
         setState(() {
           recipeToDisplay =
               RecipeRepository(recipeRepository: widget.repository)
-                  .getSingleRecipe(id: recipeGetx.currentId);
+                  .getSingleRecipe(id: recipeGetx.currentId!);
         });
       });
     }
