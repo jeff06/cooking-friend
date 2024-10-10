@@ -1,11 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:cooking_friend/features/recipe/business/entities/imported_recipe_entity.dart';
-import 'package:cooking_friend/features/recipe/business/entities/recipe_ingredient_entity.dart';
-import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
-import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_ingredient.dart';
-import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_step.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_entity.dart';
@@ -60,46 +54,23 @@ class _RecipeManagementState extends State<RecipeManagement> {
     }
   }
 
-  void processImportedRecipe(http.Response response) {
-    ImportedRecipeEntity importedRecipe =
-        ImportedRecipeEntity.fromJson(json.decode(response.body));
-    _recipeTitleController.text = importedRecipe.name!;
-    recipeGetx.ingredients.removeWhere((x) => true);
-
-    for (var v in importedRecipe.ingredients!) {
-      RecipeIngredientEntity recipeIngredient =
-          RecipeIngredientEntity(null, null, v.name, null, null, null);
-      recipeIngredient.ingredient = v.name;
-      recipeGetx.ingredients.add(RecipeIngredient(recipeIngredient));
-    }
-
-    var steps = importedRecipe.instructions?.first.steps;
-    if (steps != null) {
-      recipeGetx.steps.removeWhere((x) => true);
-      for (var v in steps) {
-        RecipeStepEntity recipeStep =
-            RecipeStepEntity(null, null, v.text, null);
-        TextEditingController textEditingController = TextEditingController();
-        textEditingController.text = v.text!;
-        recipeGetx.steps.add(RecipeStep(textEditingController, recipeStep));
-      }
-    }
-  }
-
   Future<void> importRecipeFromUrl() async {
     String? recipeUrl = await recipeUseCase.requestUrlToImport(context);
 
     setState(() {
       isLoading = true;
     });
+
     String urlToCall =
         'https://www.justtherecipe.com/extractRecipeAtUrl?url=$recipeUrl';
     var response = await http.get(Uri.parse(urlToCall));
+
     setState(() {
       isLoading = false;
     });
+
     if (response.statusCode == 200) {
-      processImportedRecipe(response);
+      recipeUseCase.processImportedRecipe(response, _recipeTitleController);
     }
   }
 
