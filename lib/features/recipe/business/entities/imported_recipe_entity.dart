@@ -1,4 +1,4 @@
-class ImportedRecipe {
+class ImportedRecipeEntity {
   String? version;
   String? id;
   String? name;
@@ -14,7 +14,7 @@ class ImportedRecipe {
   List<Instructions>? instructions;
   String? source;
 
-  ImportedRecipe(
+  ImportedRecipeEntity(
       {this.version,
       this.id,
       this.name,
@@ -30,7 +30,7 @@ class ImportedRecipe {
       this.instructions,
       this.source});
 
-  ImportedRecipe.fromJson(Map<String, dynamic> json) {
+  ImportedRecipeEntity.fromJson(Map<String, dynamic> json) {
     version = json['version'];
     id = json['id'];
     name = json['name'];

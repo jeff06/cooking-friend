@@ -1,7 +1,7 @@
+import 'package:cooking_friend/features/recipe/business/entities/recipe_entity.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_ingredient_entity.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
 import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_step.dart'
     as rs_widget;
@@ -17,7 +17,7 @@ class RecipeGetx extends GetxController {
   int? currentId;
   var currentFavorite = false.obs;
   var action = RecipeManagementAction.none.name.obs;
-  var lstRecipe = <RecipeModel>[].obs;
+  var lstRecipe = <RecipeEntity>[].obs;
   var lstRecipeModification = <RecipeModificationEntity>[].obs;
   List<int> ingredientsToRemove = [];
   List<int> stepsToRemove = [];
@@ -36,7 +36,7 @@ class RecipeGetx extends GetxController {
     currentFavorite = false.obs;
   }
 
-  void updateLstRecipeDisplayed(List<RecipeModel> newLstStorageItem) {
+  void updateLstRecipeDisplayed(List<RecipeEntity> newLstStorageItem) {
     lstRecipe.value = newLstStorageItem;
   }
 

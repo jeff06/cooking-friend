@@ -1,9 +1,8 @@
+import 'package:cooking_friend/features/storage/business/entities/storage_modification_entity.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
 import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
-import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
-import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
 import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -44,7 +43,7 @@ class StorageUseCase {
   Future<SpeedDial> availableFloatingAction(
       BuildContext context,
       GlobalKey<FormBuilderState> formKey,
-      List<StorageItemModification> lstStorageItemModification) async {
+      List<StorageItemModificationEntity> lstStorageItemModification) async {
     List<SpeedDialChild> lst = [];
     if (storageController.action == StorageManagementAction.edit.name.obs ||
         storageController.action == StorageManagementAction.add.name.obs) {
@@ -109,7 +108,7 @@ class StorageUseCase {
   }
 
   Future<void> save(GlobalKey<FormBuilderState> formKey, BuildContext context,
-      List<StorageItemModification> lstStorageItemModification) async {
+      List<StorageItemModificationEntity> lstStorageItemModification) async {
     await _save(formKey, context, lstStorageItemModification);
     storageController
         .updateLstStorageItemModification(lstStorageItemModification);
@@ -124,7 +123,7 @@ class StorageUseCase {
   }
 
   Future<void> delete(BuildContext context,
-      List<StorageItemModification> lstStorageItemModification) async {
+      List<StorageItemModificationEntity> lstStorageItemModification) async {
     await _delete(lstStorageItemModification, context);
     storageController
         .updateLstStorageItemModification(lstStorageItemModification);
@@ -140,14 +139,14 @@ class StorageUseCase {
   //#endregion
 
   //#region Private
-  Future<void> _delete(List<StorageItemModification> lstStorageItemModification,
+  Future<void> _delete(List<StorageItemModificationEntity> lstStorageItemModification,
       BuildContext context) async {
     await storageRepository
         .deleteStorageItem(id: storageController.currentId)
         .then(
       (res) {
         res.fold((currentFailure) {}, (currentBool) {
-          lstStorageItemModification.add(StorageItemModification()
+          lstStorageItemModification.add(StorageItemModificationEntity()
             ..id = storageController.currentId
             ..action = StorageManagementAction.delete
             ..item = null);
@@ -157,27 +156,27 @@ class StorageUseCase {
   }
 
   Future<void> _saveUpdate(
-      StorageModel item,
-      List<StorageItemModification> lstStorageItemModification,
+      StorageEntity item,
+      List<StorageItemModificationEntity> lstStorageItemModification,
       GlobalKey<FormBuilderState> formKey) async {
     if (storageController.action == StorageManagementAction.edit.name.obs) {
       await storageRepository
           .updateStorageItem(
-              storageItem: item, currentId: storageController.currentId)
+              storageItem: item.toModel(), currentId: storageController.currentId)
           .then((res) {
         res.fold((currentFailure) {}, (currentId) {
-          lstStorageItemModification.add(StorageItemModification()
+          lstStorageItemModification.add(StorageItemModificationEntity()
             ..id = storageController.currentId
             ..action = StorageManagementAction.edit
             ..item = item);
         });
       });
     } else {
-      await storageRepository.saveNewStorageItem(storageItem: item).then((res) {
+      await storageRepository.saveNewStorageItem(storageItem: item.toModel()).then((res) {
         res.fold((currentFailure) {}, (currentId) {
-          StorageModel savedItem = StorageModel(item.name, item.date, item.code,
+          StorageEntity savedItem = StorageEntity(item.name, item.date, item.code,
               item.quantity, item.location, currentId);
-          lstStorageItemModification.add(StorageItemModification()
+          lstStorageItemModification.add(StorageItemModificationEntity()
             ..id = currentId
             ..action = StorageManagementAction.add
             ..item = savedItem);
@@ -188,10 +187,10 @@ class StorageUseCase {
   }
 
   Future<void> _save(GlobalKey<FormBuilderState> formKey, BuildContext context,
-      List<StorageItemModification> lstStorageItemModification) async {
+      List<StorageItemModificationEntity> lstStorageItemModification) async {
     // Validate and save the form values
     if (formKey.currentState!.saveAndValidate()) {
-      StorageModel item = StorageModel(
+      StorageEntity item = StorageEntity(
           formKey.currentState?.value["form_product_name"],
           formKey.currentState?.value["form_product_date"].toString(),
           formKey.currentState?.value["form_product_code"],

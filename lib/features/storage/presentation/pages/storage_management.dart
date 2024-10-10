@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:cooking_friend/features/storage/business/entities/storage_modification_entity.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
 import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
 import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
-import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
 import 'package:cooking_friend/features/storage/business/use_cases/storage_use_case.dart';
 import 'package:cooking_friend/features/storage/presentation/widgets/storage_form.dart';
 import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
@@ -32,7 +32,7 @@ class _StorageManagementState extends State<StorageManagement> {
   final TextEditingController _textController = TextEditingController();
   late final StorageUseCase storageUseCase =
       StorageUseCase(storageGetx, widget.storageRepository);
-  List<StorageItemModification> lstStorageItemModification = [];
+  List<StorageItemModificationEntity> lstStorageItemModification = [];
 
   Future<dartz.Either<Failure, StorageEntity>> storageItemToDisplay =
       Completer<dartz.Either<Failure, StorageEntity>>().future;

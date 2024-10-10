@@ -1,3 +1,5 @@
+import 'package:cooking_friend/features/storage/data/models/storage_model.dart';
+
 class StorageEntity {
   int? id;
   String? name;
@@ -8,4 +10,8 @@ class StorageEntity {
 
   StorageEntity(
       this.name, this.date, this.code, this.quantity, this.location, this.id);
+
+  StorageModel toModel() {
+    return StorageModel(name, date, code, quantity, location, id);
+  }
 }

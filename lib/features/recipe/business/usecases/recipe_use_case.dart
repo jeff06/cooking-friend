@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+import 'package:cooking_friend/features/recipe/business/entities/imported_recipe_entity.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_ingredient_entity.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
+import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_ingredient.dart';
+import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_step.dart';
+import 'package:cooking_friend/features/storage/presentation/widgets/import_recipe_popup.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_entity.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
@@ -8,6 +14,7 @@ import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class RecipeUseCase {
   final RecipeGetx recipeGetx;
@@ -156,5 +163,40 @@ class RecipeUseCase {
       return true;
     }
     return false;
+  }
+
+  Future<String?> requestUrlToImport(BuildContext context) async {
+    return await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return const ImportRecipePopup();
+      },
+    );
+  }
+
+  void processImportedRecipe(http.Response response, TextEditingController recipeTitleController) {
+    ImportedRecipeEntity importedRecipe =
+    ImportedRecipeEntity.fromJson(json.decode(response.body));
+    recipeTitleController.text = importedRecipe.name!;
+    recipeGetx.ingredients.removeWhere((x) => true);
+
+    for (var v in importedRecipe.ingredients!) {
+      RecipeIngredientEntity recipeIngredient =
+      RecipeIngredientEntity(null, null, v.name, null, null, null);
+      recipeIngredient.ingredient = v.name;
+      recipeGetx.ingredients.add(RecipeIngredient(recipeIngredient));
+    }
+
+    var steps = importedRecipe.instructions?.first.steps;
+    if (steps != null) {
+      recipeGetx.steps.removeWhere((x) => true);
+      for (var v in steps) {
+        RecipeStepEntity recipeStep =
+        RecipeStepEntity(null, null, v.text, null);
+        TextEditingController textEditingController = TextEditingController();
+        textEditingController.text = v.text!;
+        recipeGetx.steps.add(RecipeStep(textEditingController, recipeStep));
+      }
+    }
   }
 }
