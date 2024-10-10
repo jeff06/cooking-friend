@@ -1,15 +1,15 @@
+import 'package:cooking_friend/features/recipe/business/entities/recipe_entity.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
-import 'package:cooking_friend/features/recipe/data/models/recipe_model.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  /*group('modifyLstStorageItemDisplayed', () {
+  group('modifyLstStorageItemDisplayed', () {
     test('Do nothing', () {
       //arrange
-      RecipeController controller = RecipeController();
-      List<RecipeModification> lst = [];
+      RecipeGetx controller = RecipeGetx();
+      List<RecipeModificationEntity> lst = [];
       controller.updateLstRecipeModification(lst);
       //act
       controller.modifyLstStorageItemDisplayed();
@@ -20,12 +20,12 @@ void main() {
 
     test('Add one', () {
       //arrange
-      RecipeController controller = RecipeController();
-      List<RecipeModification> lst = [];
-      RecipeModification item = RecipeModification();
+      RecipeGetx controller = RecipeGetx();
+      List<RecipeModificationEntity> lst = [];
+      RecipeModificationEntity item = RecipeModificationEntity();
       item.id = 0;
       item.action = RecipeManagementAction.add;
-      item.item = Recipe();
+      item.item = RecipeEntity(null, null, null, null, null);
       lst.add(item);
       controller.updateLstRecipeModification(lst);
 
@@ -36,17 +36,16 @@ void main() {
       expect(controller.lstRecipe.length, 1);
     });
 
-    test('Remove one', (){
+    test('Remove one', () {
       //arrange
-      RecipeController controller = RecipeController();
-      List<RecipeModification> lst = [];
-      Recipe recipeToRemove = Recipe();
-      recipeToRemove.id = 0;
+      RecipeGetx controller = RecipeGetx();
+      List<RecipeModificationEntity> lst = [];
+      RecipeEntity recipeToRemove = RecipeEntity(0, null, null, null, null);
       controller.lstRecipe.add(recipeToRemove);
-      RecipeModification item = RecipeModification();
+      RecipeModificationEntity item = RecipeModificationEntity();
       item.id = 0;
       item.action = RecipeManagementAction.delete;
-      item.item = Recipe();
+      item.item = RecipeEntity(0, null, null, null, null);
       lst.add(item);
       controller.updateLstRecipeModification(lst);
 
@@ -57,18 +56,17 @@ void main() {
       expect(controller.lstRecipe.length, 0);
     });
 
-    test('Edit one', (){
+    test('Edit one', () {
       //arrange
-      RecipeController controller = RecipeController();
-      List<RecipeModification> lst = [];
-      Recipe recipeToEdit = Recipe();
-      recipeToEdit.id = 0;
-      recipeToEdit.name = "recipe name";
+      RecipeGetx controller = RecipeGetx();
+      List<RecipeModificationEntity> lst = [];
+      RecipeEntity recipeToEdit =
+          RecipeEntity(0, "recipe name", null, null, null);
       controller.lstRecipe.add(recipeToEdit);
-      RecipeModification item = RecipeModification();
+      RecipeModificationEntity item = RecipeModificationEntity();
       item.id = 0;
       item.action = RecipeManagementAction.edit;
-      item.item = Recipe()..name = "modified name";
+      item.item = RecipeEntity(0, "modified name", null, null, null);
       lst.add(item);
       controller.updateLstRecipeModification(lst);
 
@@ -76,7 +74,7 @@ void main() {
       controller.modifyLstStorageItemDisplayed();
 
       //assert
-      expect(controller.lstRecipe[0].name, "modified name");
+      expect(controller.lstRecipe[0].title, "modified name");
     });
-  });*/
+  });
 }
