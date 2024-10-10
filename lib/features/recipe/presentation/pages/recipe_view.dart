@@ -120,36 +120,51 @@ class _RecipeViewState extends State<RecipeView> {
                   future: recipeToDisplay,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      var widgetToDisplay = snapshot.data!.fold((failure) {
-                        return const Text("FAILED");
-                      }, (recipeEntities) {
-                        recipeGetx.updateLstRecipeDisplayed(
-                            recipeEntities.map((x) => x.toModel()).toList());
-                        return RefreshIndicator(
-                          onRefresh: () => refreshList(),
-                          child: Obx(() {
-                            orderBy(recipeEntities);
-                            return ListView.builder(
-                              physics: const AlwaysScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.all(8),
-                              itemCount: recipeGetx.lstRecipe.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                String name =
-                                    recipeGetx.lstRecipe[index].title!;
-                                int id = recipeGetx.lstRecipe[index].idRecipe!;
-                                return SearchDisplayCard(
-                                  () => recipeService.clickOnCard(id, context),
-                                  ListTile(
-                                    leading: const Icon(Icons.album),
-                                    title: Text(name),
-                                  ),
-                                );
-                              },
-                            );
-                          }),
-                        );
-                      });
+                      var widgetToDisplay = snapshot.data!.fold(
+                        (failure) {
+                          return const Text("FAILED");
+                        },
+                        (recipeEntities) {
+                          recipeGetx.updateLstRecipeDisplayed(
+                              recipeEntities.map((x) => x.toModel()).toList());
+                          return RefreshIndicator(
+                            onRefresh: () => refreshList(),
+                            child: Obx(() {
+                              orderBy(recipeEntities);
+                              return ListView.builder(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.all(8),
+                                itemCount: recipeGetx.lstRecipe.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  String name =
+                                      recipeGetx.lstRecipe[index].title!;
+                                  int id =
+                                      recipeGetx.lstRecipe[index].idRecipe!;
+                                  bool isFavorite =
+                                      recipeGetx.lstRecipe[index].isFavorite! ==
+                                              1
+                                          ? true
+                                          : false;
+                                  return SearchDisplayCard(
+                                    () =>
+                                        recipeService.clickOnCard(id, context),
+                                    ListTile(
+                                      leading: Icon(
+                                        isFavorite
+                                            ? Icons.favorite
+                                            : Icons.favorite_outline,
+                                        color: Colors.red,
+                                      ),
+                                      title: Text(name),
+                                    ),
+                                  );
+                                },
+                              );
+                            }),
+                          );
+                        },
+                      );
                       return widgetToDisplay;
                     }
                     return Container();
