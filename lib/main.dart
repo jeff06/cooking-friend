@@ -1,10 +1,11 @@
-import 'package:cooking_friend/features/storage/data/datasources/storage_isar_data_source.dart';
+import 'package:cooking_friend/features/recipe/data/datasources/recipe_sqflite_data_source.dart';
+import 'package:cooking_friend/features/recipe/data/repositories/recipe_repository_implementation.dart';
+import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
+import 'package:cooking_friend/features/storage/data/datasources/storage_sqflite_data_source.dart';
 import 'package:cooking_friend/features/storage/data/repositories/storage_repository_implementation.dart';
-import 'package:cooking_friend/getx/controller/recipe_controller.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
-import 'package:cooking_friend/main_wrapper.dart';
-import 'package:cooking_friend/getx/services/isar_service.dart';
-import 'package:cooking_friend/theme/custom_theme.dart';
+import 'package:cooking_friend/skeleton/main_wrapper.dart';
+import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -55,15 +56,20 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final StorageGetx storageController = Get.put(StorageGetx());
-  final RecipeController recipeController = Get.put(RecipeController());
-  final service = IsarService();
+  final RecipeGetx recipeController = Get.put(RecipeGetx());
 
-  StorageRepositoryImplementation repository = StorageRepositoryImplementation(
-      localDataSource: StorageLocalDataSourceImpl(),
+  StorageRepositoryImplementation storageRepository =
+      StorageRepositoryImplementation(
+    localDataSource: StorageSqfliteDataSourceImpl(),
+  );
+
+  RecipeRepositoryImplementation recipeRepository =
+      RecipeRepositoryImplementation(
+    localDataSource: RecipeSqfliteDataSourceImpl(),
   );
 
   @override
   Widget build(BuildContext context) {
-    return MainWrapper(service, repository);
+    return MainWrapper(storageRepository, recipeRepository);
   }
 }

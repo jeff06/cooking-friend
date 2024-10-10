@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
 import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
@@ -9,8 +9,8 @@ import 'package:cooking_friend/features/storage/presentation/provider/storage_ge
 import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
 import 'package:cooking_friend/features/storage/business/use_cases/storage_use_case.dart';
 import 'package:cooking_friend/features/storage/presentation/widgets/storage_form.dart';
-import 'package:cooking_friend/screens/support/gradient_background.dart';
-import 'package:cooking_friend/screens/support/loading.dart';
+import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
+import 'package:cooking_friend/global_widget/loading.dart';
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -28,10 +28,10 @@ class StorageManagement extends StatefulWidget {
 
 class _StorageManagementState extends State<StorageManagement> {
   final _formKey = GlobalKey<FormBuilderState>();
-  final StorageGetx storageController = Get.find<StorageGetx>();
+  final StorageGetx storageGetx = Get.find<StorageGetx>();
   final TextEditingController _textController = TextEditingController();
   late final StorageUseCase storageUseCase =
-      StorageUseCase(storageController, widget.storageRepository);
+      StorageUseCase(storageGetx, widget.storageRepository);
   List<StorageItemModification> lstStorageItemModification = [];
 
   Future<dartz.Either<Failure, StorageEntity>> storageItemToDisplay =
@@ -40,12 +40,12 @@ class _StorageManagementState extends State<StorageManagement> {
   @override
   void initState() {
     super.initState();
-    if (storageController.action == StorageManagementAction.view.name.obs) {
+    if (storageGetx.action == StorageManagementAction.view.name.obs) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
           storageItemToDisplay =
               StorageRepository(storageRepository: widget.storageRepository)
-                  .getSingleStorageItem(id: storageController.currentId);
+                  .getSingleStorageItem(id: storageGetx.currentId);
         });
       });
     }
@@ -77,9 +77,9 @@ class _StorageManagementState extends State<StorageManagement> {
                     AsyncSnapshot<dartz.Either<Failure, StorageEntity>>
                         snapshot) {
                   if (snapshot.hasData ||
-                      storageController.action ==
+                      storageGetx.action ==
                           StorageManagementAction.add.name.obs) {
-                    var widgetToDisplay = snapshot.data!.fold<Widget>(
+                    var widgetToDisplay = snapshot.data?.fold<Widget>(
                       (currentFailure) {
                         return Container();
                       },
@@ -87,10 +87,10 @@ class _StorageManagementState extends State<StorageManagement> {
                         _textController.text =
                             (snapshot.data != null ? currentStorage.code : "")!;
                         return StorageForm(_formKey, snapshot.data,
-                            storageController, currentStorage, _textController);
+                            storageGetx, currentStorage, _textController);
                       },
                     );
-                    return widgetToDisplay;
+                    return widgetToDisplay ?? StorageForm(_formKey, null, storageGetx, null, _textController);
                   } else {
                     return const Loading();
                   }

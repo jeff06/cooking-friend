@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
 import 'package:cooking_friend/features/storage/business/repositories/storage_repository.dart';
 import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
 import 'package:cooking_friend/features/storage/business/use_cases/storage_use_case.dart';
-import 'package:cooking_friend/screens/support/gradient_background.dart';
-import 'package:cooking_friend/screens/support/search_bar_custom.dart';
-import 'package:cooking_friend/screens/support/search_display_card.dart';
+import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
+import 'package:cooking_friend/global_widget/search_bar_custom.dart';
+import 'package:cooking_friend/global_widget/search_display_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dartz/dartz.dart' as dartz;
@@ -25,9 +25,9 @@ class StorageView extends StatefulWidget {
 
 class _StorageViewState extends State<StorageView> {
   TextEditingController searchBarController = TextEditingController();
-  final StorageGetx storageController = Get.find<StorageGetx>();
+  final StorageGetx storageGetx = Get.find<StorageGetx>();
   late final StorageUseCase storageUseCase =
-      StorageUseCase(storageController, widget.storageRepository);
+      StorageUseCase(storageGetx, widget.storageRepository);
   Future<dartz.Either<Failure, List<StorageEntity>>> storageItemToDisplay =
       Completer<dartz.Either<Failure, List<StorageEntity>>>().future;
 
@@ -55,7 +55,7 @@ class _StorageViewState extends State<StorageView> {
       Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            storageController.updateAction(StorageManagementAction.add);
+            storageGetx.updateAction(StorageManagementAction.add);
             await storageUseCase.updateList("/storageAdd", context);
           },
           child: const Icon(Icons.add),
@@ -71,7 +71,7 @@ class _StorageViewState extends State<StorageView> {
                 IconButton(
                   color: Colors.white,
                   onPressed: () async {
-                    await storageController.navigateAndDisplaySelection(
+                    await storageGetx.navigateAndDisplaySelection(
                         context, searchBarController);
                     refreshList();
                   },
@@ -95,7 +95,7 @@ class _StorageViewState extends State<StorageView> {
                           return Container();
                         },
                         (currentStorages) {
-                          storageController
+                          storageGetx
                               .updateLstStorageItemDisplayed(currentStorages);
                           return RefreshIndicator(
                             onRefresh: () => refreshList(),
@@ -108,16 +108,16 @@ class _StorageViewState extends State<StorageView> {
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.all(8),
                                   itemCount:
-                                      storageController.lstStorageItem.length,
+                                      storageGetx.lstStorageItem.length,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    String name = storageController
+                                    String name = storageGetx
                                         .lstStorageItem[index].name
                                         .toString();
-                                    String date = storageController
+                                    String date = storageGetx
                                         .lstStorageItem[index].date
                                         .toString();
-                                    int id = storageController
+                                    int id = storageGetx
                                         .lstStorageItem[index].id!;
                                     return SearchDisplayCard(
                                       () async => await storageUseCase

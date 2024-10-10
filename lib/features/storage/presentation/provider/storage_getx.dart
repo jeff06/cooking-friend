@@ -1,6 +1,6 @@
-import 'package:cooking_friend/constants.dart';
+import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
-import 'package:cooking_friend/screens/support/barcode_scanner.dart';
+import 'package:cooking_friend/global_widget/barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
