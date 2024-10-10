@@ -60,66 +60,6 @@ class _RecipeManagementState extends State<RecipeManagement> {
     }
   }
 
-  Future<String?> requestUrlToImport() async {
-    final GlobalKey<FormBuilderState> filterMenuKey =
-        GlobalKey<FormBuilderState>();
-    return await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                FormBuilder(
-                  key: filterMenuKey,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: FormBuilderTextField(
-                          decoration: const InputDecoration(
-                            labelText: "URL",
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          name: "url",
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    TextButton(
-                      child: const Text('Cancel'),
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                    ),
-                    TextButton(
-                      child: const Text('Accept'),
-                      onPressed: () {
-                        filterMenuKey.currentState!.saveAndValidate();
-                        String url = filterMenuKey.currentState?.value["url"];
-                        Navigator.of(context).pop(url);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   void processImportedRecipe(http.Response response) {
     ImportedRecipeEntity importedRecipe =
         ImportedRecipeEntity.fromJson(json.decode(response.body));
@@ -137,17 +77,17 @@ class _RecipeManagementState extends State<RecipeManagement> {
     if (steps != null) {
       recipeGetx.steps.removeWhere((x) => true);
       for (var v in steps) {
-        RecipeStepEntity recipeStep = RecipeStepEntity(null, null, v.text, null);
+        RecipeStepEntity recipeStep =
+            RecipeStepEntity(null, null, v.text, null);
         TextEditingController textEditingController = TextEditingController();
         textEditingController.text = v.text!;
-        recipeGetx.steps
-            .add(RecipeStep(textEditingController, recipeStep));
+        recipeGetx.steps.add(RecipeStep(textEditingController, recipeStep));
       }
     }
   }
 
   Future<void> importRecipeFromUrl() async {
-    String? recipeUrl = await requestUrlToImport();
+    String? recipeUrl = await recipeUseCase.requestUrlToImport(context);
 
     setState(() {
       isLoading = true;

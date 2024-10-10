@@ -1,5 +1,6 @@
 import 'package:cooking_friend/features/recipe/business/entities/recipe_ingredient_entity.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
+import 'package:cooking_friend/features/storage/presentation/widgets/import_recipe_popup.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_entity.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_modification_entity.dart';
@@ -156,5 +157,14 @@ class RecipeUseCase {
       return true;
     }
     return false;
+  }
+
+  Future<String?> requestUrlToImport(BuildContext context) async {
+    return await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return const ImportRecipePopup();
+      },
+    );
   }
 }
