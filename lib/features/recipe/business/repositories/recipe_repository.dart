@@ -29,7 +29,12 @@ class RecipeRepository {
   }
 
   Future<Either<Failure, int>> updateRecipe(
-      {required RecipeModel recipe}) async {
-    return await recipeRepository.updateRecipe(recipe: recipe);
+      {required RecipeModel recipe,
+      required List<int> ingredientsToRemove,
+      required List<int> stepsToRemove}) async {
+    return await recipeRepository.updateRecipe(
+        recipe: recipe,
+        ingredientsToRemove: ingredientsToRemove,
+        stepsToRemove: stepsToRemove);
   }
 }

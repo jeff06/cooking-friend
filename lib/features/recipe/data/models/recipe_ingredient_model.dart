@@ -10,7 +10,7 @@ class RecipeIngredientModel extends RecipeIngredientEntity {
         int.parse(json['idRecipe'].toString()),
         json['ingredient'].toString(),
         json['measuringUnit'].toString(),
-        double.parse(json['quantity'].toString()),
+        double.tryParse(json['quantity'].toString()),
         int.parse(json['ordering'].toString()));
   }
 

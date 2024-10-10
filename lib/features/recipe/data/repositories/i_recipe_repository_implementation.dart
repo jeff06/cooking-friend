@@ -9,7 +9,7 @@ abstract class IRecipeRepositoryImplementation {
 
   Future<Either<Failure, int>> saveNewRecipe({required RecipeModel recipe});
 
-  Future<Either<Failure, int>> updateRecipe({required RecipeModel recipe});
+  Future<Either<Failure, int>> updateRecipe({required RecipeModel recipe, required List<int> ingredientsToRemove, required List<int> stepsToRemove, });
 
   Future<Either<Failure, bool>> deleteRecipe({required int id});
 

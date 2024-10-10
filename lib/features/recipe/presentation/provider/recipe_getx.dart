@@ -28,7 +28,7 @@ class RecipeGetx extends GetxController {
     steps.value = <rs_widget.RecipeStep>[rs_widget.RecipeStep(null, null)].obs;
     ingredients.value =
         <ri_widget.RecipeIngredient>[ri_widget.RecipeIngredient(null)].obs;
-    currentId = -1;
+    currentId = null;
     //action = RecipeManagementAction.none.name.obs;
     lstRecipeModification = <RecipeModificationEntity>[].obs;
     ingredientsToRemove = [];

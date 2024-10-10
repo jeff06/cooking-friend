@@ -173,7 +173,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
           onTap: () async {
             await recipeUseCase
                 .save(_formKey, context, lstRecipeModification,
-                    recipeGetx.currentFavorite.value)
+                    recipeGetx.currentFavorite.value, recipeGetx.ingredientsToRemove, recipeGetx.stepsToRemove)
                 .then((success) {
               if (success) {
                 _recipeTitleController.text = "";

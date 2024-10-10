@@ -87,19 +87,33 @@ class RecipeSqfliteDataSourceImpl implements IRecipeSqfliteDataSource {
   }
 
   @override
-  Future<int> updateRecipe(RecipeModel recipe) async {
+  Future<int> updateRecipe(RecipeModel recipe, List<int> ingredientsToRemove,
+      List<int> stepsToRemove) async {
     final db = await SqfliteConnection.instance.database;
     int id = await db.update(
         SqfliteRecipeTable.tableName.paramName, recipe.toJson());
 
+    await deleteAllRecipeStepsByIds(stepsToRemove);
+    await deleteAllRecipeIngredientsByIds(ingredientsToRemove);
+
     for (var v in recipe.steps!) {
-      await db.update(
-          SqfliteRecipeStepTable.tableName.paramName, v.toModel().toJson());
+      if (v.idStep == null) {
+        await db.insert(
+            SqfliteRecipeStepTable.tableName.paramName, v.toModel().toJson());
+      } else {
+        await db.update(
+            SqfliteRecipeStepTable.tableName.paramName, v.toModel().toJson());
+      }
     }
 
     for (var v in recipe.ingredients!) {
-      await db.update(SqfliteRecipeIngredientTable.tableName.paramName,
-          v.toModel().toJson());
+      if (v.idIngredient == null) {
+        await db.insert(SqfliteRecipeIngredientTable.tableName.paramName,
+            v.toModel().toJson());
+      } else {
+        await db.update(SqfliteRecipeIngredientTable.tableName.paramName,
+            v.toModel().toJson());
+      }
     }
 
     return id;
@@ -111,6 +125,23 @@ class RecipeSqfliteDataSourceImpl implements IRecipeSqfliteDataSource {
     int count = await db.delete(SqfliteRecipeTable.tableName.paramName,
         where: '${SqfliteRecipeTable.id.paramName} = ?', whereArgs: [id]);
     return count > 0;
+  }
+
+  Future deleteAllRecipeStepsByIds(List<int> stepsToRemove) async {
+    final db = await SqfliteConnection.instance.database;
+    for (var id in stepsToRemove) {
+      await db.delete(SqfliteRecipeStepTable.tableName.paramName,
+          where: '${SqfliteRecipeStepTable.id.paramName} = ?', whereArgs: [id]);
+    }
+  }
+
+  Future deleteAllRecipeIngredientsByIds(List<int> ingredientsToRemove) async {
+    final db = await SqfliteConnection.instance.database;
+    for (var id in ingredientsToRemove) {
+      await db.delete(SqfliteRecipeIngredientTable.tableName.paramName,
+          where: '${SqfliteRecipeIngredientTable.id.paramName} = ?',
+          whereArgs: [id]);
+    }
   }
 
   @override

@@ -7,7 +7,7 @@ class RecipeStepModel extends RecipeStepEntity {
     return RecipeStepModel(
       int.parse(json['idStep'].toString()),
       int.parse(json['idRecipe'].toString()),
-      json['step'].toString(),
+      json['step'] != null ? json['step'].toString() : "",
       int.parse(json['ordering'].toString()),
     );
   }

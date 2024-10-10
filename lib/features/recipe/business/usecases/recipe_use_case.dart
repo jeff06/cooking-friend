@@ -43,8 +43,8 @@ class RecipeUseCase {
       GlobalKey<FormBuilderState> formKey,
       BuildContext context,
       List<RecipeModificationEntity> lstRecipeModification,
-      bool isFavorite) async {
-    return await _save(formKey, context, lstRecipeModification, isFavorite)
+      bool isFavorite, List<int> ingredientsToRemove, List<int> stepsToRemove) async {
+    return await _save(formKey, context, lstRecipeModification, isFavorite, ingredientsToRemove, stepsToRemove)
         .then((success) {
       if (success) {
         recipeGetx.updateLstRecipeModification(lstRecipeModification);
@@ -75,11 +75,11 @@ class RecipeUseCase {
   Future<void> _saveAndUpdate(
       RecipeEntity recipe,
       List<RecipeModificationEntity> lstRecipeModification,
-      GlobalKey<FormBuilderState> formKey) async {
+      GlobalKey<FormBuilderState> formKey, List<int> ingredientsToRemove, List<int> stepsToRemove) async {
     if (recipeGetx.action == RecipeManagementAction.edit.name.obs) {
       await recipeRepository
           .updateRecipe(
-        recipe: recipe.toModel(),
+        recipe: recipe.toModel(), ingredientsToRemove: ingredientsToRemove, stepsToRemove :stepsToRemove
       )
           .then((res) {
         lstRecipeModification.add(RecipeModificationEntity()
@@ -106,7 +106,7 @@ class RecipeUseCase {
       GlobalKey<FormBuilderState> formKey,
       BuildContext context,
       List<RecipeModificationEntity> lstRecipeModification,
-      bool isFavorite) async {
+      bool isFavorite, List<int> ingredientsToRemove, List<int> stepsToRemove) async {
     // ne pas saver ce qui ont le meme id
     if (formKey.currentState!.saveAndValidate()) {
       List<RecipeStepEntity> steps = [];
@@ -127,7 +127,7 @@ class RecipeUseCase {
             recipeGetx.currentId,
             formKey.currentState?.value["ri_${currentElement.guid}"],
             formKey.currentState?.value["riu_${currentElement.guid}"],
-            double.parse(
+            double.tryParse(
                 formKey.currentState?.value["riq_${currentElement.guid}"]),
             i);
 
@@ -141,7 +141,7 @@ class RecipeUseCase {
           steps,
           ingredients);
 
-      await _saveAndUpdate(newRecipe, lstRecipeModification, formKey)
+      await _saveAndUpdate(newRecipe, lstRecipeModification, formKey, ingredientsToRemove, stepsToRemove)
           .then((res) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

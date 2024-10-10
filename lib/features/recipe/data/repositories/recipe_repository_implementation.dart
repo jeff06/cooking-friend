@@ -61,9 +61,9 @@ class RecipeRepositoryImplementation
 
   @override
   Future<Either<Failure, int>> updateRecipe(
-      {required RecipeModel recipe}) async {
+      {required RecipeModel recipe, required List<int> ingredientsToRemove, required List<int> stepsToRemove}) async {
     try {
-      final localStorageItem = await localDataSource.updateRecipe(recipe);
+      final localStorageItem = await localDataSource.updateRecipe(recipe, ingredientsToRemove, stepsToRemove);
       return Right(localStorageItem);
     } on CacheException {
       return Left(CacheFailure(errorMessage: 'No local data found'));
