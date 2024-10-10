@@ -1,5 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:cooking_friend/features/recipe/business/entities/imported_recipe_entity.dart';
+import 'package:cooking_friend/features/recipe/business/entities/recipe_ingredient_entity.dart';
+import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
+import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_ingredient.dart';
+import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_step.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_entity.dart';
@@ -115,31 +121,29 @@ class _RecipeManagementState extends State<RecipeManagement> {
   }
 
   void processImportedRecipe(http.Response response) {
-    /*ImportedRecipe importedRecipe =
-        ImportedRecipe.fromJson(json.decode(response.body));
+    ImportedRecipeEntity importedRecipe =
+        ImportedRecipeEntity.fromJson(json.decode(response.body));
     _recipeTitleController.text = importedRecipe.name!;
     recipeGetx.ingredients.removeWhere((x) => true);
 
     for (var v in importedRecipe.ingredients!) {
-      ri_model.RecipeIngredientModel recipeIngredient =
-          ri_model.RecipeIngredientModel();
+      RecipeIngredientEntity recipeIngredient =
+          RecipeIngredientEntity(null, null, v.name, null, null, null);
       recipeIngredient.ingredient = v.name;
-      recipeGetx.ingredients
-          .add(ri_widget.RecipeIngredient(recipeIngredient));
+      recipeGetx.ingredients.add(RecipeIngredient(recipeIngredient));
     }
 
     var steps = importedRecipe.instructions?.first.steps;
     if (steps != null) {
       recipeGetx.steps.removeWhere((x) => true);
       for (var v in steps) {
-        rs_model.RecipeStep recipeStep = rs_model.RecipeStep();
-        recipeStep.step = v.text;
+        RecipeStepEntity recipeStep = RecipeStepEntity(null, null, v.text, null);
         TextEditingController textEditingController = TextEditingController();
         textEditingController.text = v.text!;
         recipeGetx.steps
-            .add(rs_widget.RecipeStep(textEditingController, recipeStep));
+            .add(RecipeStep(textEditingController, recipeStep));
       }
-    }*/
+    }
   }
 
   Future<void> importRecipeFromUrl() async {
@@ -172,8 +176,13 @@ class _RecipeManagementState extends State<RecipeManagement> {
           backgroundColor: Colors.green,
           onTap: () async {
             await recipeUseCase
-                .save(_formKey, context, lstRecipeModification,
-                    recipeGetx.currentFavorite.value, recipeGetx.ingredientsToRemove, recipeGetx.stepsToRemove)
+                .save(
+                    _formKey,
+                    context,
+                    lstRecipeModification,
+                    recipeGetx.currentFavorite.value,
+                    recipeGetx.ingredientsToRemove,
+                    recipeGetx.stepsToRemove)
                 .then((success) {
               if (success) {
                 _recipeTitleController.text = "";

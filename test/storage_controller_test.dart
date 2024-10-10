@@ -1,5 +1,5 @@
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
-import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
+import 'package:cooking_friend/features/storage/business/entities/storage_modification_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -7,7 +7,7 @@ void main() {
     test('Do nothing', () {
       //arrange
       StorageGetx controller = StorageGetx();
-      List<StorageItemModification> lst = [];
+      List<StorageItemModificationEntity> lst = [];
       controller.updateLstStorageItemModification(lst);
       //act
       controller.modifyLstStorageItemDisplayed();

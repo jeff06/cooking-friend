@@ -4,14 +4,14 @@ import 'package:cooking_friend/global_widget/barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 
-import 'package:cooking_friend/features/storage/data/models/storage_modification.dart';
+import 'package:cooking_friend/features/storage/business/entities/storage_modification_entity.dart';
 
 class StorageGetx extends GetxController {
   var barcode = "".obs;
   int currentId = -1;
   var action = StorageManagementAction.none.name.obs;
   var lstStorageItem = <StorageEntity>[].obs;
-  var lstStorageItemModification = <StorageItemModification>[].obs;
+  var lstStorageItemModification = <StorageItemModificationEntity>[].obs;
   StorageOrderBy currentOrderBy = StorageOrderBy.name;
   OrderByDirection currentDirection = OrderByDirection.ascending;
 
@@ -23,7 +23,7 @@ class StorageGetx extends GetxController {
     lstStorageItem.value = newLstStorageItem;
   }
 
-  void updateLstStorageItemModification(List<StorageItemModification> lst) {
+  void updateLstStorageItemModification(List<StorageItemModificationEntity> lst) {
     lstStorageItemModification.value = lst;
   }
 
@@ -48,7 +48,7 @@ class StorageGetx extends GetxController {
           break;
       }
     }
-    lstStorageItemModification = <StorageItemModification>[].obs;
+    lstStorageItemModification = <StorageItemModificationEntity>[].obs;
   }
 
   void updateAction(StorageManagementAction newAction) {
