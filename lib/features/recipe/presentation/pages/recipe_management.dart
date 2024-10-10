@@ -1,4 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:cooking_friend/features/recipe/business/entities/imported_recipe_entity.dart';
+import 'package:cooking_friend/features/recipe/business/entities/recipe_ingredient_entity.dart';
+import 'package:cooking_friend/features/recipe/business/entities/recipe_step_entity.dart';
+import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_ingredient.dart';
+import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_step.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_entity.dart';
@@ -10,6 +17,7 @@ import 'package:cooking_friend/features/recipe/business/entities/recipe_modifica
 import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_form.dart';
 import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
 import 'package:cooking_friend/global_widget/loading.dart';
+import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -52,8 +60,94 @@ class _RecipeManagementState extends State<RecipeManagement> {
     }
   }
 
+  Future<String?> requestUrlToImport() async {
+    final GlobalKey<FormBuilderState> filterMenuKey =
+        GlobalKey<FormBuilderState>();
+    return await showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                FormBuilder(
+                  key: filterMenuKey,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: FormBuilderTextField(
+                          decoration: const InputDecoration(
+                            labelText: "URL",
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          name: "url",
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    TextButton(
+                      child: const Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Accept'),
+                      onPressed: () {
+                        filterMenuKey.currentState!.saveAndValidate();
+                        String url = filterMenuKey.currentState?.value["url"];
+                        Navigator.of(context).pop(url);
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void processImportedRecipe(http.Response response) {
+    ImportedRecipeEntity importedRecipe =
+        ImportedRecipeEntity.fromJson(json.decode(response.body));
+    _recipeTitleController.text = importedRecipe.name!;
+    recipeGetx.ingredients.removeWhere((x) => true);
+
+    for (var v in importedRecipe.ingredients!) {
+      RecipeIngredientEntity recipeIngredient =
+          RecipeIngredientEntity(null, null, v.name, null, null, null);
+      recipeIngredient.ingredient = v.name;
+      recipeGetx.ingredients.add(RecipeIngredient(recipeIngredient));
+    }
+
+    var steps = importedRecipe.instructions?.first.steps;
+    if (steps != null) {
+      recipeGetx.steps.removeWhere((x) => true);
+      for (var v in steps) {
+        RecipeStepEntity recipeStep = RecipeStepEntity(null, null, v.text, null);
+        TextEditingController textEditingController = TextEditingController();
+        textEditingController.text = v.text!;
+        recipeGetx.steps
+            .add(RecipeStep(textEditingController, recipeStep));
+      }
+    }
+  }
+
   Future<void> importRecipeFromUrl() async {
-    String? recipeUrl = await recipeUseCase.requestUrlToImport(context);
+    String? recipeUrl = await requestUrlToImport();
 
     setState(() {
       isLoading = true;
@@ -65,8 +159,91 @@ class _RecipeManagementState extends State<RecipeManagement> {
       isLoading = false;
     });
     if (response.statusCode == 200) {
-      recipeUseCase.processImportedRecipe(response, _recipeTitleController);
+      processImportedRecipe(response);
     }
+  }
+
+  Future<SpeedDial> availableFloatingAction(BuildContext context) async {
+    List<SpeedDialChild> lst = [];
+    if (recipeGetx.action == RecipeManagementAction.edit.name.obs ||
+        recipeGetx.action == RecipeManagementAction.add.name.obs) {
+      lst.add(
+        SpeedDialChild(
+          child: const Icon(
+            Icons.save,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.green,
+          onTap: () async {
+            await recipeUseCase
+                .save(
+                    _formKey,
+                    context,
+                    lstRecipeModification,
+                    recipeGetx.currentFavorite.value,
+                    recipeGetx.ingredientsToRemove,
+                    recipeGetx.stepsToRemove)
+                .then((success) {
+              if (success) {
+                _recipeTitleController.text = "";
+                recipeGetx.updateFavorite(false);
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+              }
+            });
+          },
+        ),
+      );
+    }
+
+    if (recipeGetx.action == RecipeManagementAction.add.name.obs) {
+      lst.add(
+        SpeedDialChild(
+            child: const Icon(
+              Icons.download,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.pinkAccent,
+            onTap: () async => importRecipeFromUrl()),
+      );
+    }
+
+    if (recipeGetx.action != RecipeManagementAction.add.name.obs) {
+      lst.add(
+        SpeedDialChild(
+          child: Icon(
+            recipeGetx.action == RecipeManagementAction.view.name.obs
+                ? Icons.edit
+                : Icons.edit_outlined,
+            color: Colors.white,
+          ),
+          backgroundColor: CustomTheme.navbar,
+          onTap: () async {
+            recipeUseCase.edit();
+          },
+        ),
+      );
+    }
+
+    if (recipeGetx.action == RecipeManagementAction.edit.name.obs) {
+      lst.add(
+        SpeedDialChild(
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+          backgroundColor: Colors.red,
+          onTap: () async {
+            await recipeUseCase.delete(context, lstRecipeModification);
+          },
+        ),
+      );
+    }
+
+    return SpeedDial(
+      animatedIcon: AnimatedIcons.menu_close,
+      children: lst,
+    );
   }
 
   @override
@@ -75,7 +252,7 @@ class _RecipeManagementState extends State<RecipeManagement> {
       Scaffold(
         floatingActionButton: Obx(
           () => FutureBuilder<SpeedDial>(
-            future: recipeUseCase.availableFloatingAction(context, _formKey, lstRecipeModification, _recipeTitleController, importRecipeFromUrl()),
+            future: availableFloatingAction(context),
             builder: (builder, AsyncSnapshot<SpeedDial> snapshot) {
               if (snapshot.hasData) {
                 return snapshot.data as SpeedDial;

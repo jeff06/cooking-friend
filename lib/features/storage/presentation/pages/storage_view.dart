@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cooking_friend/features/storage/presentation/widgets/storage_view_refresh.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/storage/business/entities/storage_entity.dart';
@@ -10,6 +9,7 @@ import 'package:cooking_friend/features/storage/presentation/provider/storage_ge
 import 'package:cooking_friend/features/storage/business/use_cases/storage_use_case.dart';
 import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
 import 'package:cooking_friend/global_widget/search_bar_custom.dart';
+import 'package:cooking_friend/global_widget/search_display_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dartz/dartz.dart' as dartz;
@@ -97,7 +97,52 @@ class _StorageViewState extends State<StorageView> {
                         (currentStorages) {
                           storageGetx
                               .updateLstStorageItemDisplayed(currentStorages);
-                          return StorageViewRefresh(refreshList(), storageUseCase, currentStorages, storageGetx);
+                          return RefreshIndicator(
+                            onRefresh: () => refreshList(),
+                            child: Obx(
+                              () {
+                                storageUseCase.orderBy(currentStorages);
+                                return ListView.builder(
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.all(8),
+                                  itemCount:
+                                      storageGetx.lstStorageItem.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    String name = storageGetx
+                                        .lstStorageItem[index].name
+                                        .toString();
+                                    String date = storageGetx
+                                        .lstStorageItem[index].date
+                                        .toString();
+                                    int id = storageGetx
+                                        .lstStorageItem[index].id!;
+                                    return SearchDisplayCard(
+                                      () async => await storageUseCase
+                                          .clickOnCard(id, context),
+                                      ListTile(
+                                        leading: const Icon(Icons.album),
+                                        title: ClipRect(
+                                          child: Text(name,
+                                              style: const TextStyle(
+                                                  color: Colors.black)),
+                                        ),
+                                        subtitle: ClipRect(
+                                          child: date == "null"
+                                              ? Container()
+                                              : Text(date,
+                                                  style: const TextStyle(
+                                                      color: Colors.black)),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          );
                         },
                       );
                       return widgetToDisplay;

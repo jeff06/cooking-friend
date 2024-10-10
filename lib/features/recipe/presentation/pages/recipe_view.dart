@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cooking_friend/features/recipe/presentation/widgets/recipe_view_refresh.dart';
 import 'package:cooking_friend/skeleton/constants.dart';
 import 'package:cooking_friend/core/errors/failure.dart';
 import 'package:cooking_friend/features/recipe/business/entities/recipe_entity.dart';
@@ -11,6 +10,7 @@ import 'package:cooking_friend/features/recipe/data/repositories/i_recipe_reposi
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
 import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
 import 'package:cooking_friend/global_widget/search_bar_custom.dart';
+import 'package:cooking_friend/global_widget/search_display_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,7 +28,7 @@ class _RecipeViewState extends State<RecipeView> {
   final RecipeGetx recipeGetx = Get.find<RecipeGetx>();
   Future<dartz.Either<Failure, List<RecipeEntity>>> recipeToDisplay =
       Completer<dartz.Either<Failure, List<RecipeEntity>>>().future;
-  late final RecipeUseCase recipeUseCase =
+  late final RecipeUseCase recipeService =
       RecipeUseCase(recipeGetx, widget.recipeRepository);
 
   @override
@@ -47,6 +47,45 @@ class _RecipeViewState extends State<RecipeView> {
     });
   }
 
+  void updateFilterRules(String orderBy, String direction) {
+    recipeGetx.currentDirection =
+        OrderByDirection.values.firstWhere((x) => x.paramName == direction);
+
+    recipeGetx.currentOrderBy =
+        RecipeOrderBy.values.firstWhere((x) => x.paramName == orderBy);
+  }
+
+  Future<void> orderBy(List<RecipeEntity> lstRecipe) async {
+    switch (recipeGetx.currentOrderBy) {
+      case RecipeOrderBy.id:
+        if (recipeGetx.currentDirection == OrderByDirection.ascending) {
+          lstRecipe.sort((a, b) => a.idRecipe!.compareTo(b.idRecipe!));
+        } else {
+          lstRecipe.sort((a, b) => b.idRecipe!.compareTo(a.idRecipe!));
+        }
+      case RecipeOrderBy.name:
+        if (recipeGetx.currentDirection == OrderByDirection.ascending) {
+          lstRecipe.sort((a, b) => a.title!.compareTo(b.title!));
+        } else {
+          lstRecipe.sort((a, b) => b.title!.compareTo(a.title!));
+        }
+      case RecipeOrderBy.favorite:
+        if (recipeGetx.currentDirection == OrderByDirection.ascending) {
+          lstRecipe.sort(
+            (a, b) {
+              return b.isFavorite != null && b.isFavorite! == 1 ? 1 : 0;
+            },
+          );
+        } else {
+          lstRecipe.sort(
+            (a, b) {
+              return a.isFavorite != null && a.isFavorite! == 1 ? 1 : 0;
+            },
+          );
+        }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     num screenWidth = MediaQuery.of(context).size.width;
@@ -56,7 +95,7 @@ class _RecipeViewState extends State<RecipeView> {
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             recipeGetx.updateAction(RecipeManagementAction.add);
-            await recipeUseCase.updateList("/recipeAdd", context);
+            await recipeService.updateList("/recipeAdd", context);
           },
           child: const Icon(Icons.add),
         ),
@@ -67,7 +106,7 @@ class _RecipeViewState extends State<RecipeView> {
               child: SearchBarCustom(
                 searchBarController,
                 refreshList,
-                recipeUseCase.updateFilterRules,
+                updateFilterRules,
                 null,
                 RecipeOrderBy.values.map((toElement) {
                   return toElement.paramName;
@@ -86,7 +125,30 @@ class _RecipeViewState extends State<RecipeView> {
                       }, (recipeEntities) {
                         recipeGetx.updateLstRecipeDisplayed(
                             recipeEntities.map((x) => x.toModel()).toList());
-                        return RecipeViewRefresh(refreshList(), recipeUseCase, recipeEntities, recipeGetx);
+                        return RefreshIndicator(
+                          onRefresh: () => refreshList(),
+                          child: Obx(() {
+                            orderBy(recipeEntities);
+                            return ListView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(8),
+                              itemCount: recipeGetx.lstRecipe.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String name =
+                                    recipeGetx.lstRecipe[index].title!;
+                                int id = recipeGetx.lstRecipe[index].idRecipe!;
+                                return SearchDisplayCard(
+                                  () => recipeService.clickOnCard(id, context),
+                                  ListTile(
+                                    leading: const Icon(Icons.album),
+                                    title: Text(name),
+                                  ),
+                                );
+                              },
+                            );
+                          }),
+                        );
                       });
                       return widgetToDisplay;
                     }
