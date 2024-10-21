@@ -2,7 +2,7 @@ import 'package:cooking_friend/features/storage/business/entities/storage_entity
 
 class StorageModel extends StorageEntity {
   StorageModel(super.name, super.date, super.code, super.quantity,
-      super.location, super.id);
+      super.location, super.idStorage);
 
   factory StorageModel.fromJson(Map<String, Object?> json) {
     return StorageModel(
@@ -11,7 +11,7 @@ class StorageModel extends StorageEntity {
         json['code'].toString(),
         int.parse(json['quantity'].toString()),
         json['location'].toString(),
-        int.parse(json['id'].toString()));
+        int.parse(json['idStorage'].toString()));
   }
 
   Map<String, dynamic> toJson() {
@@ -21,7 +21,7 @@ class StorageModel extends StorageEntity {
     data['code'] = code;
     data['quantity'] = quantity;
     data['location'] = location;
-    data['id'] = id;
+    data['idStorage'] = idStorage;
 
     return data;
   }

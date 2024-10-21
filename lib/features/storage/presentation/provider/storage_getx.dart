@@ -31,18 +31,18 @@ class StorageGetx extends GetxController {
     for (var v in lstStorageItemModification) {
       switch (v.action) {
         case StorageManagementAction.add:
-          lstStorageItem.add(v.item!);
+          lstStorageItem.add(v.item!.toModel());
           break;
         case StorageManagementAction.view:
           break;
         case StorageManagementAction.edit:
-          lstStorageItem[lstStorageItem.indexWhere((x) => x.id == v.id)] =
-              v.item!;
+          lstStorageItem[lstStorageItem.indexWhere((x) => x.idStorage == v.id)] =
+              v.item!.toModel();
           break;
         case StorageManagementAction.none:
           break;
         case StorageManagementAction.delete:
-          lstStorageItem.removeWhere((x) => x.id == v.id);
+          lstStorageItem.removeWhere((x) => x.idStorage == v.id);
           break;
         case null:
           break;

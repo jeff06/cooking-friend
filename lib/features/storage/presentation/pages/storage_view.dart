@@ -118,7 +118,7 @@ class _StorageViewState extends State<StorageView> {
                                         .lstStorageItem[index].date
                                         .toString();
                                     int id = storageGetx
-                                        .lstStorageItem[index].id!;
+                                        .lstStorageItem[index].idStorage!;
                                     return SearchDisplayCard(
                                       () async => await storageUseCase
                                           .clickOnCard(id, context),

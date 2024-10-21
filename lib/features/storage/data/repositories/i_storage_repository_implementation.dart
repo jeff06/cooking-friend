@@ -20,5 +20,5 @@ abstract class IStorageRepositoryImplementation {
   });
 
   Future<Either<Failure, int>> updateStorageItem(
-      {required StorageModel storageItem, required int currentId});
+      {required StorageModel storageItem});
 }
