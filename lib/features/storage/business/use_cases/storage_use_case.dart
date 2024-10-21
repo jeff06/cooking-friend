@@ -27,9 +27,9 @@ class StorageUseCase {
     switch (storageController.currentOrderBy) {
       case StorageOrderBy.id:
         if (storageController.currentDirection == OrderByDirection.ascending) {
-          lstStorageItem.sort((a, b) => a.id!.compareTo(b.id!));
+          lstStorageItem.sort((a, b) => a.idStorage!.compareTo(b.idStorage!));
         } else {
-          lstStorageItem.sort((a, b) => b.id!.compareTo(a.id!));
+          lstStorageItem.sort((a, b) => b.idStorage!.compareTo(a.idStorage!));
         }
       case StorageOrderBy.name:
         if (storageController.currentDirection == OrderByDirection.ascending) {
@@ -160,9 +160,10 @@ class StorageUseCase {
       List<StorageItemModificationEntity> lstStorageItemModification,
       GlobalKey<FormBuilderState> formKey) async {
     if (storageController.action == StorageManagementAction.edit.name.obs) {
+      item.idStorage = storageController.currentId;
       await storageRepository
           .updateStorageItem(
-              storageItem: item.toModel(), currentId: storageController.currentId)
+              storageItem: item.toModel())
           .then((res) {
         res.fold((currentFailure) {}, (currentId) {
           lstStorageItemModification.add(StorageItemModificationEntity()

@@ -49,7 +49,7 @@ class _StorageFormState extends State<StorageForm> {
             ),
             FormBuilderDateTimePicker(
               name: "form_product_date",
-              initialValue: widget.storage?.date != null
+              initialValue: widget.storage?.date != null && widget.storage?.date != "null"
                   ? DateTime.parse(widget.storage!.date!)
                   : null,
               enabled: widget.storageController.action ==
