@@ -36,6 +36,6 @@ class StorageRepository {
   Future<Either<Failure, int>> updateStorageItem(
       {required StorageModel storageItem, required int currentId}) async {
     return await storageRepository.updateStorageItem(
-        storageItem: storageItem, currentId: currentId);
+        storageItem: storageItem);
   }
 }

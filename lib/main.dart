@@ -22,8 +22,6 @@ class MyApp extends StatelessWidget {
             backgroundColor: CustomTheme.elementOnScreen),
         fontFamily: "Sunflower",
         brightness: Brightness.light,
-        //primaryColor: Colors.grey[800],
-        //hintColor: Colors.grey[850],
         textTheme: const TextTheme(
                 bodySmall: TextStyle(),
                 bodyMedium: TextStyle(),

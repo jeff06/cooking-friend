@@ -42,13 +42,13 @@ class StorageSqfliteDataSourceImpl implements IStorageSqfliteDataSource {
   }
 
   @override
-  Future<int> updateStorageItem(StorageModel storageItem, int currentId) async {
+  Future<int> updateStorageItem(StorageModel storageItem) async {
     final db = await SqfliteConnection.instance.database;
 
     return await db.update(
         SqfliteStorageTable.tableName.paramName, storageItem.toJson(),
         where: '${SqfliteStorageTable.id.paramName} = ?',
-        whereArgs: [currentId]);
+        whereArgs: [storageItem.idStorage]);
   }
 
   @override

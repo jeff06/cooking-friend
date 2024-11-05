@@ -41,7 +41,7 @@ void main() {
       StorageGetx controller = StorageGetx();
       List<StorageItemModificationEntity> lst = [];
       StorageEntity itemToRemove = StorageEntity(null, null, null, null, null, null);
-      itemToRemove.id = 0;
+      itemToRemove.idStorage = 0;
       controller.lstStorageItem.add(itemToRemove);
       StorageItemModificationEntity item = StorageItemModificationEntity();
       item.id = 0;
@@ -62,7 +62,7 @@ void main() {
       StorageGetx controller = StorageGetx();
       List<StorageItemModificationEntity> lst = [];
       StorageEntity recipeToEdit = StorageEntity(null, null, null, null, null, null);
-      recipeToEdit.id = 0;
+      recipeToEdit.idStorage = 0;
       recipeToEdit.name = "storage name";
       controller.lstStorageItem.add(recipeToEdit);
       StorageItemModificationEntity item = StorageItemModificationEntity();
