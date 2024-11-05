@@ -4,10 +4,12 @@ import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx
 import 'package:cooking_friend/features/storage/data/datasources/storage_sqflite_data_source.dart';
 import 'package:cooking_friend/features/storage/data/repositories/storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
+import 'package:cooking_friend/global_widget/loading.dart';
 import 'package:cooking_friend/skeleton/main_wrapper.dart';
 import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,6 +58,19 @@ class _MyHomePageState extends State<MyHomePage> {
   final StorageGetx storageController = Get.put(StorageGetx());
   final RecipeGetx recipeController = Get.put(RecipeGetx());
 
+  Future<bool> askForPermission(BuildContext currentContext) async {
+    bool cameraApproved = false;
+    await Permission.camera.onGrantedCallback(() {
+      cameraApproved = true;
+    }).request();
+
+    if (!cameraApproved) {
+      //await openAppSettings();
+    }
+
+    return cameraApproved;
+  }
+
   StorageRepositoryImplementation storageRepository =
       StorageRepositoryImplementation(
     localDataSource: StorageSqfliteDataSourceImpl(),
@@ -66,8 +81,18 @@ class _MyHomePageState extends State<MyHomePage> {
     localDataSource: RecipeSqfliteDataSourceImpl(),
   );
 
+  //
   @override
   Widget build(BuildContext context) {
-    return MainWrapper(storageRepository, recipeRepository);
+    return FutureBuilder<bool>(
+      future: askForPermission(context),
+      builder: (builder, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasData) {
+          return MainWrapper(
+              storageRepository, recipeRepository, snapshot.data);
+        }
+        return const Loading();
+      },
+    );
   }
 }

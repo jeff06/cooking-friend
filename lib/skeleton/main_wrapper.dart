@@ -5,12 +5,16 @@ import 'package:cooking_friend/skeleton/navigation/storage_navigation.dart';
 import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MainWrapper extends StatefulWidget {
   final IStorageRepositoryImplementation storageRepository;
   final IRecipeRepositoryImplementation recipeRepository;
+  final bool? allPermissionApproved;
 
-  const MainWrapper(this.storageRepository, this.recipeRepository, {super.key});
+  const MainWrapper(
+      this.storageRepository, this.recipeRepository, this.allPermissionApproved,
+      {super.key});
 
   @override
   State<MainWrapper> createState() => _MainWrapperState();
@@ -77,14 +81,43 @@ class _MainWrapperState extends State<MainWrapper> {
           ),
         ),
         body: SafeArea(
-          child: IndexedStack(
-            index: _selectedIndex,
-            children: [
-              StorageNavigation(widget.storageRepository),
-              RecipeNavigation(widget.recipeRepository),
-              //ShoppingListNavigation(widget.service),
-            ],
-          ),
+          child: widget.allPermissionApproved!
+              ? IndexedStack(
+                  index: _selectedIndex,
+                  children: [
+                    StorageNavigation(widget.storageRepository),
+                    RecipeNavigation(widget.recipeRepository),
+                    //ShoppingListNavigation(widget.service),
+                  ],
+                )
+              : AlertDialog(
+                  title: const Text("Camera is mandatory"),
+                  content: const Text(
+                    'Approval for the camera module is required to use the app.\n'
+                    'Please go to your setting change approve the camera.',
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        textStyle: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      child: const Text('Non'),
+                      onPressed: () {
+                        SystemNavigator.pop();
+                      },
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        textStyle: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      child: const Text('Yes'),
+                      onPressed: () async {
+                        await openAppSettings();
+                        SystemNavigator.pop();
+                      },
+                    ),
+                  ],
+                ),
         ),
       ),
     );
