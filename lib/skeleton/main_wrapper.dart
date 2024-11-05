@@ -1,6 +1,8 @@
 import 'package:cooking_friend/features/recipe/data/repositories/i_recipe_repository_implementation.dart';
+import 'package:cooking_friend/features/shopping_list/data/repositories/i_shopping_list_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/data/repositories/i_storage_repository_implementation.dart';
 import 'package:cooking_friend/skeleton/navigation/recipe_navigation.dart';
+import 'package:cooking_friend/skeleton/navigation/shopping_list_navigation.dart';
 import 'package:cooking_friend/skeleton/navigation/storage_navigation.dart';
 import 'package:cooking_friend/skeleton/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +12,11 @@ import 'package:permission_handler/permission_handler.dart';
 class MainWrapper extends StatefulWidget {
   final IStorageRepositoryImplementation storageRepository;
   final IRecipeRepositoryImplementation recipeRepository;
+  final IShoppingListRepositoryImplementation shoppingListRepository;
   final bool? allPermissionApproved;
 
   const MainWrapper(
-      this.storageRepository, this.recipeRepository, this.allPermissionApproved,
+      this.storageRepository, this.recipeRepository, this.shoppingListRepository, this.allPermissionApproved,
       {super.key});
 
   @override
@@ -74,8 +77,8 @@ class _MainWrapperState extends State<MainWrapper> {
               NavigationDestination(
                   icon: Icon(Icons.fastfood, color: Colors.white),
                   label: "Recipe"),
-              /*NavigationDestination(
-                  icon: Icon(Icons.receipt), label: "Shopping list"),*/
+              NavigationDestination(
+                  icon: Icon(Icons.receipt), label: "Shopping list"),
               //NavigationDestination(icon: Icon(Icons.menu), label: "Menu of the week")
             ],
           ),
@@ -87,7 +90,7 @@ class _MainWrapperState extends State<MainWrapper> {
                   children: [
                     StorageNavigation(widget.storageRepository),
                     RecipeNavigation(widget.recipeRepository),
-                    //ShoppingListNavigation(widget.service),
+                    ShoppingListNavigation(widget.shoppingListRepository),
                   ],
                 )
               : AlertDialog(

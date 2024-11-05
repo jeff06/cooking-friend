@@ -1,6 +1,8 @@
 import 'package:cooking_friend/features/recipe/data/datasources/recipe_sqflite_data_source.dart';
 import 'package:cooking_friend/features/recipe/data/repositories/recipe_repository_implementation.dart';
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
+import 'package:cooking_friend/features/shopping_list/data/datasources/shopping_list_sqflite_data_source.dart';
+import 'package:cooking_friend/features/shopping_list/data/repositories/shopping_list_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/data/datasources/storage_sqflite_data_source.dart';
 import 'package:cooking_friend/features/storage/data/repositories/storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
@@ -81,6 +83,11 @@ class _MyHomePageState extends State<MyHomePage> {
     localDataSource: RecipeSqfliteDataSourceImpl(),
   );
 
+  ShoppingListRepositoryImplementation shoppingListRepository =
+      ShoppingListRepositoryImplementation(
+    localDataSource: ShoppingListSqfliteDataSourceImpl(),
+  );
+
   //
   @override
   Widget build(BuildContext context) {
@@ -89,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (builder, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
           return MainWrapper(
-              storageRepository, recipeRepository, snapshot.data);
+              storageRepository, recipeRepository, shoppingListRepository, snapshot.data);
         }
         return const Loading();
       },
