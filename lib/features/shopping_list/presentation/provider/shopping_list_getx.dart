@@ -1,10 +1,15 @@
+import 'package:cooking_friend/features/shopping_list/business/entities/shopping_list_entity.dart';
 import 'package:cooking_friend/features/shopping_list/business/entities/shopping_list_item_entity.dart';
 import 'package:get/get.dart';
 
 class ShoppingListGetx extends GetxController {
-  var currentShoppingListItem = <ShoppingListItemEntity>[].obs;
+  var shoppingList = <ShoppingListEntity>[].obs;
+  
+  void addEmptyShoppingList() {
+    shoppingList.add(ShoppingListEntity.empty());
+  }
 
-  void addEmptyElementInCurrentShoppingList() {
-    currentShoppingListItem.add(ShoppingListItemEntity.empty());
+  void addEmptyElementInCurrentShoppingList(int index) {
+    shoppingList[index].items?.add(ShoppingListItemEntity.empty());
   }
 }

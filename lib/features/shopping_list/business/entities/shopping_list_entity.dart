@@ -7,6 +7,7 @@ class ShoppingListEntity {
   List<ShoppingListItemEntity>? items;
 
   ShoppingListEntity(this.idShoppingList, this.name, this.items);
+  ShoppingListEntity.empty();
 
   ShoppingListModel toModel([int? newId]) {
     return ShoppingListModel(newId ?? idShoppingList, name, items);
