@@ -1,5 +1,8 @@
 import 'package:cooking_friend/features/shopping_list/data/repositories/i_shopping_list_repository_implementation.dart';
+import 'package:cooking_friend/skeleton/theme/widget/gradient_background.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class ShoppingListView extends StatefulWidget {
   final IShoppingListRepositoryImplementation storageRepository;
@@ -13,6 +16,30 @@ class ShoppingListView extends StatefulWidget {
 class _ShoppingListViewState extends State<ShoppingListView> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return GradientBackground(
+      Scaffold(
+        body: Obx(
+          () => SingleChildScrollView(
+            child: FormBuilder(
+              child: Column(
+                children: [
+                  const Text('Title'),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+                  ReorderableListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      header: const Text("Shopping list"),
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container();
+                      },
+                      itemCount: 0,
+                      onReorder: (int oldIndex, int newIndex) {})
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -25,7 +25,7 @@ class SqfliteConnection {
     final path = join(dbPath, filePath);
 
     return await openDatabase(path,
-        version: 1, onCreate: _createDB, onConfigure: _configureDB);
+        version: 2, onCreate: _createDB, onConfigure: _configureDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -40,6 +40,12 @@ class SqfliteConnection {
 
     await db.execute(
         'CREATE TABLE recipe_step(idStep INTEGER PRIMARY KEY, idRecipe INT, step TEXT, ordering INT, FOREIGN KEY(idRecipe) REFERENCES recipe(idRecipe) ON DELETE CASCADE)');
+
+    await db.execute(
+        'CREATE TABLE shopping_list(idShoppingList INTEGER PRIMARY KEY, name)');
+
+    await db.execute(
+        'CREATE TABLE shopping_list_item(idItem INTEGER PRIMARY KEY, idShoppingList, order, item, quantity, FOREIGN KEY(idShoppingList) REFERENCES shopping_list(idShoppingList) on DELETE CASCADE');
   }
 
   Future _configureDB(Database db) async {
