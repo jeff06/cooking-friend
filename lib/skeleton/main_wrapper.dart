@@ -15,8 +15,8 @@ class MainWrapper extends StatefulWidget {
   final IShoppingListRepositoryImplementation shoppingListRepository;
   final bool? allPermissionApproved;
 
-  const MainWrapper(
-      this.storageRepository, this.recipeRepository, this.shoppingListRepository, this.allPermissionApproved,
+  const MainWrapper(this.storageRepository, this.recipeRepository,
+      this.shoppingListRepository, this.allPermissionApproved,
       {super.key});
 
   @override
@@ -29,7 +29,7 @@ class _MainWrapperState extends State<MainWrapper> {
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
     storageNavigatorKey,
     recipeNavigatorKey,
-    //shoppingNavigatorKey
+    shoppingListNavigatorKey
   ];
 
   Future<bool> _systemBackButtonPressed() async {

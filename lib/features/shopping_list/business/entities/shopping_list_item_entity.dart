@@ -8,7 +8,8 @@ class ShoppingListItemEntity {
   int? quantity;
   
   ShoppingListItemEntity(this.idItem, this.idShoppingList, this.order, this.item, this.quantity);
-
+  ShoppingListItemEntity.empty();
+  
   ShoppingListItemModel toModel() {
     return ShoppingListItemModel(idItem, idShoppingList, order, item, quantity);
   }

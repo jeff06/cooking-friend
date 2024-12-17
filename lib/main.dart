@@ -3,6 +3,7 @@ import 'package:cooking_friend/features/recipe/data/repositories/recipe_reposito
 import 'package:cooking_friend/features/recipe/presentation/provider/recipe_getx.dart';
 import 'package:cooking_friend/features/shopping_list/data/datasources/shopping_list_sqflite_data_source.dart';
 import 'package:cooking_friend/features/shopping_list/data/repositories/shopping_list_repository_implementation.dart';
+import 'package:cooking_friend/features/shopping_list/presentation/provider/shopping_list_getx.dart';
 import 'package:cooking_friend/features/storage/data/datasources/storage_sqflite_data_source.dart';
 import 'package:cooking_friend/features/storage/data/repositories/storage_repository_implementation.dart';
 import 'package:cooking_friend/features/storage/presentation/provider/storage_getx.dart';
@@ -59,6 +60,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final StorageGetx storageController = Get.put(StorageGetx());
   final RecipeGetx recipeController = Get.put(RecipeGetx());
+  final ShoppingListGetx shoppingListController = Get.put(ShoppingListGetx());
 
   Future<bool> askForPermission(BuildContext currentContext) async {
     bool cameraApproved = false;

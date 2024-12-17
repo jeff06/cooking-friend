@@ -1,11 +1,11 @@
 import 'package:cooking_friend/features/shopping_list/business/entities/shopping_list_entity.dart';
 
 class ShoppingListModel extends ShoppingListEntity {
-  ShoppingListModel(super.idShoppingList, super.name);
+  ShoppingListModel(super.idShoppingList, super.name, super.items);
 
   factory ShoppingListModel.fromJson(Map<String, Object?> json) {
     return ShoppingListModel(
-        int.parse(json['idShoppingList'].toString()), json['name'].toString());
+        int.parse(json['idShoppingList'].toString()), json['name'].toString(), null);
   }
 
   Map<String, dynamic> toJson() {
